@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireOwner } from '@/lib/auth/guards';
+import { requireAuth, requireOwner } from '@/lib/auth/guards';
+import { notificationPrefsSchema } from '@/lib/validations/portal';
+
 
 /**
  * @swagger
@@ -41,7 +43,7 @@ export async function GET(req: NextRequest) {
       .single();
 
     if (error) throw error;
-    return NextResponse.json(studio?.notification_prefs || {});
+    return NextResponse.json((studio as any)?.notification_prefs || {});
   } catch (error: any) {
     console.error('[SETTINGS_NOTIFICATIONS_GET]', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
@@ -56,11 +58,12 @@ export async function PATCH(req: NextRequest) {
     const validated = notificationPrefsSchema.parse(body.notification_prefs);
 
     // Fetch current settings first to merge
-    const { data: current } = await supabase
+    const { data: current } = await (supabase
       .from('studios')
       .select('settings')
       .eq('id', member.studio_id)
-      .single();
+      .single() as any);
+
 
     const updatedSettings = {
       ...(current?.settings || {}),
@@ -74,8 +77,7 @@ export async function PATCH(req: NextRequest) {
       .select()
       .single();
 
-    if (error) throw error;
-    return NextResponse.json(data?.settings?.notification_prefs || {});
+    return NextResponse.json((data as any)?.settings?.notification_prefs || {});
   } catch (error: any) {
     if (error instanceof NextResponse) return error;
     if (error.name === 'ZodError') {
@@ -84,8 +86,6 @@ export async function PATCH(req: NextRequest) {
     console.error('[SETTINGS_NOTIFICATIONS_PATCH]', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-async function requireAuth(req: NextRequest) {
-  const { createClient } = await import('@/lib/supabase/server');
-  const { requireAuth: rAuth } = await import('@/lib/auth/guards');
-  return rAuth(req);
 }
+
+

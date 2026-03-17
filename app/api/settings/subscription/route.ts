@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireOwner } from '@/lib/auth/guards';
+import { requireAuth, requireOwner } from '@/lib/auth/guards';
+
+
 
 /**
  * @swagger
@@ -17,11 +19,12 @@ import { requireOwner } from '@/lib/auth/guards';
 export async function GET(req: NextRequest) {
   try {
     const { member, supabase } = await requireAuth(req);
-    const { data: studio, error } = await supabase
+    const { data: studio, error } = await (supabase
       .from('studios')
       .select('plan_tier, storage_used_gb, subscription_expires_at')
       .eq('id', member.studio_id)
-      .single();
+      .single() as any);
+
 
     if (error) throw error;
 
@@ -48,8 +51,4 @@ export async function GET(req: NextRequest) {
   }
 }
 
-async function requireAuth(req: NextRequest) {
-  const { createClient } = await import('@/lib/supabase/server');
-  const { requireAuth: rAuth } = await import('@/lib/auth/guards');
-  return rAuth(req);
-}
+

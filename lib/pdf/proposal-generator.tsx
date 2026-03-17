@@ -37,7 +37,9 @@ export const ProposalDocument = ({ proposal }: { proposal: any }) => (
         <Text style={{ fontSize: 12, marginTop: 40 }}>Prepared for:</Text>
         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{proposal.client.full_name}</Text>
         <Text style={{ fontSize: 10, marginTop: 100 }}>{proposal.studio.name}</Text>
-      </Page>
+      </View>
+    </Page>
+
       
       {/* Details Page */}
       <Page size="A4" style={styles.page}>

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireOwner } from '@/lib/auth/guards';
+import { requireAuth, requireOwner } from '@/lib/auth/guards';
+
+
 
 /**
  * @swagger
@@ -34,37 +36,40 @@ import { requireOwner } from '@/lib/auth/guards';
 export async function GET(req: NextRequest) {
   try {
     const { member, supabase } = await requireAuth(req);
-    const { data: requests, error } = await supabase
+    const { data: requests, error } = await (supabase
       .from('data_export_requests')
       .select('*')
       .eq('studio_id', member.studio_id)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }) as any);
+
 
     if (error) throw error;
-    return NextResponse.json(requests);
+    return NextResponse.json(requests as any);
   } catch (error: any) {
     console.error('[SETTINGS_EXPORT_GET]', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
+
 export async function POST(req: NextRequest) {
   try {
     const { member, supabase } = await requireOwner(req);
 
     // Check for pending requests
-    const { data: pending } = await supabase
+    const { data: pending } = await (supabase
       .from('data_export_requests')
       .select('id')
       .eq('studio_id', member.studio_id)
       .eq('status', 'processing')
-      .single();
+      .single() as any);
+
 
     if (pending) {
       return NextResponse.json({ error: 'An export is already in progress' }, { status: 422 });
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('data_export_requests')
       .insert({
         studio_id: member.studio_id,
@@ -73,7 +78,8 @@ export async function POST(req: NextRequest) {
         status: 'processing'
       })
       .select()
-      .single();
+      .single() as any);
+
 
     if (error) throw error;
 
@@ -88,8 +94,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function requireAuth(req: NextRequest) {
-  const { createClient } = await import('@/lib/supabase/server');
-  const { requireAuth: rAuth } = await import('@/lib/auth/guards');
-  return rAuth(req);
-}
+

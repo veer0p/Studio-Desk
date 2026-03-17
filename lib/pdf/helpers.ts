@@ -64,19 +64,33 @@ export function formatGSTIN(gstin: string): string {
   return gstin.toUpperCase();
 }
 
+export const BRAND_COLORS = {
+  PRIMARY: '#0F172A',
+  SECONDARY: '#64748B',
+  ACCENT: '#3B82F6',
+  SUCCESS: '#10B981',
+  DANGER: '#EF4444',
+};
+
+export const PDF_TABLE_STYLES = {
+  header: {
+    backgroundColor: '#F8FAFC',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E2E8F0',
+    padding: 8,
+  },
+  row: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
+    padding: 8,
+  }
+};
+
 /**
  * Brand colors and layout constants for PDF
  */
 export const getPDFStyles = () => ({
-  colors: {
-    primary: '#0F172A', // Slate 900
-    secondary: '#64748B', // Slate 500
-    accent: '#3B82F6', // Blue 500
-    success: '#10B981', // Emerald 500
-    danger: '#EF4444', // Red 500
-    light: '#F8FAFC', // Slate 50
-    border: '#E2E8F0', // Slate 200
-  },
+  colors: BRAND_COLORS,
   spacing: {
     padding: 24,
     marginSmall: 8,
@@ -92,3 +106,4 @@ export const getPDFStyles = () => ({
     xxl: 24,
   }
 });
+

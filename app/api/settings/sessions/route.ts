@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireOwner } from '@/lib/auth/guards';
+import { requireAuth, requireOwner } from '@/lib/auth/guards';
+
+
 
 /**
  * @swagger
@@ -17,7 +19,7 @@ import { requireOwner } from '@/lib/auth/guards';
 export async function GET(req: NextRequest) {
   try {
     const { member, supabase } = await requireAuth(req);
-    const { data: sessions, error } = await supabase
+    const { data: sessions, error } = await (supabase
       .from('client_portal_sessions')
       .select(`
         id,
@@ -31,15 +33,17 @@ export async function GET(req: NextRequest) {
         used_at
       `)
       .eq('studio_id', member.studio_id)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }) as any);
+
 
     if (error) throw error;
-    return NextResponse.json(sessions);
+    return NextResponse.json(sessions as any);
   } catch (error: any) {
     console.error('[SETTINGS_SESSIONS_GET]', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
 
 /**
  * @swagger
@@ -81,8 +85,4 @@ export async function POST(
   }
 }
 
-async function requireAuth(req: NextRequest) {
-  const { createClient } = await import('@/lib/supabase/server');
-  const { requireAuth: rAuth } = await import('@/lib/auth/guards');
-  return rAuth(req);
-}
+

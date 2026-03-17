@@ -1,5 +1,5 @@
-import { Document, Page, Text, View, StyleSheet, font } from '@react-pdf/renderer';
-import { formatINR, formatIndianDate } from '../formatters';
+import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { formatINR, formatIndianDate } from '@/lib/formatters';
 import { amountInWords, getPDFStyles } from './helpers';
 import React from 'react';
 

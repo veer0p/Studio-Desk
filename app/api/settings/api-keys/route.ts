@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireOwner } from '@/lib/auth/guards';
+import { requireAuth, requireOwner } from '@/lib/auth/guards';
+
+
 import { generateSecureToken } from '@/lib/crypto';
 import crypto from 'crypto';
 
@@ -50,20 +52,22 @@ import crypto from 'crypto';
 export async function GET(req: NextRequest) {
   try {
     const { member, supabase } = await requireAuth(req);
-    const { data: keys, error } = await supabase
+    const { data: keys, error } = await (supabase
       .from('studio_api_keys')
       .select('*')
       .eq('studio_id', member.studio_id)
       .eq('is_active', true)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }) as any);
+
 
     if (error) throw error;
-    return NextResponse.json(keys);
+    return NextResponse.json(keys as any);
   } catch (error: any) {
     console.error('[SETTINGS_API_KEYS_GET]', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
 
 export async function POST(req: NextRequest) {
   try {
@@ -76,7 +80,7 @@ export async function POST(req: NextRequest) {
     const keyHash = crypto.createHash('sha256').update(rawKey).digest('hex');
     const keyPrefix = rawKey.substring(0, 7) + '...';
 
-    const { data: key, error } = await supabase
+    const { data: key, error } = await (supabase
       .from('studio_api_keys')
       .insert({
         studio_id: member.studio_id,
@@ -87,7 +91,8 @@ export async function POST(req: NextRequest) {
         is_active: true
       })
       .select()
-      .single();
+      .single() as any);
+
 
     if (error) throw error;
 
@@ -140,8 +145,4 @@ export async function DELETE(
   }
 }
 
-async function requireAuth(req: NextRequest) {
-  const { createClient } = await import('@/lib/supabase/server');
-  const { requireAuth: rAuth } = await import('@/lib/auth/guards');
-  return rAuth(req);
-}
+

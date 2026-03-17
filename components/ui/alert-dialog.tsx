@@ -54,8 +54,9 @@ const AlertDialogHeader = ({
       "flex flex-col space-y-2 text-center sm:text-left",
       className
     )}
-    ...props
+    {...props}
   />
+
 )
 AlertDialogHeader.displayName = "AlertDialogHeader"
 
@@ -68,8 +69,9 @@ const AlertDialogFooter = ({
       "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
       className
     )}
-    ...props
+    {...props}
   />
+
 )
 AlertDialogFooter.displayName = "AlertDialogFooter"
 

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireOwner } from '@/lib/auth/guards';
-import { studioProfileSchema } from '@/lib/validations/portal'; // Reuse or define in settings.ts if needed
+import { requireAuth, requireOwner } from '@/lib/auth/guards';
+import { updateStudioSettingsSchema } from '@/lib/validations/portal';
+
+
 
 /**
  * @swagger
@@ -37,14 +39,17 @@ import { studioProfileSchema } from '@/lib/validations/portal'; // Reuse or defi
 export async function GET(req: NextRequest) {
   try {
     const { member, supabase } = await requireAuth(req);
-    const { data: studio, error } = await supabase
+    const { data: studio, error } = await (supabase
       .from('studios')
-      .select('*')
+      .select('name, logo_url, branding_colors, contact_email, contact_phone, address, settings')
       .eq('id', member.studio_id)
-      .single();
+      .single() as any);
+
+
 
     if (error) throw error;
     return NextResponse.json(studio);
+
   } catch (error: any) {
     console.error('[SETTINGS_PROFILE_GET]', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
@@ -58,19 +63,22 @@ export async function PATCH(req: NextRequest) {
     
     const validated = updateStudioSettingsSchema.parse(body);
 
-    const { data, error } = await supabase
+    const { data, error } = await ((supabase as any)
       .from('studios')
       .update({
-        ...validated.studio,
+        ...(validated.studio as any),
         ...(validated.settings ? { settings: validated.settings } : {})
       })
       .eq('id', member.studio_id)
       .select()
-      .single();
+      .single() as any);
+
 
     if (error) throw error;
-    return NextResponse.json(data);
+    return NextResponse.json(data as any);
+
   } catch (error: any) {
+
     if (error instanceof NextResponse) return error;
     if (error.name === 'ZodError') {
       return NextResponse.json({ error: error.errors }, { status: 400 });
@@ -78,8 +86,6 @@ export async function PATCH(req: NextRequest) {
     console.error('[SETTINGS_PROFILE_PATCH]', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-async function requireAuth(req: NextRequest) {
-  const { createClient } = await import('@/lib/supabase/server');
-  const { requireAuth: rAuth } = await import('@/lib/auth/guards');
-  return rAuth(req);
 }
+
+

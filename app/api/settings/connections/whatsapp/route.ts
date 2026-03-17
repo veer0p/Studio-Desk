@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireOwner } from '@/lib/auth/guards';
+import { requireAuth, requireOwner } from '@/lib/auth/guards';
+
+
 import { encrypt } from '@/lib/crypto';
 
 /**
@@ -37,11 +39,12 @@ import { encrypt } from '@/lib/crypto';
 export async function GET(req: NextRequest) {
   try {
     const { member, supabase } = await requireAuth(req);
-    const { data: studio, error } = await supabase
+    const { data: studio, error } = await (supabase
       .from('studios')
       .select('whatsapp_phone_number')
       .eq('id', member.studio_id)
-      .single();
+      .single() as any);
+
 
     if (error) throw error;
     return NextResponse.json({ 
@@ -53,6 +56,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
 
 export async function POST(req: NextRequest) {
   try {
@@ -83,8 +87,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function requireAuth(req: NextRequest) {
-  const { createClient } = await import('@/lib/supabase/server');
-  const { requireAuth: rAuth } = await import('@/lib/auth/guards');
-  return rAuth(req);
-}
+
