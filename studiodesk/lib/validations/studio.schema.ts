@@ -70,7 +70,8 @@ export const step5Schema = z
   .partial()
 
 export const completeStepSchema = z.object({
-  data: z.record(z.unknown()).optional().default({}),
+  /** Zod v4: key schema required for z.record */
+  data: z.record(z.string(), z.unknown()).optional().default({}),
   time_spent_sec: z.number().int().min(0).max(86400).optional(),
 })
 
@@ -122,7 +123,7 @@ export const updateProfileSchema = z.object({
   bank_ifsc: ifscSchema.optional(),
   whatsapp_api_provider: z.enum(['interakt', 'aisensy']).optional(),
   whatsapp_phone: phoneSchema.optional(),
-  invoice_prefix: z.string().max(10).regex(/^[A-Z0-9]+$/i).optional(),
+  invoice_prefix: z.string().max(10).regex(/^[A-Z0-9]+$/).optional(),
   default_advance_pct: z.number().min(0).max(100).optional(),
   default_hsn_code: z.string().optional(),
 })

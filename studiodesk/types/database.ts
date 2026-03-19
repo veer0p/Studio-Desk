@@ -3604,6 +3604,7 @@ export interface StudioInvitations {
   resent_count: number;
   last_resent_at: Date | null;
   created_at: Date;
+  updated_at: Date;
 }
 export interface StudioInvitationsInput {
   id?: string;
@@ -3617,10 +3618,11 @@ export interface StudioInvitationsInput {
   resent_count?: number;
   last_resent_at?: Date | null;
   created_at?: Date;
+  updated_at?: Date;
 }
 const studio_invitations = {
   tableName: 'studio_invitations',
-  columns: ['id', 'studio_id', 'invited_by', 'email', 'role', 'token', 'expires_at', 'accepted_at', 'resent_count', 'last_resent_at', 'created_at'],
+  columns: ['id', 'studio_id', 'invited_by', 'email', 'role', 'token', 'expires_at', 'accepted_at', 'resent_count', 'last_resent_at', 'created_at', 'updated_at'],
   requiredForInsert: ['studio_id', 'invited_by', 'email'],
   primaryKey: 'id',
   foreignKeys: {

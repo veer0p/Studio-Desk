@@ -7,7 +7,8 @@ import { ServiceError } from '@/lib/errors'
 import { logError } from '@/lib/logger'
 
 const bodySchema = z.object({
-  data: z.record(z.unknown()).optional().default({}),
+  /** Zod v4 requires key schema for z.record */
+  data: z.record(z.string(), z.unknown()).optional().default({}),
   time_spent_sec: z.number().int().min(0).max(86400).optional(),
 })
 

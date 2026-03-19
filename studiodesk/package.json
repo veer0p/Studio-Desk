@@ -8,7 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "test:unit": "vitest run --dir tests/unit",
-    "test:coverage": "vitest run --coverage"
+    "test:api": "vitest run --dir tests/api",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:integration:verbose": "vitest run --config vitest.integration.config.ts --reporter=verbose",
+    "test:coverage": "vitest run --coverage",
+    "db:seed": "npx ts-node --project supabase/tsconfig.seed.json supabase/seed.ts",
+    "db:reset:seed": "npx supabase db reset && npm run db:seed"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -38,9 +43,11 @@
     "eslint-config-next": "14.2.0",
     "jsdom": "^29.0.0",
     "next-test-api-route-handler": "^5.0.3",
+    "pg": "^8.20.0",
     "postcss": "^8",
     "supabase": "^2.81.2",
     "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5",
     "vitest": "^4.1.0"
   }

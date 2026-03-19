@@ -1,11 +1,12 @@
 import { z } from 'zod'
+import { isValidGstinChecksum } from '@/lib/gstin-checksum'
 
 export const amountSchema = z.string().regex(/^\d{1,10}(\.\d{1,2})?$/, 'Invalid amount format')
 export const phoneSchema = z.string().regex(/^[6-9]\d{9}$/, 'Invalid Indian mobile number')
-export const gstinSchema = z.string().regex(
-  /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
-  'Invalid GSTIN'
-)
+export const gstinSchema = z
+  .string()
+  .regex(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, 'Invalid GSTIN')
+  .refine(isValidGstinChecksum, { message: 'Invalid GSTIN checksum' })
 export const panSchema = z.string().regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN')
 export const ifscSchema = z.string().regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, 'Invalid IFSC')
 export const pincodeSchema = z.string().regex(/^[1-9][0-9]{5}$/, 'Invalid 6-digit pincode')

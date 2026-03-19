@@ -1,10 +1,14 @@
 import { NextRequest } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createClientFromAccessToken } from '@/lib/supabase/server'
 import { getMemberByUserId } from '@/lib/supabase/queries'
 import { Errors } from '@/lib/errors'
 
 export async function requireAuth(req: NextRequest) {
-  const supabase = createClient()
+  const authHeader = req.headers.get('authorization')
+  const bearer =
+    authHeader?.startsWith('Bearer ') ? authHeader.slice('Bearer '.length).trim() : ''
+
+  const supabase = bearer ? createClientFromAccessToken(bearer) : createClient()
   
   // ALWAYS use getUser() - never getSession()
   const { data: { user }, error: authError } = await supabase.auth.getUser()

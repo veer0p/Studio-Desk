@@ -44,6 +44,15 @@ interface CreatePaymentLinkParams {
 }
 
 export async function createPaymentLink(params: CreatePaymentLinkParams) {
+  if (env.NODE_ENV === 'test' || env.RAZORPAY_KEY_SECRET === 'placeholder_secret') {
+    const amount = rupeesToPaise(params.amount_rupees)
+    return {
+      id: `plink_test_${amount}`,
+      short_url: `https://rzp.io/i/test-${amount}`,
+      payment_link_id: `plink_test_${amount}`,
+    }
+  }
+
   try {
     const response = await razorpay.paymentLink.create({
       amount: rupeesToPaise(params.amount_rupees),

@@ -9,7 +9,7 @@ export async function getMemberByUserId(supabase: SupabaseClient<Database>, user
     .from('studio_members')
     .select('studio_id, role, id')
     .eq('user_id', userId)
-    .is('deleted_at', null)
+    .eq('is_active', true)
     .single()
 
   if (error || !data) return null
