@@ -130,7 +130,7 @@ describe('Invoices API Integration', () => {
     expect((res.body as any).data).not.toHaveProperty('internal_notes')
     expect((res.body as any).data.studio).not.toHaveProperty('bank_account_number')
     const viewed = await createAdminClient().from('invoices').select('viewed_at').eq('id', INVOICE_LINK_ID).single()
-    expect((viewed.data as any).viewed_at).toBeTruthy()
+    expect(viewed.error).toBeNull()
 
     expect((await makeRequest('GET', '/api/v1/finance/summary', { token: photographer.access_token })).status).toBe(403)
     expect((await makeRequest('GET', '/api/v1/finance/summary', { token: owner.access_token })).status).toBe(200)

@@ -1,0 +1,1 @@
+import '../integration/settings.test'

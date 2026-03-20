@@ -213,11 +213,15 @@ export const ContractService = {
   },
 
   async getTemplates(supabase: Db, studioId: string): Promise<ContractTemplate[]> {
-    const seedPromise = contractRepo.ensureDefaultTemplates(supabase, studioId, templateSeed()).catch(() => {})
+    const admin = createAdminClient()
+    const seedPromise = contractRepo.ensureDefaultTemplates(admin, studioId, templateSeed()).catch(() => {})
     let templates = await contractRepo.getTemplates(supabase, studioId)
     if (!templates.length) {
       await seedPromise
       templates = await contractRepo.getTemplates(supabase, studioId)
+      if (!templates.length) {
+        templates = await contractRepo.getTemplates(admin, studioId)
+      }
     }
     return templates as ContractTemplate[]
   },

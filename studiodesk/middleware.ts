@@ -36,9 +36,9 @@ export async function middleware(request: NextRequest) {
 
   const isApiRoute = request.nextUrl.pathname.startsWith('/api')
   const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')
-  
+
   // Public exceptions (no auth needed)
-  const isPublicRoute = 
+  const isPublicRoute =
     request.nextUrl.pathname.startsWith('/api/v1/webhooks') ||
     /\/api\/v1\/gallery\/.*\/lookup/.test(request.nextUrl.pathname) ||
     request.nextUrl.pathname.startsWith('/api/v1/inquiry') ||
@@ -52,7 +52,7 @@ export async function middleware(request: NextRequest) {
         { status: 401 }
       )
     }
-    
+
     if (isDashboardRoute) {
       return NextResponse.redirect(new URL('/login', request.url))
     }

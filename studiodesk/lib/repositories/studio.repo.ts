@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js'
-import { Database } from '@/types/database'
+import { Database } from '@/types/supabase'
 import { Errors } from '@/lib/errors'
 
 export type StudioRow = Database['public']['Tables']['studios']['Row']
@@ -216,5 +216,24 @@ export const studioRepo = {
       .single()
     if (error) throw Errors.validation('Failed to insert inquiry form config')
     return row
+  },
+  async createStudio(supabase: SupabaseClient<Database>, data: { name: string; slug: string; email: string }) {
+    const { data: row, error } = await supabase
+      .from('studios')
+      .insert({
+        ...data,
+        plan_tier: 'starter',
+        subscription_status: 'trialing',
+        trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+        is_active: true
+      })
+      .select(SELECTED_COLUMNS)
+      .single()
+
+    if (error) {
+      if (error.code === '23505') throw Errors.conflict('Studio slug already exists')
+      throw error
+    }
+    return row as StudioRow
   },
 }

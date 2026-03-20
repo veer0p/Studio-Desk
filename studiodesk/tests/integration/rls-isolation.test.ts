@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 import { makeRequest } from '../helpers/request'
 import { getOutsiderToken, type AuthToken } from '../helpers/auth'
+import { createAdminClient } from '@/lib/supabase/admin'
 import {
   STUDIO_B_ID,
   LEAD_1_ID,
@@ -14,6 +15,12 @@ describe('RLS isolation (Studio B outsider)', () => {
   let outsider: AuthToken
 
   beforeAll(async () => {
+    const admin = createAdminClient()
+    await admin
+      .from('studio_members')
+      .update({ studio_id: STUDIO_B_ID, role: 'owner', is_active: true })
+      .eq('id', OUTSIDER_MEMBER_ID)
+    await admin.from('service_packages').delete().eq('studio_id', STUDIO_B_ID)
     outsider = await getOutsiderToken()
   })
 

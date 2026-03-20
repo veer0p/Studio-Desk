@@ -14,6 +14,13 @@ export async function checkAndIncrementRateLimit(key: string): Promise<void> {
   return checkAndIncrementRateLimitWithMax(key, MAX_HITS)
 }
 
+export async function checkAndIncrementRateLimitWithCustomMax(
+  key: string,
+  maxHits: number
+): Promise<void> {
+  return checkAndIncrementRateLimitWithMax(key, maxHits)
+}
+
 /**
  * Inquiry form: 5 submissions per IP per hour per studio.
  */

@@ -11,8 +11,9 @@
     "test:api": "vitest run --dir tests/api",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:integration:verbose": "vitest run --config vitest.integration.config.ts --reporter=verbose",
+    "test:deep": "vitest run tests/deep/ --reporter=verbose --no-file-parallelism --testTimeout=30000 --hookTimeout=30000",
     "test:coverage": "vitest run --coverage",
-    "db:seed": "npx ts-node --project supabase/tsconfig.seed.json supabase/seed.ts",
+    "db:seed": "npx ts-node -r tsconfig-paths/register --project supabase/tsconfig.seed.json supabase/seed.ts",
     "db:reset:seed": "npx supabase db reset && npm run db:seed"
   },
   "dependencies": {
@@ -29,6 +30,7 @@
     "react-hook-form": "^7.71.2",
     "resend": "^6.9.4",
     "sonner": "^2.0.7",
+    "ssh2": "^1.17.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -48,6 +50,7 @@
     "supabase": "^2.81.2",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5",
     "vitest": "^4.1.0"
   }

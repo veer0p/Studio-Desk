@@ -1,0 +1,1 @@
+import '../integration/dashboard.test'

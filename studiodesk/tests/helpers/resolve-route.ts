@@ -8,6 +8,41 @@ const TOKEN = '([^/]+)'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const ROUTES: Array<{ pattern: RegExp; paramNames: string[]; load: () => Promise<any> }> = [
   {
+    pattern: /^\/api\/v1\/auth\/signup$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/auth/signup/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/auth\/login$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/auth/login/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/auth\/me$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/auth/me/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/auth\/logout$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/auth/logout/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/auth\/reset-password$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/auth/reset-password/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/auth\/forgot-password$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/auth/forgot-password/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/auth\/update-password$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/auth/update-password/route'),
+  },
+  {
     pattern: /^\/api\/v1\/studio\/profile$/,
     paramNames: [],
     load: () => import('@/app/api/v1/studio/profile/route'),
@@ -38,6 +73,41 @@ const ROUTES: Array<{ pattern: RegExp; paramNames: string[]; load: () => Promise
     load: () => import('@/app/api/v1/team/invite/route'),
   },
   {
+    pattern: /^\/api\/v1\/team\/schedule$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/team/schedule/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/dashboard\/overview$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/dashboard/overview/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/dashboard\/today$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/dashboard/today/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/analytics\/revenue$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/analytics/revenue/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/analytics\/bookings$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/analytics/bookings/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/analytics\/performance$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/analytics/performance/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/cron\/snapshot$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/cron/snapshot/route'),
+  },
+  {
     pattern: /^\/api\/v1\/team\/accept\/(.+)$/,
     paramNames: ['token'],
     load: () => import('@/app/api/v1/team/accept/[token]/route'),
@@ -46,6 +116,11 @@ const ROUTES: Array<{ pattern: RegExp; paramNames: string[]; load: () => Promise
     pattern: /^\/api\/v1\/contracts$/,
     paramNames: [],
     load: () => import('@/app/api/v1/contracts/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/galleries$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/galleries/route'),
   },
   {
     pattern: /^\/api\/v1\/invoices$/,
@@ -76,6 +151,86 @@ const ROUTES: Array<{ pattern: RegExp; paramNames: string[]; load: () => Promise
     pattern: /^\/api\/v1\/finance\/mark-overdue$/,
     paramNames: [],
     load: () => import('@/app/api/v1/finance/mark-overdue/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/automations\/settings$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/automations/settings/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/settings\/notifications$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/settings/notifications/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/settings\/integrations$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/settings/integrations/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/settings\/integrations\/test$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/settings/integrations/test/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/settings\/billing$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/settings/billing/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/automations\/log$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/automations/log/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/automations\/trigger$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/automations/trigger/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/automations\/templates$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/automations/templates/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/automations\/test$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/automations/test/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/automations\/stats$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/automations/stats/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/dashboard\/overview$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/dashboard/overview/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/dashboard\/today$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/dashboard/today/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/analytics\/revenue$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/analytics/revenue/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/analytics\/bookings$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/analytics/bookings/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/analytics\/performance$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/analytics/performance/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/cron\/snapshot$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/cron/snapshot/route'),
   },
   {
     pattern: new RegExp(`^/api/v1/contracts/view/${TOKEN}$`),
@@ -133,6 +288,61 @@ const ROUTES: Array<{ pattern: RegExp; paramNames: string[]; load: () => Promise
     load: () => import('@/app/api/v1/invoices/[id]/route'),
   },
   {
+    pattern: new RegExp(`^/api/v1/galleries/${UUID}/upload$`),
+    paramNames: ['id'],
+    load: () => import('@/app/api/v1/galleries/[id]/upload/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/galleries/${UUID}/upload-status$`),
+    paramNames: ['id'],
+    load: () => import('@/app/api/v1/galleries/[id]/upload-status/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/galleries/${UUID}/clusters/${UUID}$`),
+    paramNames: ['id', 'cid'],
+    load: () => import('@/app/api/v1/galleries/[id]/clusters/[cid]/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/galleries/${UUID}/clusters$`),
+    paramNames: ['id'],
+    load: () => import('@/app/api/v1/galleries/[id]/clusters/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/galleries/${UUID}/publish$`),
+    paramNames: ['id'],
+    load: () => import('@/app/api/v1/galleries/[id]/publish/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/galleries/${UUID}/share$`),
+    paramNames: ['id'],
+    load: () => import('@/app/api/v1/galleries/[id]/share/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/galleries/${UUID}$`),
+    paramNames: ['id'],
+    load: () => import('@/app/api/v1/galleries/[id]/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/bookings/${UUID}/assignments$`),
+    paramNames: ['id'],
+    load: () => import('@/app/api/v1/bookings/[id]/assignments/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/bookings/${UUID}/activity$`),
+    paramNames: ['id'],
+    load: () => import('@/app/api/v1/bookings/[id]/activity/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/bookings/${UUID}/shoot-brief$`),
+    paramNames: ['id'],
+    load: () => import('@/app/api/v1/bookings/[id]/shoot-brief/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/assignments/${UUID}$`),
+    paramNames: ['id'],
+    load: () => import('@/app/api/v1/assignments/[id]/route'),
+  },
+  {
     pattern: new RegExp(`^/api/v1/payments/${UUID}$`),
     paramNames: ['id'],
     load: () => import('@/app/api/v1/payments/[id]/route'),
@@ -183,6 +393,11 @@ const ROUTES: Array<{ pattern: RegExp; paramNames: string[]; load: () => Promise
     load: () => import('@/app/api/v1/team/[memberId]/role/route'),
   },
   {
+    pattern: new RegExp(`^/api/v1/team/${UUID}/assignments$`),
+    paramNames: ['memberId'],
+    load: () => import('@/app/api/v1/team/[memberId]/assignments/route'),
+  },
+  {
     pattern: /^\/api\/v1\/packages\/templates$/,
     paramNames: [],
     load: () => import('@/app/api/v1/packages/templates/route'),
@@ -213,6 +428,36 @@ const ROUTES: Array<{ pattern: RegExp; paramNames: string[]; load: () => Promise
     load: () => import('@/app/api/v1/inquiry/route'),
   },
   {
+    pattern: /^\/api\/v1\/portal\/send-link$/,
+    paramNames: [],
+    load: () => import('@/app/api/v1/portal/send-link/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/portal/${TOKEN}/invoices$`),
+    paramNames: ['token'],
+    load: () => import('@/app/api/v1/portal/[token]/invoices/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/portal/${TOKEN}/contracts$`),
+    paramNames: ['token'],
+    load: () => import('@/app/api/v1/portal/[token]/contracts/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/portal/${TOKEN}/gallery$`),
+    paramNames: ['token'],
+    load: () => import('@/app/api/v1/portal/[token]/gallery/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/portal/${TOKEN}/pay$`),
+    paramNames: ['token'],
+    load: () => import('@/app/api/v1/portal/[token]/pay/route'),
+  },
+  {
+    pattern: new RegExp(`^/api/v1/portal/${TOKEN}$`),
+    paramNames: ['token'],
+    load: () => import('@/app/api/v1/portal/[token]/route'),
+  },
+  {
     pattern: /^\/api\/v1\/leads$/,
     paramNames: [],
     load: () => import('@/app/api/v1/leads/route'),
@@ -236,6 +481,16 @@ const ROUTES: Array<{ pattern: RegExp; paramNames: string[]; load: () => Promise
     pattern: new RegExp(`^/api/v1/team/${UUID}$`),
     paramNames: ['memberId'],
     load: () => import('@/app/api/v1/team/[memberId]/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/gallery\/([^/]+)\/lookup$/,
+    paramNames: ['slug'],
+    load: () => import('@/app/api/v1/gallery/[slug]/lookup/route'),
+  },
+  {
+    pattern: /^\/api\/v1\/gallery\/([^/]+)$/,
+    paramNames: ['slug'],
+    load: () => import('@/app/api/v1/gallery/[slug]/route'),
   },
 ]
 

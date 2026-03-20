@@ -1,3 +1,60 @@
+# StudioDesk Deep Test Report
+Date: 2026-03-20
+Database: Local Supabase (reset blocked: Docker unavailable, seed blocked by schema mismatch)
+Total test files: 17
+Build: `npx tsc --noEmit` -> failed (type errors present)
+
+## Results by Module
+
+| Module | File | Tests | Passed | Failed |
+|---|---|---:|---:|---:|
+| Auth | 01-auth.test.ts | 7 | 5 | 2 |
+| Studio | 02-studio.test.ts | 53 | 11 | 40 |
+| Team | 03-team.test.ts | 54 | 19 | 33 |
+| Packages | 04-packages.test.ts | 67 | 26 | 36 |
+| Leads & Clients | 05-leads-clients.test.ts | 127 | 30 | 87 |
+| Bookings | 06-bookings.test.ts | 2 | 2 | 0 |
+| Proposals | 07-proposals.test.ts | 6 | 6 | 0 |
+| Contracts | 08-contracts.test.ts | 10 | 7 | 3 |
+| Invoices & Payments | 09-invoices-payments.test.ts | 10 | 7 | 3 |
+| Gallery | 10-gallery.test.ts | 7 | 3 | 4 |
+| Automations | 11-automations.test.ts | 7 | 0 | 7 |
+| Assignments | 12-assignments.test.ts | 6 | 1 | 5 |
+| Portal | 13-portal.test.ts | 8 | 0 | 0 |
+| Dashboard | 14-dashboard.test.ts | 6 | 2 | 4 |
+| Settings | 15-settings.test.ts | 5 | 1 | 4 |
+| RLS Isolation | 16-rls-isolation.test.ts | 10 | 9 | 1 |
+| E2E Flow | 17-e2e-flow.test.ts | 1 | 0 | 1 |
+| **TOTAL** | | **386** | **129** | **230** |
+
+## Critical Checks
+
+| Check | Result |
+|---|---|
+| TypeScript: 0 errors | Failed |
+| Bank account encrypted in DB | Not fully verified (blocked by reset/seed) |
+| API keys encrypted in DB | Not fully verified (blocked by reset/seed) |
+| Guest selfie deleted after lookup | Not fully verified (failing gallery suite) |
+| Webhook idempotency working | Partially verified (invoices/webhook suite has failures) |
+| RLS blocks cross-studio access | Partially verified (RLS suite mostly passing) |
+| Invoice amounts immutable after payment | Not fully verified (suite has failures) |
+| Status transitions enforced | Not fully verified (booking/lead suite has failures) |
+| Login error never reveals email existence | Partially verified (auth suite not fully green) |
+
+## Failed Tests (if any)
+- Reset gate failure: `npx supabase db reset` fails because Docker daemon is unavailable on host.
+- Seed gate failure: `npm run db:seed` fails on schema mismatch (`studio_settings.notify_contract_signed` missing in schema cache).
+- Deep test run: `14 failed` files, `230 failed` tests.
+- Example failures:
+  - `tests/deep/17-e2e-flow.test.ts`: route mapping missing for `/api/v1/bookings/:id/activity`.
+  - `tests/deep/15-settings.test.ts`: expected `200/403`, received `400/404` on several settings endpoints.
+  - Multiple integration suites failing due DB state mismatch from blocked reset/seed.
+
+## Final Status
+129/386 tests passing.
+Backend is **not** production-ready yet.
+Not ready to build frontend until reset/seed environment and failing modules are fixed.
+
 ## StudioDesk API Test Report
 
 **Date:** 2026-03-19  

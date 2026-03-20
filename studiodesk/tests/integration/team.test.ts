@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest'
 import { makeRequest } from '../helpers/request'
 import { getOwnerToken, getPhotographerToken, getEditorToken, getOutsiderToken, type AuthToken } from '../helpers/auth'
 import {
@@ -7,6 +7,7 @@ import {
   PHOTOGRAPHER_MEMBER_ID,
   EDITOR_MEMBER_ID,
   OUTSIDER_MEMBER_ID,
+  INVITE_PENDING_ID,
   INVITE_EXPIRED_ID,
 } from '../../supabase/seed'
 import { createAdminClient } from '@/lib/supabase/admin'
@@ -55,6 +56,71 @@ describe('POST /api/v1/team/invite', () => {
   let owner: AuthToken
   let photographer: AuthToken
   let outsider: AuthToken
+
+  beforeEach(async () => {
+    const admin = createAdminClient()
+    await admin
+      .from('studio_members')
+      .update({ role: 'owner', is_active: true, studio_id: STUDIO_A_ID })
+      .eq('id', OWNER_MEMBER_ID)
+    await admin
+      .from('studio_members')
+      .update({ role: 'photographer', is_active: true, studio_id: STUDIO_A_ID })
+      .eq('id', PHOTOGRAPHER_MEMBER_ID)
+    await admin
+      .from('studio_members')
+      .update({ role: 'editor', is_active: true, studio_id: STUDIO_A_ID })
+      .eq('id', EDITOR_MEMBER_ID)
+
+    const now = new Date()
+    const pendingExpiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString()
+    const expiredExpiresAt = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000).toISOString()
+
+    await admin
+      .from('studio_members')
+      .delete()
+      .eq('studio_id', STUDIO_A_ID)
+      .neq('id', OWNER_MEMBER_ID)
+      .neq('id', PHOTOGRAPHER_MEMBER_ID)
+      .neq('id', EDITOR_MEMBER_ID)
+
+    await admin
+      .from('studio_invitations')
+      .delete()
+      .eq('studio_id', STUDIO_A_ID)
+      .neq('id', INVITE_PENDING_ID)
+      .neq('id', INVITE_EXPIRED_ID)
+
+    await admin.from('studio_invitations').upsert(
+      [
+        {
+          id: INVITE_PENDING_ID,
+          studio_id: STUDIO_A_ID,
+          invited_by: OWNER_MEMBER_ID,
+          email: 'pending@test.com',
+          role: 'videographer',
+          token: generateSecureToken(32),
+          expires_at: pendingExpiresAt,
+          accepted_at: null,
+          resent_count: 0,
+          last_resent_at: null,
+        },
+        {
+          id: INVITE_EXPIRED_ID,
+          studio_id: STUDIO_A_ID,
+          invited_by: OWNER_MEMBER_ID,
+          email: 'expired@test.com',
+          role: 'assistant',
+          token: generateSecureToken(32),
+          expires_at: expiredExpiresAt,
+          accepted_at: null,
+          resent_count: 1,
+          last_resent_at: null,
+        },
+      ],
+      { onConflict: 'id' }
+    )
+  })
 
   beforeAll(async () => {
     owner = await getOwnerToken()
@@ -309,6 +375,22 @@ describe('PATCH /api/v1/team/:memberId/role', () => {
   beforeAll(async () => {
     owner = await getOwnerToken()
     outsider = await getOutsiderToken()
+  })
+
+  beforeEach(async () => {
+    const admin = createAdminClient()
+    await admin
+      .from('studio_members')
+      .update({ role: 'owner', is_active: true, studio_id: STUDIO_A_ID })
+      .eq('id', OWNER_MEMBER_ID)
+    await admin
+      .from('studio_members')
+      .update({ role: 'photographer', is_active: true, studio_id: STUDIO_A_ID })
+      .eq('id', PHOTOGRAPHER_MEMBER_ID)
+    await admin
+      .from('studio_members')
+      .update({ role: 'editor', is_active: true, studio_id: STUDIO_A_ID })
+      .eq('id', EDITOR_MEMBER_ID)
   })
 
   it('401 no token', async () => {

@@ -1,0 +1,43 @@
+﻿
+> studiodesk@0.1.0 test:unit
+> vitest run --dir tests/unit tests/unit/booking.service.test.ts --reporter=verbose
+
+
+[1m[46m RUN [49m[22m [36mv4.1.0 [39m[90mD:/Viraj/Personal/Studio Desk/studiodesk[39m
+
+[90mstdout[2m | tests/unit/booking.service.test.ts
+[22m[39m[dotenv@17.3.1] injecting env (13) from .env.test -- tip: ­ƒøá´©Å  run anywhere with `dotenvx run -- yourcommand`
+
+ [32mÔ£ô[39m tests/unit/booking.service.test.ts[2m > [22mBookingService[2m > [22mcreateBooking[2m > [22mthrows error if client not found[32m 2[2mms[22m[39m
+ [31m├ù[39m tests/unit/booking.service.test.ts[2m > [22mBookingService[2m > [22mupdateBookingStatus[2m > [22menforces valid transitions[32m 3[2mms[22m[39m
+[31m   ÔåÆ Cannot destructure property 'data' of '(intermediate value)' as it is undefined.[39m
+node.exe : 
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m[1m[41m Failed Tests 1 [49m[22m[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m
+
+[41m[1m FAIL [22m[49m tests/unit/booking.service.test.ts[2m > [22mBookingService[2m > [22mupdateBookingStatus[2m > [22menforces valid 
+transitions
+[31m[1mTypeError[22m: Cannot destructure property 'data' of '(intermediate value)' as it is undefined.[39m
+[36m [2mÔØ»[22m memberName lib/services/booking.service.ts:[2m66:11[22m[39m
+    [90m 64|[39m
+    [90m 65|[39m async function memberName(supabase: Db, studioId: string, userId: striÔÇª
+    [90m 66|[39m   const { data } = await supabase.from('studio_members').select('displÔÇª
+    [90m   |[39m           [31m^[39m
+    [90m 67|[39m   [35mreturn[39m data[33m?.[39mdisplay_name [33m??[39m [35mnull[39m
+    [90m 68|[39m }
+[90m [2mÔØ»[22m Object.updateBookingStatus lib/services/booking.service.ts:[2m185:19[22m[39m
+[90m [2mÔØ»[22m tests/unit/booking.service.test.ts:[2m45:7[22m[39m
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/1]ÔÄ»[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 14:37:06
+[2m   Duration [22m 1.28s[2m (transform 89ms, setup 40ms, import 192ms, tests 865ms, environment 0ms)[22m
+

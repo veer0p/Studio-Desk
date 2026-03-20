@@ -47,6 +47,8 @@ import {
   BOOKING_INVOICE_PAID_ID,
   BOOKING_INVOICE_OVERDUE_ID,
   BOOKING_INVOICE_LINK_ID,
+  BOOKING_ASSIGNMENT_CONFLICT_ID,
+  BOOKING_GALLERY_B_ID,
   INQUIRY_FORM_CONFIG_A_ID,
   INVITE_PENDING_ID,
   INVITE_EXPIRED_ID,
@@ -66,6 +68,22 @@ import {
   INVOICE_CREDIT_NOTE_ID,
   PAYMENT_MANUAL_ID,
   PAYMENT_RAZORPAY_ID,
+  ASSIGNMENT_CONFIRMED_ID,
+  ASSIGNMENT_PENDING_ID,
+  ASSIGNMENT_CONFLICT_ID,
+  SHOOT_BRIEF_ID,
+  MEMBER_UNAVAILABLE_ID,
+  GALLERY_DRAFT_ID,
+  GALLERY_PUBLISHED_ID,
+  GALLERY_STUDIO_B_ID,
+  FACE_CLUSTER_BRIDE_ID,
+  FACE_CLUSTER_UNKNOWN_ID,
+  FACE_CLUSTER_GROOM_ID,
+  UPLOAD_JOB_COMPLETED_ID,
+  UPLOAD_JOB_PROCESSING_ID,
+  IMMICH_PERSON_BRIDE_ID,
+  IMMICH_PERSON_UNKNOWN_ID,
+  IMMICH_PERSON_GROOM_ID,
   ONBOARDING_A_EVT_1,
   ONBOARDING_A_EVT_2,
   ONBOARDING_A_EVT_3,
@@ -86,6 +104,9 @@ import {
   INVOICE_OVERDUE_TOKEN,
   INVOICE_LINK_TOKEN,
   INVOICE_CREDIT_NOTE_TOKEN,
+  GALLERY_DRAFT_TOKEN,
+  GALLERY_PUBLISHED_TOKEN,
+  GALLERY_STUDIO_B_TOKEN,
   SEED_IDS,
 } from './seed-ids'
 
@@ -114,6 +135,355 @@ function addDays(d: Date, n: number): Date {
   const x = new Date(d)
   x.setDate(x.getDate() + n)
   return x
+}
+
+function buildRevenueSnapshots(now: Date) {
+  const rows = []
+  for (let offset = 89; offset >= 0; offset -= 1) {
+    const day = addDays(now, -offset)
+    const amount = 3000 + ((89 - offset) * 137) % 12001
+    rows.push({
+      studio_id: STUDIO_A_ID,
+      snapshot_date: day.toISOString().slice(0, 10),
+      total_bookings: 8 + ((89 - offset) % 8),
+      new_leads: (89 - offset) % 4,
+      invoices_sent: 4 + ((89 - offset) % 5),
+      revenue_collected: Number(amount.toFixed(2)),
+      photos_delivered: 1 + ((89 - offset) % 6),
+      storage_used_gb: Number((2.5 + (89 - offset) * 0.03).toFixed(4)),
+    })
+  }
+  return rows
+}
+
+export const DEFAULT_AUTOMATION_SETTINGS = [
+  {
+    automation_type: 'lead_acknowledgment',
+    is_enabled: true,
+    trigger_offset_days: 0,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'lead_follow_up',
+    is_enabled: true,
+    trigger_offset_days: 2,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'proposal_sent',
+    is_enabled: true,
+    trigger_offset_days: 0,
+    trigger_delay_hours: 0,
+    send_email: true,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'proposal_reminder',
+    is_enabled: true,
+    trigger_offset_days: 2,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'contract_sent',
+    is_enabled: true,
+    trigger_offset_days: 0,
+    trigger_delay_hours: 0,
+    send_email: true,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'contract_reminder',
+    is_enabled: true,
+    trigger_offset_days: 3,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'contract_signed',
+    is_enabled: true,
+    trigger_offset_days: 0,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'advance_payment_reminder',
+    is_enabled: true,
+    trigger_offset_days: 3,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'balance_payment_reminder',
+    is_enabled: true,
+    trigger_offset_days: 3,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'payment_overdue_reminder',
+    is_enabled: true,
+    trigger_offset_days: 1,
+    trigger_delay_hours: 0,
+    send_email: true,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'payment_received',
+    is_enabled: true,
+    trigger_offset_days: 0,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'gallery_ready',
+    is_enabled: true,
+    trigger_offset_days: 0,
+    trigger_delay_hours: 0,
+    send_email: true,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'gallery_reminder',
+    is_enabled: true,
+    trigger_offset_days: 3,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'shoot_reminder',
+    is_enabled: true,
+    trigger_offset_days: 1,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+  {
+    automation_type: 'post_shoot_followup',
+    is_enabled: false,
+    trigger_offset_days: 1,
+    trigger_delay_hours: 0,
+    send_email: false,
+    send_whatsapp: true,
+    send_sms: false,
+    custom_subject: null,
+    custom_message: null,
+  },
+] as const
+
+export const AUTOMATION_WHATSAPP_TEMPLATES = [
+  {
+    automation_type: 'lead_acknowledgment',
+    template_name: 'Lead Acknowledgment',
+    provider_template_id: 'tmpl_lead_ack',
+    language: 'en',
+    category: 'utility',
+    body_text:
+      'Hi {{client_name}}, thank you for reaching out to {{studio_name}}! We received your inquiry for {{event_type}} on {{event_date}}.',
+    variables: ['client_name', 'studio_name', 'event_type', 'event_date'],
+    status: 'approved',
+    is_active: true,
+  },
+  {
+    automation_type: 'gallery_ready',
+    template_name: 'Gallery Ready',
+    provider_template_id: 'tmpl_gallery_ready',
+    language: 'en',
+    category: 'utility',
+    body_text:
+      'Hi {{client_name}}, your photo gallery from {{studio_name}} is ready! View it here: {{gallery_url}}',
+    variables: ['client_name', 'studio_name', 'gallery_url'],
+    status: 'approved',
+    is_active: true,
+  },
+] as const
+
+export const AUTOMATION_EMAIL_TEMPLATES = [
+  {
+    automation_type: 'proposal_sent',
+    name: 'Proposal Sent',
+    subject: 'Your proposal from {{studio_name}} is ready',
+    html_body:
+      '<p>Hi {{client_name}}, your photography proposal from <strong>{{studio_name}}</strong> is ready.</p>',
+    text_body: 'Hi {{client_name}}, your photography proposal from {{studio_name}} is ready.',
+    variables_used: ['client_name', 'studio_name'],
+    is_default: true,
+    is_active: true,
+  },
+] as const
+
+function buildAutomationLogs(now: Date) {
+  return [
+    {
+      studio_id: STUDIO_A_ID,
+      booking_id: null,
+      lead_id: LEAD_1_ID,
+      client_id: CLIENT_MEERA_ID,
+      automation_type: 'lead_acknowledgment',
+      channel: 'whatsapp',
+      status: 'sent',
+      recipient_phone: '7654321098',
+      recipient_email: 'meera@test.com',
+      subject: 'Lead acknowledgment',
+      message_body:
+        'Hi Meera Patel, thank you for reaching out to XYZ Photography! We received your inquiry for wedding on 15 Nov 2025.',
+      provider_message_id: 'wamid.seed.lead.1',
+      scheduled_for: addDays(now, -1).toISOString(),
+      sent_at: addDays(now, -1).toISOString(),
+    },
+    {
+      studio_id: STUDIO_A_ID,
+      booking_id: BOOKING_CONVERTED_ID,
+      lead_id: LEAD_4_ID,
+      client_id: CLIENT_PRIYA_ID,
+      automation_type: 'advance_payment_reminder',
+      channel: 'whatsapp',
+      status: 'sent',
+      recipient_phone: '9876543210',
+      recipient_email: 'priya@test.com',
+      subject: 'Advance payment reminder',
+      message_body: 'Hi Priya Sharma, your advance payment of Rs 25,500 for Priya Sharma - Wedding is due soon.',
+      provider_message_id: 'wamid.seed.advance.1',
+      scheduled_for: addDays(now, -3).toISOString(),
+      sent_at: addDays(now, -3).toISOString(),
+    },
+    {
+      studio_id: STUDIO_A_ID,
+      booking_id: BOOKING_CONTRACT_SIGNED_ID,
+      lead_id: null,
+      client_id: CLIENT_RAJ_ID,
+      automation_type: 'gallery_ready',
+      channel: 'email',
+      status: 'failed',
+      recipient_phone: null,
+      recipient_email: null,
+      subject: 'Your photos are ready',
+      message_body: 'Hi Raj Kumar, your photo gallery from XYZ Photography is ready!',
+      failure_reason: 'No email for client',
+      scheduled_for: addDays(now, -4).toISOString(),
+    },
+    {
+      studio_id: STUDIO_A_ID,
+      booking_id: BOOKING_CONVERTED_ID,
+      lead_id: null,
+      client_id: CLIENT_PRIYA_ID,
+      automation_type: 'contract_sent',
+      channel: 'whatsapp',
+      status: 'sent',
+      recipient_phone: '9876543210',
+      recipient_email: 'priya@test.com',
+      subject: 'Contract sent',
+      message_body: 'Hi Priya Sharma, please review and sign your photography agreement with XYZ Photography here.',
+      provider_message_id: 'wamid.seed.contract.1',
+      scheduled_for: addDays(now, -5).toISOString(),
+      sent_at: addDays(now, -5).toISOString(),
+    },
+    {
+      studio_id: STUDIO_A_ID,
+      booking_id: BOOKING_CONVERTED_ID,
+      lead_id: null,
+      client_id: CLIENT_PRIYA_ID,
+      automation_type: 'payment_received',
+      channel: 'whatsapp',
+      status: 'sent',
+      recipient_phone: '9876543210',
+      recipient_email: 'priya@test.com',
+      subject: 'Payment received',
+      message_body: 'Hi Priya Sharma, we received your payment of Rs 25,500 for Priya Sharma - Wedding. Thank you!',
+      provider_message_id: 'wamid.seed.payment.1',
+      scheduled_for: addDays(now, -2).toISOString(),
+      sent_at: addDays(now, -2).toISOString(),
+    },
+  ]
+}
+
+async function seedAutomationData(now: Date) {
+  await supabase.from('automation_log').delete().eq('studio_id', STUDIO_A_ID)
+  await supabase.from('automation_settings').delete().eq('studio_id', STUDIO_A_ID)
+  await supabase.from('whatsapp_templates').delete().eq('studio_id', STUDIO_A_ID)
+  await supabase.from('email_templates').delete().eq('studio_id', STUDIO_A_ID)
+
+  const { error: whatsappErr } = await supabase.from('whatsapp_templates').insert(
+    AUTOMATION_WHATSAPP_TEMPLATES.map((row) => ({ studio_id: STUDIO_A_ID, ...row }))
+  )
+  if (whatsappErr) throw whatsappErr
+
+  const { error: emailErr } = await supabase.from('email_templates').insert(
+    AUTOMATION_EMAIL_TEMPLATES.map((row) => ({ studio_id: STUDIO_A_ID, ...row }))
+  )
+  if (emailErr) throw emailErr
+
+  const { error: settingsErr } = await supabase.from('automation_settings').insert(
+    DEFAULT_AUTOMATION_SETTINGS.map((row) => ({ studio_id: STUDIO_A_ID, ...row }))
+  )
+  if (settingsErr) throw settingsErr
+
+  const { error: logErr } = await supabase.from('automation_log').insert(buildAutomationLogs(now))
+  if (logErr) throw logErr
+}
+
+async function seedRevenueSnapshots(now: Date) {
+  const { error: deleteError } = await supabase
+    .from('revenue_snapshots')
+    .delete()
+    .eq('studio_id', STUDIO_A_ID)
+  if (deleteError) throw deleteError
+
+  const { error: insertError } = await supabase.from('revenue_snapshots').insert(buildRevenueSnapshots(now))
+  if (insertError) throw insertError
 }
 
 async function ensureAuthUser(
@@ -163,6 +533,8 @@ async function seed() {
 
   const { encrypt } = await import('../lib/crypto')
   const encryptedBankSeed = encrypt('123456789012')
+  const settingsBlob = (value: Record<string, unknown>) =>
+    `__studiodesk_settings_v1__:${JSON.stringify(value)}`
 
   const ownerUserId = await ensureAuthUser('owner@test.com', 'Test@1234', OWNER_USER_ID)
   const photographerUserId = await ensureAuthUser(
@@ -189,12 +561,17 @@ async function seed() {
       bank_name: 'HDFC Bank',
       bank_account_number: encryptedBankSeed,
       bank_ifsc: 'HDFC0001234',
+      razorpay_account_id: 'acc_test123',
+      whatsapp_api_provider: 'interakt',
+      whatsapp_api_key: encrypt('test-whatsapp-key-123'),
+      whatsapp_phone: '9876543210',
       invoice_prefix: 'XYZ',
       invoice_sequence: 0,
       default_advance_pct: 30,
       default_hsn_code: '9983',
       plan_tier: 'studio',
       subscription_status: 'active',
+      trial_ends_at: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString(),
       storage_limit_gb: 100,
       storage_used_gb: 2.5,
       onboarding_completed: true,
@@ -334,7 +711,10 @@ async function seed() {
         studio_id: STUDIO_A_ID,
         user_id: photographerUserId,
         role: 'photographer',
-        display_name: 'Test Photographer',
+        display_name: 'Raj Joshi',
+        phone: '9876500001',
+        whatsapp: '9876500001',
+        specialization: ['wedding', 'portrait'],
         is_active: true,
         accepted_at: now.toISOString(),
       },
@@ -343,7 +723,10 @@ async function seed() {
         studio_id: STUDIO_A_ID,
         user_id: editorUserId,
         role: 'editor',
-        display_name: 'Test Editor',
+        display_name: 'Amit Shah',
+        phone: '9876500002',
+        whatsapp: '9876500002',
+        specialization: ['corporate', 'video'],
         is_active: true,
         accepted_at: now.toISOString(),
       },
@@ -767,6 +1150,22 @@ async function seed() {
         package_id: PACKAGE_CORPORATE_ID,
         package_snapshot: { id: PACKAGE_CORPORATE_ID, name: 'Corporate Event', turnaround_days: 7 },
       },
+      {
+        id: BOOKING_ASSIGNMENT_CONFLICT_ID,
+        studio_id: STUDIO_A_ID,
+        client_id: CLIENT_ANITA_ID,
+        title: 'Anita Shah - Same Day Wedding Coverage',
+        event_type: 'wedding',
+        event_date: eventDate.toISOString().slice(0, 10),
+        venue_name: 'Royal Palace, Surat',
+        total_amount: 65000,
+        advance_amount: 20000,
+        amount_paid: 0,
+        gst_type: 'cgst_sgst',
+        status: 'contract_signed',
+        package_id: PACKAGE_WEDDING_ID,
+        package_snapshot: { id: PACKAGE_WEDDING_ID, name: 'Wedding Full Day', turnaround_days: 30 },
+      },
     ],
     { onConflict: 'id' }
   )
@@ -837,6 +1236,9 @@ async function seed() {
   const contractSentAt = addDays(now, -2).toISOString()
   const reminderRecentAt = new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString()
   const signedAt = addDays(now, -7).toISOString()
+
+  // Avoid partial-unique conflicts for one default template per studio.
+  await supabase.from('contract_templates').update({ is_default: false }).eq('studio_id', STUDIO_A_ID)
 
   const { error: templateError } = await supabase.from('contract_templates').upsert(
     [
@@ -1138,19 +1540,299 @@ async function seed() {
   )
   if (paymentError) throw paymentError
 
+  await supabase
+    .from('shoot_assignments')
+    .delete()
+    .in('id', [ASSIGNMENT_CONFIRMED_ID, ASSIGNMENT_PENDING_ID, ASSIGNMENT_CONFLICT_ID])
+
+  const { error: assignmentError } = await supabase.from('shoot_assignments').insert([
+    {
+      id: ASSIGNMENT_CONFIRMED_ID,
+      studio_id: STUDIO_A_ID,
+      booking_id: BOOKING_CONVERTED_ID,
+      member_id: PHOTOGRAPHER_MEMBER_ID,
+      role: 'photographer',
+      call_time: `${eventDate.toISOString().slice(0, 10)}T08:00:00.000Z`,
+      call_location: JSON.stringify({ role: 'photographer', status: 'confirmed' }),
+      notes: 'Main photographer for ceremony',
+      is_confirmed: true,
+      confirmed_at: addDays(now, -1).toISOString(),
+    },
+    {
+      id: ASSIGNMENT_PENDING_ID,
+      studio_id: STUDIO_A_ID,
+      booking_id: BOOKING_CONVERTED_ID,
+      member_id: EDITOR_MEMBER_ID,
+      role: 'videographer',
+      call_time: `${eventDate.toISOString().slice(0, 10)}T08:00:00.000Z`,
+      call_location: JSON.stringify({ role: 'videographer', status: 'pending' }),
+      notes: 'Handle candid video coverage',
+      is_confirmed: false,
+    },
+    {
+      id: ASSIGNMENT_CONFLICT_ID,
+      studio_id: STUDIO_A_ID,
+      booking_id: BOOKING_ASSIGNMENT_CONFLICT_ID,
+      member_id: PHOTOGRAPHER_MEMBER_ID,
+      role: 'photographer',
+      call_time: `${eventDate.toISOString().slice(0, 10)}T07:00:00.000Z`,
+      call_location: JSON.stringify({ role: 'photographer', status: 'confirmed' }),
+      notes: 'Existing same-day assignment for conflict checks',
+      is_confirmed: true,
+      confirmed_at: addDays(now, -2).toISOString(),
+    },
+  ])
+  if (assignmentError) throw assignmentError
+
+  await supabase.from('shoot_briefs').delete().eq('id', SHOOT_BRIEF_ID)
+  const { error: shootBriefError } = await supabase.from('shoot_briefs').upsert(
+    {
+      id: SHOOT_BRIEF_ID,
+      studio_id: STUDIO_A_ID,
+      booking_id: BOOKING_CONVERTED_ID,
+      key_shots: ['Bridal prep', 'Ceremony', 'Reception'],
+      venue_access_notes: 'Hotel Grand, Ring Road, Surat',
+      contact_on_day: 'Priya Sharma',
+      contact_phone: '9876543210',
+      special_instructions: 'Bride allergic to flash',
+      equipment_needed: ['Bring 70-200mm lens'],
+      people_to_capture: {
+        call_time: '08:00',
+        shoot_start_time: '09:00',
+        shoot_end_time: '20:00',
+        venue_map_link: 'https://maps.google.com/?q=Hotel+Grand+Surat',
+        client_whatsapp: '9876543210',
+        reference_images: [],
+        equipment_notes: 'Bring 70-200mm lens',
+        outfit_notes: 'Wear formal black attire',
+      },
+    },
+    { onConflict: 'booking_id' }
+  )
+  if (shootBriefError) throw shootBriefError
+
+  await supabase.from('member_unavailability').delete().eq('id', MEMBER_UNAVAILABLE_ID)
+  const { error: unavailabilityError } = await supabase.from('member_unavailability').upsert(
+    {
+      id: MEMBER_UNAVAILABLE_ID,
+      studio_id: STUDIO_A_ID,
+      member_id: PHOTOGRAPHER_MEMBER_ID,
+      unavailable_date: eventDate.toISOString().slice(0, 10),
+      reason: 'Personal leave',
+      all_day: true,
+    },
+    { onConflict: 'id' }
+  )
+  if (unavailabilityError) throw unavailabilityError
+
+  const { error: galleryBookingError } = await supabase.from('bookings').upsert(
+    {
+      id: BOOKING_GALLERY_B_ID,
+      studio_id: STUDIO_B_ID,
+      client_id: CLIENT_VIKRAM_ID,
+      title: 'Vikram Mehta - Studio B Wedding',
+      event_type: 'wedding',
+      event_date: addMonths(now, 3).toISOString().slice(0, 10),
+      venue_name: 'Riverfront Lawn, Ahmedabad',
+      total_amount: 95000,
+      advance_amount: 25000,
+      amount_paid: 0,
+      gst_type: 'cgst_sgst',
+      status: 'contract_signed',
+      package_id: PACKAGE_WEDDING_ID,
+      package_snapshot: { id: PACKAGE_WEDDING_ID, name: 'Wedding Full Day', turnaround_days: 30 },
+    },
+    { onConflict: 'id' }
+  )
+  if (galleryBookingError) throw galleryBookingError
+
+  const galleryMetaDraft = JSON.stringify({ name: 'Priya Wedding Draft Gallery' })
+  const galleryMetaPublished = JSON.stringify({
+    name: 'Sharma Wedding Gallery',
+    share_link_url: 'https://test.immich.app/share/xxx',
+    share_link_immich_id: 'share_immich_seed_001',
+    qr_code_url: 'https://studiodesk.test/gallery/sharma-wedding-gallery-test',
+    cover_photo_immich_id: 'asset-priya-1',
+  })
+  const galleryMetaStudioB = JSON.stringify({ name: 'Studio B Private Gallery' })
+  const { error: galleryError } = await supabase.from('galleries').upsert(
+    [
+      {
+        id: GALLERY_DRAFT_ID,
+        studio_id: STUDIO_A_ID,
+        booking_id: BOOKING_CONVERTED_ID,
+        immich_album_id: 'mock-draft-album-id',
+        immich_library_id: galleryMetaDraft,
+        status: 'ready',
+        total_photos: 0,
+        total_videos: 0,
+        total_size_mb: 0,
+        is_published: false,
+        is_download_enabled: false,
+        slug: 'priya-wedding-gallery-draft',
+        access_token: GALLERY_DRAFT_TOKEN,
+        view_count: 0,
+        download_count: 0,
+        expires_at: addMonths(now, 1).toISOString(),
+      },
+      {
+        id: GALLERY_PUBLISHED_ID,
+        studio_id: STUDIO_A_ID,
+        booking_id: BOOKING_CONTRACT_SIGNED_ID,
+        immich_album_id: 'mock-album-id',
+        immich_library_id: galleryMetaPublished,
+        status: 'published',
+        total_photos: 450,
+        total_videos: 2,
+        total_size_mb: 1024.5,
+        is_published: true,
+        is_download_enabled: true,
+        published_at: addDays(now, -2).toISOString(),
+        download_enabled_at: addDays(now, -2).toISOString(),
+        slug: 'sharma-wedding-gallery-test',
+        access_token: GALLERY_PUBLISHED_TOKEN,
+        view_count: 45,
+        download_count: 3,
+        expires_at: addMonths(now, 1).toISOString(),
+      },
+      {
+        id: GALLERY_STUDIO_B_ID,
+        studio_id: STUDIO_B_ID,
+        booking_id: BOOKING_GALLERY_B_ID,
+        immich_album_id: 'mock-b-album-id',
+        immich_library_id: galleryMetaStudioB,
+        status: 'ready',
+        total_photos: 12,
+        total_videos: 0,
+        total_size_mb: 48.2,
+        is_published: false,
+        is_download_enabled: false,
+        slug: 'studio-b-gallery-test',
+        access_token: GALLERY_STUDIO_B_TOKEN,
+        view_count: 0,
+        download_count: 0,
+        expires_at: addMonths(now, 1).toISOString(),
+      },
+    ],
+    { onConflict: 'id' }
+  )
+  if (galleryError) throw galleryError
+
+  await supabase.from('face_clusters').delete().eq('gallery_id', GALLERY_PUBLISHED_ID)
+  const { error: clusterError } = await supabase.from('face_clusters').insert([
+    {
+      id: FACE_CLUSTER_BRIDE_ID,
+      gallery_id: GALLERY_PUBLISHED_ID,
+      studio_id: STUDIO_A_ID,
+      immich_person_id: IMMICH_PERSON_BRIDE_ID,
+      label: 'Bride - Priya',
+      is_labeled: true,
+      photo_count: 127,
+      representative_photo_url: 'https://thumb.test/priya.jpg',
+    },
+    {
+      id: FACE_CLUSTER_UNKNOWN_ID,
+      gallery_id: GALLERY_PUBLISHED_ID,
+      studio_id: STUDIO_A_ID,
+      immich_person_id: IMMICH_PERSON_UNKNOWN_ID,
+      label: null,
+      is_labeled: false,
+      photo_count: 43,
+      representative_photo_url: 'https://thumb.test/unknown.jpg',
+    },
+    {
+      id: FACE_CLUSTER_GROOM_ID,
+      gallery_id: GALLERY_PUBLISHED_ID,
+      studio_id: STUDIO_A_ID,
+      immich_person_id: IMMICH_PERSON_GROOM_ID,
+      label: 'Groom - Raj',
+      is_labeled: true,
+      photo_count: 98,
+      representative_photo_url: 'https://thumb.test/raj.jpg',
+    },
+  ])
+  if (clusterError) throw clusterError
+
+  await supabase.from('gallery_photos').delete().eq('gallery_id', GALLERY_PUBLISHED_ID)
+  const { error: galleryPhotoError } = await supabase.from('gallery_photos').insert([
+    {
+      gallery_id: GALLERY_PUBLISHED_ID,
+      studio_id: STUDIO_A_ID,
+      immich_asset_id: 'asset-priya-1',
+      filename: 'priya-1.jpg',
+      file_size_mb: 4.2,
+      taken_at: addDays(now, -10).toISOString(),
+      face_cluster_ids: [IMMICH_PERSON_BRIDE_ID],
+    },
+    {
+      gallery_id: GALLERY_PUBLISHED_ID,
+      studio_id: STUDIO_A_ID,
+      immich_asset_id: 'asset-priya-2',
+      filename: 'priya-2.jpg',
+      file_size_mb: 4.8,
+      taken_at: addDays(now, -10).toISOString(),
+      face_cluster_ids: [IMMICH_PERSON_BRIDE_ID],
+    },
+    {
+      gallery_id: GALLERY_PUBLISHED_ID,
+      studio_id: STUDIO_A_ID,
+      immich_asset_id: 'asset-raj-1',
+      filename: 'raj-1.jpg',
+      file_size_mb: 5.1,
+      taken_at: addDays(now, -10).toISOString(),
+      face_cluster_ids: [IMMICH_PERSON_GROOM_ID],
+    },
+  ])
+  if (galleryPhotoError) throw galleryPhotoError
+
+  await supabase.from('file_upload_jobs').delete().in('id', [UPLOAD_JOB_COMPLETED_ID, UPLOAD_JOB_PROCESSING_ID])
+  const { error: uploadJobError } = await supabase.from('file_upload_jobs').insert([
+    {
+      id: UPLOAD_JOB_COMPLETED_ID,
+      studio_id: STUDIO_A_ID,
+      gallery_id: GALLERY_DRAFT_ID,
+      status: 'completed',
+      total_files: 50,
+      processed_files: 50,
+      failed_files: 0,
+      total_size_mb: 250,
+      processed_size_mb: 250,
+      started_at: addDays(now, -1).toISOString(),
+      completed_at: addDays(now, -1).toISOString(),
+      error_log: [],
+    },
+    {
+      id: UPLOAD_JOB_PROCESSING_ID,
+      studio_id: STUDIO_A_ID,
+      gallery_id: GALLERY_DRAFT_ID,
+      status: 'processing',
+      total_files: 50,
+      processed_files: 30,
+      failed_files: 0,
+      total_size_mb: 250,
+      processed_size_mb: 150,
+      started_at: addDays(now, -1).toISOString(),
+      error_log: [],
+    },
+  ])
+  if (uploadJobError) throw uploadJobError
+
   const { error: settingsError } = await supabase.from('studio_settings').upsert(
     [
       {
         id: STUDIO_SETTINGS_A_ID,
         studio_id: STUDIO_A_ID,
         notify_new_lead_email: true,
-        notify_new_lead_whatsapp: false,
+        notify_new_lead_whatsapp: true,
         notify_payment_email: true,
-        notify_payment_whatsapp: false,
+        notify_payment_whatsapp: true,
+        timezone: 'Asia/Kolkata',
+        invoice_terms: 'Payment is due as per agreed schedule.',
         invoice_bank_details_visible: true,
         gallery_default_expiry_days: 30,
         gallery_watermark_default: true,
-        timezone: 'Asia/Kolkata',
+        email_from_name: 'XYZ Photography',
+        email_reply_to: 'studio@xyzphoto.com',
       },
       {
         id: STUDIO_SETTINGS_B_ID,
@@ -1159,15 +1841,21 @@ async function seed() {
         notify_new_lead_whatsapp: false,
         notify_payment_email: true,
         notify_payment_whatsapp: false,
+        timezone: 'Asia/Kolkata',
+        invoice_terms: null,
         invoice_bank_details_visible: true,
         gallery_default_expiry_days: 14,
         gallery_watermark_default: false,
-        timezone: 'Asia/Kolkata',
+        email_from_name: null,
+        email_reply_to: null,
       },
     ],
     { onConflict: 'studio_id' }
   )
   if (settingsError) throw settingsError
+
+  await seedRevenueSnapshots(now)
+  await seedAutomationData(now)
 
   console.log('Seed complete.')
   console.log('Users:', {

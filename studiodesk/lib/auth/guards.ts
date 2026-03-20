@@ -9,10 +9,10 @@ export async function requireAuth(req: NextRequest) {
     authHeader?.startsWith('Bearer ') ? authHeader.slice('Bearer '.length).trim() : ''
 
   const supabase = bearer ? createClientFromAccessToken(bearer) : createClient()
-  
+
   // ALWAYS use getUser() - never getSession()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
-  
+
   if (authError || !user) {
     throw Errors.unauthorized()
   }
@@ -27,7 +27,7 @@ export async function requireAuth(req: NextRequest) {
 
 export async function requireOwner(req: NextRequest) {
   const context = await requireAuth(req)
-  
+
   if (context.member.role !== 'owner') {
     throw Errors.forbidden()
   }
