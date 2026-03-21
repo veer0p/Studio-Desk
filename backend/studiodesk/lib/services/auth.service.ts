@@ -7,7 +7,9 @@ import { signupSchema, loginSchema, updatePasswordSchema } from '@/lib/validatio
 
 export class AuthService {
   static async signup(supabase: any, input: unknown) {
+    console.log('[AuthService] Initiating signup for:', (input as any)?.email)
     const validated = signupSchema.parse(input)
+    console.log('[AuthService] Validation success for:', validated.email)
 
     // 1. Sign up user in Auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -20,8 +22,12 @@ export class AuthService {
       }
     })
 
-    if (authError) throw authError
+    if (authError) {
+      console.error('[AuthService] Auth signup error:', authError)
+      throw authError
+    }
     if (!authData.user) throw Errors.unauthorized()
+    console.log('[AuthService] Auth user created:', authData.user.id)
 
     const userId = authData.user.id
 
@@ -44,19 +50,19 @@ export class AuthService {
 
       return { user: authData.user, studio }
     } catch (err) {
-      // Cleanup auth user if studio creation fails (pseudo-transactional)
-      // Note: In production, use a database function or handle carefully
       console.error('[Signup] Phase 2 failed, user exists in Auth but not in DB:', err)
       throw err
     }
   }
 
   static async login(supabase: any, input: unknown) {
+    console.log('[AuthService] Initiating login for:', (input as any)?.email)
     const validated = loginSchema.parse(input)
     const { data, error } = await supabase.auth.signInWithPassword({
       email: validated.email,
       password: validated.password
     })
+    console.log('[AuthService] Login attempt finished. Error:', error?.message)
 
     if (error) throw error
     return data
