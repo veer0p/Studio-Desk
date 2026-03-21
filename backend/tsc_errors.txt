@@ -1,0 +1,546 @@
+app/api/v1/addons/[id]/route.ts(18,35): error TS2339: Property 'then' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'then' does not exist on type '{ id: string; }'.
+app/api/v1/addons/[id]/route.ts(19,17): error TS2339: Property 'id' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+app/api/v1/addons/[id]/route.ts(19,37): error TS2339: Property 'id' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+app/api/v1/clients/[id]/route.ts(18,35): error TS2339: Property 'then' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'then' does not exist on type '{ id: string; }'.
+app/api/v1/clients/[id]/route.ts(19,17): error TS2339: Property 'id' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+app/api/v1/clients/[id]/route.ts(19,37): error TS2339: Property 'id' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+app/api/v1/leads/[id]/convert/route.ts(18,35): error TS2339: Property 'then' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'then' does not exist on type '{ id: string; }'.
+app/api/v1/leads/[id]/convert/route.ts(19,17): error TS2339: Property 'id' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+app/api/v1/leads/[id]/convert/route.ts(19,37): error TS2339: Property 'id' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+app/api/v1/leads/[id]/route.ts(18,35): error TS2339: Property 'then' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'then' does not exist on type '{ id: string; }'.
+app/api/v1/leads/[id]/route.ts(19,17): error TS2339: Property 'id' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+app/api/v1/leads/[id]/route.ts(19,37): error TS2339: Property 'id' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+app/api/v1/packages/[id]/route.ts(18,35): error TS2339: Property 'then' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'then' does not exist on type '{ id: string; }'.
+app/api/v1/packages/[id]/route.ts(19,17): error TS2339: Property 'id' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+app/api/v1/packages/[id]/route.ts(19,37): error TS2339: Property 'id' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+app/api/v1/proposals/route.ts(28,40): error TS2554: Expected 1-2 arguments, but got 3.
+app/api/v1/studio/onboarding/[step]/route.ts(28,39): error TS2339: Property 'step' does not exist on type 'Promise<{ step: string; }> | { step: string; }'.
+  Property 'step' does not exist on type 'Promise<{ step: string; }>'.
+app/api/v1/team/[memberId]/role/route.ts(17,35): error TS2339: Property 'then' does not exist on type 'Promise<{ memberId: string; }> | { memberId: string; }'.
+  Property 'then' does not exist on type '{ memberId: string; }'.
+app/api/v1/team/[memberId]/role/route.ts(18,17): error TS2339: Property 'memberId' does not exist on type 'Promise<{ memberId: string; }> | { memberId: string; }'.
+  Property 'memberId' does not exist on type 'Promise<{ memberId: string; }>'.
+app/api/v1/team/[memberId]/role/route.ts(18,43): error TS2339: Property 'memberId' does not exist on type 'Promise<{ memberId: string; }> | { memberId: string; }'.
+  Property 'memberId' does not exist on type 'Promise<{ memberId: string; }>'.
+app/api/v1/team/[memberId]/role/route.ts(50,9): error TS2367: This comparison appears to be unintentional because the types '"assistant" | "editor" | "photographer" | "videographer"' and '"owner"' have no overlap.
+app/api/v1/team/[memberId]/route.ts(16,35): error TS2339: Property 'then' does not exist on type 'Promise<{ memberId: string; }> | { memberId: string; }'.
+  Property 'then' does not exist on type '{ memberId: string; }'.
+app/api/v1/team/[memberId]/route.ts(17,32): error TS2339: Property 'memberId' does not exist on type 'Promise<{ memberId: string; }> | { memberId: string; }'.
+  Property 'memberId' does not exist on type 'Promise<{ memberId: string; }>'.
+app/api/v1/team/accept/[token]/route.ts(15,37): error TS2339: Property 'then' does not exist on type 'Promise<{ token: string; }> | { token: string; }'.
+  Property 'then' does not exist on type '{ token: string; }'.
+app/api/v1/team/accept/[token]/route.ts(16,29): error TS2339: Property 'token' does not exist on type 'Promise<{ token: string; }> | { token: string; }'.
+  Property 'token' does not exist on type 'Promise<{ token: string; }>'.
+app/api/v1/team/accept/[token]/route.ts(27,71): error TS2345: Argument of type 'NextRequest' is not assignable to parameter of type '{ headers: (n: string) => string | null; }'.
+  Types of property 'headers' are incompatible.
+    Type 'Headers' is not assignable to type '(n: string) => string | null'.
+      Type 'Headers' provides no match for the signature '(n: string): string | null'.
+app/api/v1/team/invite/route.ts(22,9): error TS2367: This comparison appears to be unintentional because the types '"assistant" | "editor" | "photographer" | "videographer"' and '"owner"' have no overlap.
+lib/api/route-helpers.ts(27,35): error TS2339: Property 'then' does not exist on type 'Promise<{ id: string; }> | { id: string; }'.
+  Property 'then' does not exist on type '{ id: string; }'.
+lib/api/route-helpers.ts(28,31): error TS2339: Property 'id' does not exist on type '{ id: string; } | Promise<{ id: string; }>'.
+  Property 'id' does not exist on type 'Promise<{ id: string; }>'.
+lib/api/route-helpers.ts(42,35): error TS2339: Property 'then' does not exist on type 'Promise<{ token: string; }> | { token: string; }'.
+  Property 'then' does not exist on type '{ token: string; }'.
+lib/api/route-helpers.ts(43,27): error TS2339: Property 'token' does not exist on type '{ token: string; } | Promise<{ token: string; }>'.
+  Property 'token' does not exist on type 'Promise<{ token: string; }>'.
+lib/repositories/booking.repo.ts(56,9): error TS2698: Spread types may only be created from object types.
+lib/repositories/booking.repo.ts(57,25): error TS2339: Property 'clients' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(58,26): error TS2339: Property 'clients' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(59,26): error TS2339: Property 'clients' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(60,26): error TS2339: Property 'service_packages' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(84,7): error TS2698: Spread types may only be created from object types.
+lib/repositories/booking.repo.ts(85,26): error TS2339: Property 'clients' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(86,27): error TS2339: Property 'clients' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(87,27): error TS2339: Property 'clients' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(88,27): error TS2339: Property 'service_packages' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(97,15): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "bookings", never, "POST">', gave the following error.
+    Argument of type 'BookingsInput' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "bookings", never, "POST">', gave the following error.
+    Argument of type 'BookingsInput' is not assignable to parameter of type 'never[]'.
+      Type 'BookingsInput' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+lib/repositories/booking.repo.ts(108,15): error TS2345: Argument of type '{ updated_at: string; id?: string; studio_id: string; client_id: string; lead_id?: string | null; title: string; event_type: event_type; event_date: Date; event_end_date?: Date | null; ... 25 more ...; created_at?: Date; }' is not assignable to parameter of type 'never'.
+lib/repositories/booking.repo.ts(133,45): error TS2339: Property 'status' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(139,15): error TS2345: Argument of type '{ deleted_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/booking.repo.ts(149,15): error TS2345: Argument of type '{ status: any; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/booking.repo.ts(175,7): error TS2698: Spread types may only be created from object types.
+lib/repositories/booking.repo.ts(192,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "booking_activity_feed", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: string; booking_id: string; event_type: any; actor_id: string | undefined; actor_type: "member" | "client" | "system"; metadata: object; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "booking_activity_feed", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'studio_id' does not exist in type 'never[]'.
+lib/repositories/booking.repo.ts(232,20): error TS2339: Property 'status' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(232,37): error TS2339: Property 'status' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(233,15): error TS2339: Property 'status' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(234,15): error TS2339: Property 'status' does not exist on type 'never'.
+lib/repositories/booking.repo.ts(234,40): error TS2339: Property 'total_amount' does not exist on type 'never'.
+lib/repositories/client.repo.ts(139,15): error TS2345: Argument of type '{ updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/client.repo.ts(169,15): error TS2345: Argument of type '{ deleted_at: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/contract.repo.ts(228,47): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'nullsLast' does not exist in type '{ ascending?: boolean | undefined; nullsFirst?: boolean | undefined; foreignTable?: string | undefined; }'.
+lib/repositories/contract.repo.ts(318,48): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'nullsLast' does not exist in type '{ ascending?: boolean | undefined; nullsFirst?: boolean | undefined; foreignTable?: string | undefined; }'.
+lib/repositories/dashboard.repo.ts(120,37): error TS2352: Conversion of type 'GenericStringError' to type 'Record<string, unknown> | undefined' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'GenericStringError' is not comparable to type 'Record<string, unknown>'.
+    Index signature for type 'string' is missing in type '{ error: true; } & String'.
+lib/repositories/dashboard.repo.ts(120,115): error TS2352: Conversion of type 'GenericStringError' to type 'Record<string, unknown> | undefined' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'GenericStringError' is not comparable to type 'Record<string, unknown>'.
+    Index signature for type 'string' is missing in type '{ error: true; } & String'.
+lib/repositories/dashboard.repo.ts(142,14): error TS2802: Type 'MapIterator<{ month: string; month_start: string; collected: number; pending: number; overdue: number; days_count: number; }>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+lib/repositories/dashboard.repo.ts(310,16): error TS2802: Type 'MapIterator<{ source: string; count: number; converted: number; }>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+lib/repositories/dashboard.repo.ts(330,16): error TS2802: Type 'MapIterator<{ event_type: string; count: number; revenue: number; }>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+lib/repositories/dashboard.repo.ts(358,38): error TS2339: Property 'event_date' does not exist on type '{ event_date: any; deleted_at: any; }[]'.
+lib/repositories/dashboard.repo.ts(359,84): error TS2339: Property 'deleted_at' does not exist on type '{ event_date: any; deleted_at: any; }[]'.
+lib/repositories/dashboard.repo.ts(373,16): error TS2802: Type 'MapIterator<{ member_id: string; display_name: string; role: string; shoots_assigned: number; shoots_confirmed: number; shoots_declined: number; }>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+lib/repositories/gallery.repo.ts(308,8): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/repositories/lead.repo.ts(110,15): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+lib/repositories/lead.repo.ts(139,15): error TS2345: Argument of type '{ status: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/lead.repo.ts(154,15): error TS2345: Argument of type '{ converted_to_booking: boolean; booking_id: string; status: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/package.repo.ts(113,15): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+lib/repositories/package.repo.ts(145,15): error TS2345: Argument of type '{ is_active: boolean; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/package.repo.ts(175,19): error TS2345: Argument of type '{ sort_order: number; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/package.repo.ts(242,15): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+lib/repositories/package.repo.ts(259,15): error TS2345: Argument of type '{ is_active: boolean; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/proposal.repo.ts(137,15): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "proposal_line_items", never, "POST">', gave the following error.
+    Argument of type 'any[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "proposal_line_items", never, "POST">', gave the following error.
+    Argument of type 'any[]' is not assignable to parameter of type 'never[]'.
+      Type 'any' is not assignable to type 'never'.
+lib/repositories/proposal.repo.ts(152,15): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+lib/repositories/proposal.repo.ts(181,18): error TS2339: Property 'status' does not exist on type 'never'.
+lib/repositories/proposal.repo.ts(205,15): error TS2345: Argument of type '{ status: string; sent_at: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/proposal.repo.ts(221,15): error TS2345: Argument of type '{ viewed_at: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/proposal.repo.ts(234,15): error TS2345: Argument of type '{ status: string; accepted_at: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/proposal.repo.ts(254,15): error TS2345: Argument of type '{ status: string; rejected_at: string; rejection_reason: string | null; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/proposal.repo.ts(269,15): error TS2345: Argument of type '{ status: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/studio.repo.ts(39,15): error TS2345: Argument of type '{ updated_at: string; id?: string; name: string; slug: string; tagline?: string | null; logo_url?: string | null; brand_color?: string | null; gstin?: string | null; pan?: string | null; business_address?: string | null; ... 36 more ...; created_at?: Date; }' is not assignable to parameter of type 'never'.
+lib/repositories/studio.repo.ts(81,29): error TS2339: Property 'storage_used_gb' does not exist on type 'never'.
+lib/repositories/studio.repo.ts(82,30): error TS2339: Property 'storage_limit_gb' does not exist on type 'never'.
+lib/repositories/studio.repo.ts(83,23): error TS2339: Property 'plan_tier' does not exist on type 'never'.
+lib/repositories/studio.repo.ts(99,34): error TS2339: Property 'onboarding_completed' does not exist on type 'never'.
+lib/repositories/studio.repo.ts(100,29): error TS2339: Property 'onboarding_step' does not exist on type 'never'.
+lib/repositories/studio.repo.ts(101,37): error TS2339: Property 'onboarding_completed_at' does not exist on type 'never'.
+lib/repositories/studio.repo.ts(144,17): error TS2345: Argument of type '{ completed_at: string; time_spent_sec: number | null; skipped: boolean; }' is not assignable to parameter of type 'never'.
+lib/repositories/studio.repo.ts(149,28): error TS2339: Property 'id' does not exist on type 'never'.
+lib/repositories/studio.repo.ts(157,15): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "studio_onboarding_events", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: string; step_number: number; step_name: string; completed_at: string; time_spent_sec: number | null; skipped: boolean; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "studio_onboarding_events", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: string; step_number: number; step_name: string; completed_at: string; time_spent_sec: number | null; skipped: boolean; }' is not assignable to parameter of type 'never[]'.
+      Type '{ studio_id: string; step_number: number; step_name: string; completed_at: string; time_spent_sec: number | null; skipped: boolean; }' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+lib/repositories/studio.repo.ts(181,15): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+lib/repositories/studio.repo.ts(205,17): error TS2345: Argument of type '{ updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/studio.repo.ts(206,28): error TS2339: Property 'id' does not exist on type 'never'.
+lib/repositories/studio.repo.ts(214,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "inquiry_form_configs", never, "POST">', gave the following error.
+    Argument of type '{ updated_at: string; studio_id: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "inquiry_form_configs", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'studio_id' does not exist in type 'never[]'.
+lib/repositories/studio.repo.ts(223,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "studios", never, "POST">', gave the following error.
+    Argument of type '{ plan_tier: string; subscription_status: string; trial_ends_at: string; is_active: boolean; name: string; slug: string; email: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "studios", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'plan_tier' does not exist in type 'never[]'.
+lib/repositories/team.repo.ts(96,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "studio_invitations", never, "POST">', gave the following error.
+    Argument of type '{ resent_count: number; studio_id: string; invited_by: string; email: string; role: UserRole; token: string; expires_at: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "studio_invitations", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'resent_count' does not exist in type 'never[]'.
+lib/repositories/team.repo.ts(138,15): error TS2345: Argument of type '{ accepted_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/team.repo.ts(150,25): error TS2352: Conversion of type 'null' to type '{ resent_count?: number | undefined; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+lib/repositories/team.repo.ts(155,15): error TS2345: Argument of type '{ resent_count: number; last_resent_at: string; expires_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/team.repo.ts(174,15): error TS2345: Argument of type '{ token: string; last_resent_at: string; expires_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/team.repo.ts(198,15): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "studio_members", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: string; user_id: string; role: any; display_name?: string | null | undefined; accepted_at: string; invited_by?: string | null | undefined; invited_at?: string | null | undefined; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "studio_members", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: string; user_id: string; role: any; display_name?: string | null | undefined; accepted_at: string; invited_by?: string | null | undefined; invited_at?: string | null | undefined; }' is not assignable to parameter of type 'never[]'.
+      Type '{ studio_id: string; user_id: string; role: any; display_name?: string | null | undefined; accepted_at: string; invited_by?: string | null | undefined; invited_at?: string | null | undefined; }' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+lib/repositories/team.repo.ts(214,15): error TS2345: Argument of type '{ role: any; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/team.repo.ts(232,15): error TS2345: Argument of type '{ is_active: boolean; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/repositories/team.repo.ts(251,15): error TS2345: Argument of type '{ is_active: boolean; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/services/assignment.service.ts(8,55): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/assignment.service.ts(143,27): error TS2802: Type 'Set<any>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+lib/services/assignment.service.ts(295,34): error TS2339: Property 'display_name' does not exist on type '{ display_name: any; }[]'.
+lib/services/assignment.service.ts(300,16): error TS2802: Type 'MapIterator<any>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+lib/services/auth.service.ts(37,35): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database'.
+    Types of property 'public' are incompatible.
+      Type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }' is missing the following properties from type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }': Enums, CompositeTypes
+lib/services/auth.service.ts(101,9): error TS2698: Spread types may only be created from object types.
+lib/services/booking.service.ts(43,32): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database'.
+    Types of property 'public' are incompatible.
+      Type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }' is missing the following properties from type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }': Enums, CompositeTypes
+lib/services/booking.service.ts(55,52): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database'.
+    Types of property 'public' are incompatible.
+      Type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }' is missing the following properties from type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }': Enums, CompositeTypes
+lib/services/booking.service.ts(58,19): error TS2339: Property 'id' does not exist on type 'never'.
+lib/services/booking.service.ts(59,21): error TS2339: Property 'name' does not exist on type 'never'.
+lib/services/booking.service.ts(60,27): error TS2339: Property 'base_price' does not exist on type 'never'.
+lib/services/booking.service.ts(61,27): error TS2339: Property 'line_items' does not exist on type 'never'.
+lib/services/booking.service.ts(69,7): error TS2322: Type '"booked"' is not assignable to type 'lead_status | undefined'.
+lib/services/booking.service.ts(81,7): error TS2322: Type 'string' is not assignable to type 'Date'.
+lib/services/booking.service.ts(82,7): error TS2322: Type 'string' is not assignable to type 'Date'.
+lib/services/booking.service.ts(90,27): error TS2339: Property 'id' does not exist on type 'never'.
+lib/services/booking.service.ts(94,34): error TS2339: Property 'title' does not exist on type 'never'.
+lib/services/booking.service.ts(132,84): error TS2352: Conversion of type '{ lead_id?: string | null | undefined; client_id?: string | undefined; event_type?: "corporate" | "engagement" | "maternity" | "newborn" | "other" | "pre_wedding" | "wedding" | "fashion" | undefined; ... 11 more ...; venue_pincode?: string | ... 1 more ... | undefined; }' to type 'BookingsInput' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'studio_id' is missing in type '{ lead_id?: string | null | undefined; client_id?: string | undefined; event_type?: "corporate" | "engagement" | "maternity" | "newborn" | "other" | "pre_wedding" | "wedding" | "fashion" | undefined; ... 11 more ...; venue_pincode?: string | ... 1 more ... | undefined; }' but required in type 'BookingsInput'.
+lib/services/contract.service.support.ts(139,61): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/contract.service.ts(72,34): error TS2339: Property 'is_default' does not exist on type '{ readonly name: "Wedding Photography Agreement"; readonly event_type: "wedding"; readonly content_html: "\n<h1>Photography & Videography Agreement</h1>\n<p>This agreement is made between <strong>{{studio_name}}</strong> (\"Studio\") and <strong>{{client_name}}</strong> (\"Client\").</p>\n<h2>Event Details</h2>\n<p>...'.
+  Property 'is_default' does not exist on type '{ readonly name: "Wedding Photography Agreement"; readonly event_type: "wedding"; readonly content_html: "\n<h1>Photography & Videography Agreement</h1>\n<p>This agreement is made between <strong>{{studio_name}}</strong> (\"Studio\") and <strong>{{client_name}}</strong> (\"Client\").</p>\n<h2>Event Details</h2>\n<p>...'.
+lib/services/dashboard.service.ts(133,15): error TS2802: Type 'MapIterator<[any, any[]]>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+lib/services/gallery.service.ts(37,55): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/immich.service.ts(47,6): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/invoice.service.ts(57,55): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/lead.service.ts(332,21): error TS2339: Property 'notes' does not exist on type '{ event_date: string; gst_type: "cgst_sgst" | "exempt" | "igst"; title?: string | undefined; package_id?: string | undefined; total_amount?: string | undefined; advance_amount?: string | undefined; }'.
+lib/services/package.service.ts(300,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "audit_logs", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: string; user_id: string; action: string; entity_type: string; entity_id: string; entity_snapshot: { fields_changed: string[]; }; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "audit_logs", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'studio_id' does not exist in type 'never[]'.
+lib/services/payment.service.ts(102,29): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/proposal.service.ts(199,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "audit_logs", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: string; user_id: string; action: string; entity_type: string; entity_id: never; entity_snapshot: any; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "audit_logs", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'studio_id' does not exist in type 'never[]'.
+lib/services/proposal.service.ts(208,8): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/proposal.service.ts(268,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "audit_logs", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: string; user_id: string; action: string; entity_type: string; entity_id: string; entity_snapshot: { fields_changed: string[]; }; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "audit_logs", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'studio_id' does not exist in type 'never[]'.
+lib/services/proposal.service.ts(277,8): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/proposal.service.ts(309,78): error TS2339: Property 'access_token' does not exist on type 'ProposalDetail'.
+lib/services/proposal.service.ts(333,37): error TS2339: Property 'name' does not exist on type 'never'.
+lib/services/proposal.service.ts(336,21): error TS2339: Property 'email' does not exist on type 'never'.
+lib/services/proposal.service.ts(338,24): error TS2339: Property 'email' does not exist on type 'never'.
+lib/services/proposal.service.ts(358,21): error TS2339: Property 'whatsapp' does not exist on type 'never'.
+lib/services/proposal.service.ts(359,39): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "automation_log", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: string; booking_id: string; client_id: string; automation_type: string; channel: string; status: string; recipient_phone: any; message_body: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "automation_log", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'studio_id' does not exist in type 'never[]'.
+lib/services/proposal.service.ts(366,37): error TS2339: Property 'whatsapp' does not exist on type 'never'.
+lib/services/proposal.service.ts(368,25): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/proposal.service.ts(372,44): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "booking_activity_feed", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: string; booking_id: string; event_type: string; actor_id: string; actor_type: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "booking_activity_feed", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'studio_id' does not exist in type 'never[]'.
+lib/services/proposal.service.ts(378,23): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/proposal.service.ts(444,17): error TS2345: Argument of type '{ status: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+lib/services/proposal.service.ts(448,46): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "booking_activity_feed", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: any; booking_id: any; event_type: string; actor_type: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "booking_activity_feed", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'studio_id' does not exist in type 'never[]'.
+lib/services/proposal.service.ts(453,25): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/proposal.service.ts(458,46): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "booking_activity_feed", never, "POST">', gave the following error.
+    Argument of type '{ studio_id: any; booking_id: any; event_type: string; actor_type: string; metadata: { reason: string | undefined; }; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "booking_activity_feed", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'studio_id' does not exist in type 'never[]'.
+lib/services/proposal.service.ts(464,25): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+lib/services/studio.service.ts(82,52): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(99,12): error TS2352: Conversion of type '{ bank_account_number: string | null; storage: { used_gb: number; limit_gb: number; usage_pct: number; }; id: string; name: string; slug: string; tagline: string | null; logo_url: string | null; ... 40 more ...; updated_at: Date; }' to type 'StudioProfile' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Types of property 'default_advance_pct' are incompatible.
+    Type 'number | null' is not comparable to type 'string'.
+      Type 'number' is not comparable to type 'string'.
+lib/services/studio.service.ts(148,14): error TS2339: Property 'slug' does not exist on type '{ name?: string | undefined; email?: string | undefined; phone?: string | undefined; city?: string | undefined; state?: string | undefined; state_id?: number | undefined; pincode?: string | undefined; ... 14 more ...; default_hsn_code?: string | undefined; }'.
+lib/services/studio.service.ts(149,37): error TS2339: Property 'slug' does not exist on type '{ name?: string | undefined; email?: string | undefined; phone?: string | undefined; city?: string | undefined; state?: string | undefined; state_id?: number | undefined; pincode?: string | undefined; ... 14 more ...; default_hsn_code?: string | undefined; }'.
+lib/services/studio.service.ts(150,16): error TS2339: Property 'slug' does not exist on type '{ name?: string | undefined; email?: string | undefined; phone?: string | undefined; city?: string | undefined; state?: string | undefined; state_id?: number | undefined; pincode?: string | undefined; ... 14 more ...; default_hsn_code?: string | undefined; }'.
+lib/services/studio.service.ts(150,40): error TS2339: Property 'slug' does not exist on type '{ name?: string | undefined; email?: string | undefined; phone?: string | undefined; city?: string | undefined; state?: string | undefined; state_id?: number | undefined; pincode?: string | undefined; ... 14 more ...; default_hsn_code?: string | undefined; }'.
+lib/services/studio.service.ts(152,63): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(152,78): error TS2339: Property 'slug' does not exist on type '{ name?: string | undefined; email?: string | undefined; phone?: string | undefined; city?: string | undefined; state?: string | undefined; state_id?: number | undefined; pincode?: string | undefined; ... 14 more ...; default_hsn_code?: string | undefined; }'.
+lib/services/studio.service.ts(158,36): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(161,33): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "audit_logs", never, "POST">', gave the following error.
+    Argument of type '{ entity_type: string; entity_id: string; action: string; user_id: string; entity_snapshot: { fields_changed: string[]; }; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "audit_logs", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'entity_type' does not exist in type 'never[]'.
+lib/services/studio.service.ts(178,50): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(201,38): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(202,38): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(259,38): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(270,40): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(285,40): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(302,48): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(319,44): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+lib/services/studio.service.ts(327,7): error TS2345: Argument of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database, "public", "public", never, { PostgrestVersion: "12"; }>' is not assignable to parameter of type 'import("/home/veer/Documents/projects/Studio-Desk/node_modules/@supabase/supabase-js/dist/index").SupabaseClient<import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database, "public", "public", never, { PostgrestVersion: "12"; }>'.
+  Type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/database").Database' is not assignable to type 'import("/home/veer/Documents/projects/Studio-Desk/studiodesk/types/supabase").Database'.
+    Types of property 'public' are incompatible.
+      Property 'Functions' is missing in type '{ Tables: Record<string, { Row: any; Insert: any; Update: any; }>; Views: Record<string, any>; Enums: Record<string, any>; CompositeTypes: Record<string, any>; }' but required in type '{ Tables: { bookings: { Row: Bookings; Insert: BookingsInput; Update: BookingsInput; }; studios: { Row: Studios; Insert: StudiosInput; Update: StudiosInput; }; ... 6 more ...; studio_onboarding_events: { ...; }; }; Views: { ...; }; Functions: { ...; }; }'.
+scripts/remote-reset.ts(2,25): error TS2307: Cannot find module 'dotenv' or its corresponding type declarations.
+scripts/test-db-conn.ts(1,24): error TS2307: Cannot find module 'pg' or its corresponding type declarations.
+scripts/test-db-conn.ts(2,25): error TS2307: Cannot find module 'dotenv' or its corresponding type declarations.
+supabase/seed.ts(10,25): error TS2307: Cannot find module 'dotenv' or its corresponding type declarations.
+tests/api/auth.api.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/api/auth.api.test.ts(2,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/api/auth.api.test.ts(21,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/auth.api.test.ts(47,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/bookings.api.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/api/bookings.api.test.ts(2,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/api/bookings.api.test.ts(30,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/bookings.api.test.ts(47,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/api/clients.api.test.ts(2,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/api/clients.api.test.ts(25,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(40,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(56,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(71,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(89,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(109,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(135,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(147,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(164,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(178,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(194,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(214,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(229,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(240,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(252,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/clients.api.test.ts(264,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/api/leads.api.test.ts(3,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/api/leads.api.test.ts(26,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(43,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(61,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(77,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(93,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(118,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(133,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(150,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(165,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(188,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(214,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(226,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(238,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(254,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(273,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(288,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(304,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/leads.api.test.ts(320,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/api/packages.api.test.ts(3,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/api/packages.api.test.ts(29,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(43,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(60,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(75,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(90,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(107,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(122,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(143,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(162,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(176,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(194,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(210,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(226,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(262,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(274,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(307,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(321,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(336,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(351,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(366,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(387,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(407,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(423,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(460,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/packages.api.test.ts(472,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-onboarding.api.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/api/studio-onboarding.api.test.ts(2,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/api/studio-onboarding.api.test.ts(43,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-onboarding.api.test.ts(58,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-onboarding.api.test.ts(80,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-onboarding.api.test.ts(100,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-onboarding.api.test.ts(122,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-onboarding.api.test.ts(147,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-onboarding.api.test.ts(180,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-onboarding.api.test.ts(216,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-onboarding.api.test.ts(243,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-profile.api.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/api/studio-profile.api.test.ts(2,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/api/studio-profile.api.test.ts(26,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-profile.api.test.ts(41,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-profile.api.test.ts(55,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-profile.api.test.ts(74,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-profile.api.test.ts(94,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-storage.api.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/api/studio-storage.api.test.ts(2,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/api/studio-storage.api.test.ts(26,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-storage.api.test.ts(49,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/studio-storage.api.test.ts(82,20): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/api/team.api.test.ts(3,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/api/team.api.test.ts(34,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(48,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(64,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(79,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(94,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(111,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(133,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(153,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(166,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(184,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(200,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(218,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(235,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(251,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(267,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(308,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/api/team.api.test.ts(320,22): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/deep/01-auth.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/deep/13-portal.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/deep/17-e2e-flow.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/helpers/api.ts(1,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/helpers/api.ts(37,18): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/helpers/auth.ts(18,33): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tests/helpers/db.ts(2,24): error TS2307: Cannot find module 'pg' or its corresponding type declarations.
+tests/helpers/request.ts(1,32): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/helpers/request.ts(40,18): error TS7031: Binding element 'fetch' implicitly has an 'any' type.
+tests/helpers/resolve-route.ts(1,41): error TS2307: Cannot find module 'next-test-api-route-handler' or its corresponding type declarations.
+tests/integration/assignments.test.ts(1,61): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/automations.test.ts(1,61): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/clients.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/contracts.test.ts(1,61): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/dashboard.test.ts(1,72): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/gallery.test.ts(1,65): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/global-setup.ts(7,24): error TS2307: Cannot find module 'dotenv' or its corresponding type declarations.
+tests/integration/global-setup.ts(10,24): error TS2307: Cannot find module 'pg' or its corresponding type declarations.
+tests/integration/global-setup.ts(147,15): error TS2345: Argument of type '{ role: "owner" | "editor" | "photographer"; display_name: "Studio Owner" | "Outside Owner" | "Test Photographer" | "Test Editor"; is_active: boolean; accepted_at: string; }' is not assignable to parameter of type 'never'.
+tests/integration/global-setup.ts(174,7): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: string; studio_id: string; invited_by: string; email: string; role: string; token: string; expires_at: string; accepted_at: null; resent_count: number; last_resent_at: null; }[]' is not assignable to parameter of type 'never'.
+tests/integration/global-setup.ts(219,5): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '({ id: string; studio_id: string; name: string; event_type: string; content_html: string; version: number; is_default: boolean; is_active: boolean; } | { id: string; studio_id: string; name: string; ... 4 more ...; is_active: boolean; })[]' is not assignable to parameter of type 'never'.
+tests/integration/global-setup.ts(245,5): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: string; studio_id: string; client_id: string; title: string; event_type: string; event_date: string; venue_name: string; total_amount: number; advance_amount: number; amount_paid: number; gst_type: string; status: string; }[]' is not assignable to parameter of type 'never'.
+tests/integration/global-setup.ts(279,5): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '({ id: string; studio_id: string; booking_id: string; client_id: string; template_id: string; status: string; content_html: string; access_token: string; } | { id: string; studio_id: string; booking_id: string; ... 6 more ...; reminder_sent_at: null; } | { ...; } | { ...; })[]' is not assignable to parameter of type 'never'.
+tests/integration/global-setup.ts(339,23): error TS2339: Property 'id' does not exist on type 'never'.
+tests/integration/global-setup.ts(340,55): error TS2339: Property 'id' does not exist on type 'never'.
+tests/integration/global-setup.ts(359,33): error TS2345: Argument of type 'SupabaseClient<any, "public", "public", any, any>' is not assignable to parameter of type 'SupabaseClient<unknown, { PostgrestVersion: string; }, never, never, { PostgrestVersion: string; }>'.
+  Type '"public"' is not assignable to type 'never'.
+tests/integration/global-setup.ts(360,31): error TS2345: Argument of type 'SupabaseClient<any, "public", "public", any, any>' is not assignable to parameter of type 'SupabaseClient<unknown, { PostgrestVersion: string; }, never, never, { PostgrestVersion: string; }>'.
+  Type '"public"' is not assignable to type 'never'.
+tests/integration/global-setup.ts(361,27): error TS2345: Argument of type 'SupabaseClient<any, "public", "public", any, any>' is not assignable to parameter of type 'SupabaseClient<unknown, { PostgrestVersion: string; }, never, never, { PostgrestVersion: string; }>'.
+  Type '"public"' is not assignable to type 'never'.
+tests/integration/inquiry.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/invoices.test.ts(1,61): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/leads.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/packages.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/payments.test.ts(1,61): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/proposals.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/rls-isolation.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/settings.test.ts(1,61): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/setup-integration.ts(5,24): error TS2307: Cannot find module 'dotenv' or its corresponding type declarations.
+tests/integration/studio-onboarding.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/studio-profile.test.ts(1,49): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/team.test.ts(1,71): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/integration/webhooks.test.ts(2,50): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/setup.ts(1,38): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/setup.ts(2,24): error TS2307: Cannot find module 'dotenv' or its corresponding type declarations.
+tests/unit/assignment.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/auth.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/automation.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/booking.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/booking.service.test.ts(52,21): error TS2339: Property 'id' does not exist on type 'never'.
+tests/unit/booking.service.test.ts(70,21): error TS2339: Property 'status' does not exist on type 'never'.
+tests/unit/client.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/contract.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/crypto.test.ts(1,38): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/dashboard.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/formatters.test.ts(1,38): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/gallery.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/gst-calculator.test.ts(1,38): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/immich.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/invoice.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/lead.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/lead.service.test.ts(144,83): error TS2345: Argument of type '{ full_name: string; phone: string; client_id: string; }' is not assignable to parameter of type '{ priority: "low" | "medium" | "high"; phone: string; full_name: string; source: "other" | "facebook" | "google" | "inquiry_form" | "instagram" | "phone" | "referral" | "walk_in"; ... 9 more ...; assigned_to?: string | undefined; }'.
+  Type '{ full_name: string; phone: string; client_id: string; }' is missing the following properties from type '{ priority: "low" | "medium" | "high"; phone: string; full_name: string; source: "other" | "facebook" | "google" | "inquiry_form" | "instagram" | "phone" | "referral" | "walk_in"; ... 9 more ...; assigned_to?: string | undefined; }': priority, source
+tests/unit/lead.service.test.ts(167,68): error TS2345: Argument of type '{ full_name: string; phone: string; }' is not assignable to parameter of type '{ priority: "low" | "medium" | "high"; phone: string; full_name: string; source: "other" | "facebook" | "google" | "inquiry_form" | "instagram" | "phone" | "referral" | "walk_in"; ... 9 more ...; assigned_to?: string | undefined; }'.
+  Type '{ full_name: string; phone: string; }' is missing the following properties from type '{ priority: "low" | "medium" | "high"; phone: string; full_name: string; source: "other" | "facebook" | "google" | "inquiry_form" | "instagram" | "phone" | "referral" | "walk_in"; ... 9 more ...; assigned_to?: string | undefined; }': priority, source
+tests/unit/lead.service.test.ts(186,68): error TS2345: Argument of type '{ full_name: string; phone: string; }' is not assignable to parameter of type '{ priority: "low" | "medium" | "high"; phone: string; full_name: string; source: "other" | "facebook" | "google" | "inquiry_form" | "instagram" | "phone" | "referral" | "walk_in"; ... 9 more ...; assigned_to?: string | undefined; }'.
+  Type '{ full_name: string; phone: string; }' is missing the following properties from type '{ priority: "low" | "medium" | "high"; phone: string; full_name: string; source: "other" | "facebook" | "google" | "inquiry_form" | "instagram" | "phone" | "referral" | "walk_in"; ... 9 more ...; assigned_to?: string | undefined; }': priority, source
+tests/unit/lead.service.test.ts(250,74): error TS2345: Argument of type '{ event_date: string; }' is not assignable to parameter of type '{ event_date: string; gst_type: "cgst_sgst" | "exempt" | "igst"; title?: string | undefined; package_id?: string | undefined; total_amount?: string | undefined; advance_amount?: string | undefined; }'.
+  Property 'gst_type' is missing in type '{ event_date: string; }' but required in type '{ event_date: string; gst_type: "cgst_sgst" | "exempt" | "igst"; title?: string | undefined; package_id?: string | undefined; total_amount?: string | undefined; advance_amount?: string | undefined; }'.
+tests/unit/lead.service.test.ts(266,74): error TS2345: Argument of type '{ event_date: string; }' is not assignable to parameter of type '{ event_date: string; gst_type: "cgst_sgst" | "exempt" | "igst"; title?: string | undefined; package_id?: string | undefined; total_amount?: string | undefined; advance_amount?: string | undefined; }'.
+  Property 'gst_type' is missing in type '{ event_date: string; }' but required in type '{ event_date: string; gst_type: "cgst_sgst" | "exempt" | "igst"; title?: string | undefined; package_id?: string | undefined; total_amount?: string | undefined; advance_amount?: string | undefined; }'.
+tests/unit/lead.service.test.ts(274,74): error TS2345: Argument of type '{ event_date: string; }' is not assignable to parameter of type '{ event_date: string; gst_type: "cgst_sgst" | "exempt" | "igst"; title?: string | undefined; package_id?: string | undefined; total_amount?: string | undefined; advance_amount?: string | undefined; }'.
+  Property 'gst_type' is missing in type '{ event_date: string; }' but required in type '{ event_date: string; gst_type: "cgst_sgst" | "exempt" | "igst"; title?: string | undefined; package_id?: string | undefined; total_amount?: string | undefined; advance_amount?: string | undefined; }'.
+tests/unit/lead.service.test.ts(313,9): error TS2345: Argument of type '{ event_date: string; }' is not assignable to parameter of type '{ event_date: string; gst_type: "cgst_sgst" | "exempt" | "igst"; title?: string | undefined; package_id?: string | undefined; total_amount?: string | undefined; advance_amount?: string | undefined; }'.
+  Property 'gst_type' is missing in type '{ event_date: string; }' but required in type '{ event_date: string; gst_type: "cgst_sgst" | "exempt" | "igst"; title?: string | undefined; package_id?: string | undefined; total_amount?: string | undefined; advance_amount?: string | undefined; }'.
+tests/unit/package.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/payment.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/payment.service.test.ts(23,31): error TS1378: Top-level 'await' expressions are only allowed when the 'module' option is set to 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', 'nodenext', or 'preserve', and the 'target' option is set to 'es2017' or higher.
+tests/unit/payment.service.test.ts(24,36): error TS1378: Top-level 'await' expressions are only allowed when the 'module' option is set to 'es2022', 'esnext', 'system', 'node16', 'node18', 'node20', 'nodenext', or 'preserve', and the 'target' option is set to 'es2017' or higher.
+tests/unit/proposal.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/razorpay-utils.test.ts(1,38): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/settings.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/studio-onboarding.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/studio.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+tests/unit/studio.service.test.ts(91,67): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type '{ name?: string | undefined; email?: string | undefined; phone?: string | undefined; city?: string | undefined; state?: string | undefined; state_id?: number | undefined; pincode?: string | undefined; ... 14 more ...; default_hsn_code?: string | undefined; }'.
+tests/unit/team.service.test.ts(1,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+vitest.config.ts(1,30): error TS2307: Cannot find module 'vitest/config' or its corresponding type declarations.
+vitest.config.ts(2,19): error TS2307: Cannot find module '@vitejs/plugin-react' or its corresponding type declarations.
+vitest.integration.config.ts(1,24): error TS2307: Cannot find module 'dotenv' or its corresponding type declarations.
+vitest.integration.config.ts(3,30): error TS2307: Cannot find module 'vitest/config' or its corresponding type declarations.

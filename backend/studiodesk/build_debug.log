@@ -1,0 +1,5 @@
+  ▲ Next.js 14.2.0
+
+   Creating an optimized production build ...
+2026-03-21T04:04:40.913Z next:build:webpack-build using separate compiler workers
+2026-03-21T04:04:41.582Z next:build:webpack-build Compiler server unexpectedly exited with code: null and signal: SIGBUS

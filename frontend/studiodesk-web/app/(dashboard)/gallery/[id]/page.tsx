@@ -1,0 +1,1 @@
+export default function GalleryDetailsPage() { return <div>Gallery Details</div> }

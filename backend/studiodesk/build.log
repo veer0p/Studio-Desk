@@ -1,0 +1,6 @@
+  ▲ Next.js 14.2.0
+  - Experiments (use with caution):
+    · cpus
+    · memoryBasedWorkersCount
+
+   Creating an optimized production build ...

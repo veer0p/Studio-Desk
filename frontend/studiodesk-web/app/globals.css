@@ -1,0 +1,44 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@layer base {
+  :root {
+    --sidebar: #0D4F4F;
+    --sidebar-foreground: #ffffff;
+    --sidebar-muted: rgba(255, 255, 255, 0.5);
+    --sidebar-active: rgba(255, 255, 255, 0.15);
+    --background: #F9FAFB;
+    --foreground: #111827;
+    --card: #ffffff;
+    --card-foreground: #111827;
+    --border: #E5E7EB;
+    --muted: #F3F4F6;
+    --muted-foreground: #6B7280;
+    --primary: #0EA5E9;
+    --primary-foreground: #ffffff;
+    --success: #059669;
+    --warning: #D97706;
+    --danger: #DC2626;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: #0A0F0F;
+    --foreground: #F9FAFB;
+    --card: #111B1B;
+    --card-foreground: #F9FAFB;
+    --border: #1F2F2F;
+    --muted: #1A2525;
+    --muted-foreground: #9CA3AF;
+  }
+}
+
+@layer base {
+  * {
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
