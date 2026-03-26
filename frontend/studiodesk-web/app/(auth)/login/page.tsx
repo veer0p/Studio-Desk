@@ -58,16 +58,13 @@ export default function LoginPage() {
             } else {
                 router.push("/onboarding")
             }
-        } catch {
-            setError("Invalid email or password")
+        } catch (err) {
+            const message = err instanceof Error ? err.message : "Invalid email or password"
+            setError(message)
         }
     }
 
-    // Clear form-level error when user types
-    React.useEffect(() => {
-        const subscription = form.watch(() => setError(null))
-        return () => subscription.unsubscribe()
-    }, [form])
+    // Error is cleared on next submit attempt (line 44: setError(null))
 
     return (
         <div className="flex flex-col gap-6">

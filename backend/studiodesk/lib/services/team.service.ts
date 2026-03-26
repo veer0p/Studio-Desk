@@ -158,6 +158,9 @@ export const TeamService = {
       await teamRepo.incrementResendCount(admin, (pending as { id: string }).id)
       const studioName = await teamRepo.getStudioName(admin, params.studioId)
       const acceptLink = `${env.NEXT_PUBLIC_APP_URL}/api/v1/team/accept/${(pending as { token: string }).token}`
+      console.log('--- team invitation link (resent) ---')
+      console.log(acceptLink)
+      console.log('-------------------------------------')
       sendEmail({
         to: params.email,
         subject: `You have been invited to join ${studioName} on StudioDesk`,
@@ -170,7 +173,7 @@ export const TeamService = {
         req: {} as any,
         studioId: params.studioId,
         context: { action: 'team_invite', invited_email: params.email, role: params.role },
-      }).catch(() => {})
+      }).catch(() => { })
       return {
         invitation_id: (pending as { id: string }).id,
         email: params.email,
@@ -224,6 +227,9 @@ export const TeamService = {
 
     const studioName = await teamRepo.getStudioName(admin, params.studioId)
     const acceptLink = `${env.NEXT_PUBLIC_APP_URL}/api/v1/team/accept/${token}`
+    console.log('--- team invitation link ---')
+    console.log(acceptLink)
+    console.log('----------------------------')
     sendEmail({
       to: params.email,
       subject: `You have been invited to join ${studioName} on StudioDesk`,
@@ -238,7 +244,7 @@ export const TeamService = {
       req: {} as any,
       studioId: params.studioId,
       context: { action: 'team_invite', invited_email: params.email, role: params.role },
-    }).catch(() => {})
+    }).catch(() => { })
 
     return { invitation_id: (inv as { id: string }).id, email: params.email, resent: false }
   },
@@ -297,7 +303,7 @@ export const TeamService = {
         eventType: 'login_success',
         req: req as any,
         context: { via: 'team_invitation', studio_id: inv.studio_id },
-      }).catch(() => {})
+      }).catch(() => { })
     }
 
     return {

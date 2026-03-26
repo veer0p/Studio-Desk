@@ -20,6 +20,14 @@ export async function sendEmail(params: SendEmailParams): Promise<{ id?: string 
   const { to, subject, html, studioId = null } = params
   const from = params.from ?? 'StudioDesk <onboarding@resend.dev>'
 
+  // Log for development since SMTP might not be set up
+  console.log('--- outgoing email ---')
+  console.log(`To:      ${to}`)
+  console.log(`From:    ${from}`)
+  console.log(`Subject: ${subject}`)
+  console.log(`HTML:    ${html}`)
+  console.log('----------------------')
+
   let providerMessageId: string | null = null
   let status = 'failed'
 

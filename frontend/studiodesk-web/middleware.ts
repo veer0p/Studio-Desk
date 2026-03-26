@@ -59,8 +59,12 @@ export async function middleware(request: NextRequest) {
 
     // Get session cookie (simple check for middleware speed)
     // Real verification happens in updateSession via @supabase/ssr
+    // Supabase SSR may chunk tokens: sb-xxx-auth-token or sb-xxx-auth-token.0, .1, etc.
     const hasAuthCookie = request.cookies.getAll().some(
-        c => c.name.startsWith('sb-') && c.name.endsWith('-auth-token')
+        c => c.name.startsWith('sb-') && (
+            c.name.endsWith('-auth-token') ||
+            /\-auth-token\.\d+$/.test(c.name)
+        )
     )
 
     // 2. Logic: Unauthenticated -> Protected Route

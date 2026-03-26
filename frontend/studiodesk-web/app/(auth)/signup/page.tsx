@@ -77,7 +77,7 @@ export default function SignupPage() {
             router.push("/onboarding")
         } catch (err: unknown) {
             console.error('[Signup] Error caught in component:', err)
-            if (err && typeof err === 'object' && 'status' in err && (err as { status: number }).status === 409) {
+            if (err instanceof Error && 'status' in err && (err as Error & { status: number }).status === 409) {
                 setError("An account with this email already exists")
             } else {
                 const message = err instanceof Error ? err.message : "Something went wrong. Please try again."
@@ -86,11 +86,7 @@ export default function SignupPage() {
         }
     }
 
-    // Clear form-level error when user types
-    React.useEffect(() => {
-        const subscription = form.watch(() => setError(null))
-        return () => subscription.unsubscribe()
-    }, [form])
+    // Error is cleared on next submit attempt (line 73: setError(null))
 
     return (
         <div className="flex flex-col gap-6">

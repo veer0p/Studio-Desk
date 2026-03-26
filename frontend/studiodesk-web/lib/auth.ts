@@ -38,7 +38,10 @@ export async function signUp(email: string, password: string, fullName: string, 
     console.log('[Auth] Signup response status:', res.status, data)
 
     if (!res.ok) {
-        throw data // Re-throwing data to handle specific status codes (e.g., 409) in the component
+        // Attach status so the component can detect 409 conflicts
+        const err = new Error(data.error || 'Signup failed') as Error & { status: number }
+        err.status = res.status
+        throw err
     }
 
     return data.data // { user, studio }
@@ -79,7 +82,7 @@ export async function forgotPassword(email: string) {
 }
 
 export async function resetPassword(password: string) {
-    const res = await fetch('/api/v1/auth/reset-password', {
+    const res = await fetch('/api/v1/auth/update-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
