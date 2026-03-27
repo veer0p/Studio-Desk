@@ -1,0 +1,131 @@
+﻿
+> studiodesk-web@0.1.0 build
+> next build
+
+Ôû▓ Next.js 16.2.1 (Turbopack)
+- Environments: .env.local, .env
+- Experiments (use with caution):
+  ┬À optimizePackageImports
+
+node.exe : ÔÜá The 
+"middleware" file 
+convention is 
+deprecated. Please use 
+"proxy" instead. Learn 
+more: https://nextjs.or
+g/docs/messages/middlew
+are-to-proxy
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (ÔÜá The "midd   
+ le...leware-to-pro    
+xy:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+  Creating an optimized production build ...
+(node:22648) [MODULE_TY
+PELESS_PACKAGE_JSON] 
+Warning: Module type 
+of file:///D:/Viraj/Per
+sonal/Studio-desk/front
+end/studiodesk-web/tail
+wind.config.ts?id=17745
+96222562 is not 
+specified and it 
+doesn't parse as 
+CommonJS.
+Reparsing as ES module 
+because module syntax 
+was detected. This 
+incurs a performance 
+overhead.
+To eliminate this 
+warning, add "type": 
+"module" to D:\Viraj\Pe
+rsonal\Studio-desk\fron
+tend\studiodesk-web\pac
+kage.json.
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+Ô£ô Compiled successfully in 6.2s
+  Running TypeScript ...
+Failed to type check.
+
+./components/finance/ch
+arts/FinanceCharts.tsx:
+82:17
+Type error: Type 
+'(value: number) => 
+string' is not 
+assignable to type 
+'Formatter<ValueType, 
+NameType> & ((value: 
+ValueType, name: 
+NameType, item: 
+TooltipPayloadEntry, 
+index: number, 
+payload: 
+TooltipPayload) => 
+ReactNode | [...])'.
+  Type '(value: 
+number) => string' is 
+not assignable to type 
+'Formatter<ValueType, 
+NameType>'.
+    Types of 
+parameters 'value' and 
+'value' are 
+incompatible.
+      Type 'ValueType 
+| undefined' is not 
+assignable to type 
+'number'.
+        Type 
+'undefined' is not 
+assignable to type 
+'number'.
+
+  [90m80 |[0m        
+       </[33mPie[0m>
+  [90m81 |[0m        
+       
+<[33mTooltip[0m 
+[31m[1m>[0m [90m82 
+|[0m                 
+formatter={(value: 
+number) => [32m`Ôé╣[0
+m${value.toLocaleString
+()[32m}`[0m}
+  [90m   |[0m        
+         [31m[1m^[0m
+  [90m83 |[0m        
+         
+contentStyle={{ 
+borderRadius: 
+[32m'8px'[0m, 
+border: [32m'1px 
+solid hsl(var(--border)
+).[0m..
+  [90m84 |[0m        
+       />
+  [90m85 |[0m        
+     
+</[33mPieChart[0m>
+Next.js build worker 
+exited with code: 1 
+and signal: null

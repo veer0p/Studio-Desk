@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { updateSession } from '@/lib/supabase/middleware'
 
 /**
@@ -27,7 +28,7 @@ const AUTH_ROUTES = [
 
 const PUBLIC_PATTERNS = [
     '/portal/',
-    '/gallery/.*/public',
+    '/gallery/p/',
     '/proposals/view/',
     '/contracts/view/',
     '/invoices/view/',
@@ -40,6 +41,27 @@ export async function middleware(request: NextRequest) {
     // 1. Refresh Supabase session
     const response = await updateSession(request)
     const { pathname } = request.nextUrl
+
+    // 2. Get user from response headers (updateSession adds it via supabase.auth.getUser())
+    // Note: updateSession doesn't explicitly return the user, so we check for the auth cookie
+    // but in a more robust way by checking the refreshed state.
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+            cookies: {
+                getAll() {
+                    return request.cookies.getAll()
+                },
+                setAll(cookiesToSet) {
+                    cookiesToSet.forEach(({ name, value, options }: { name: string, value: string, options: CookieOptions }) =>
+                        response.cookies.set(name, value, options)
+                    )
+                },
+            },
+        }
+    )
+    const { data: { user } } = await supabase.auth.getUser()
 
     // Check if it's a protected route
     const isProtectedRoute = PROTECTED_ROUTES.some(route =>
@@ -57,25 +79,16 @@ export async function middleware(request: NextRequest) {
         return regex.test(pathname)
     })
 
-    // Get session cookie (simple check for middleware speed)
-    // Real verification happens in updateSession via @supabase/ssr
-    // Supabase SSR may chunk tokens: sb-xxx-auth-token or sb-xxx-auth-token.0, .1, etc.
-    const hasAuthCookie = request.cookies.getAll().some(
-        c => c.name.startsWith('sb-') && (
-            c.name.endsWith('-auth-token') ||
-            /\-auth-token\.\d+$/.test(c.name)
-        )
-    )
-
-    // 2. Logic: Unauthenticated -> Protected Route
-    if (isProtectedRoute && !hasAuthCookie && !isPublicPattern) {
+    // 3. Logic: Unauthenticated -> Protected Route
+    if (isProtectedRoute && !user && !isPublicPattern) {
         return NextResponse.redirect(new URL('/login', request.url))
     }
 
-    // 3. Logic: Authenticated -> Auth Route
-    if (isAuthRoute && hasAuthCookie) {
+    // 4. Logic: Authenticated -> Auth Route
+    if (isAuthRoute && user) {
         return NextResponse.redirect(new URL('/dashboard', request.url))
     }
+
 
     return response
 }

@@ -1,0 +1,134 @@
+"use client"
+
+import { useState } from "react"
+import { useSearchParams } from "next/navigation"
+import { Plus, Search, Filter, Folder } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { GalleryCard } from "./GalleryCard"
+import { CreateGalleryDialog } from "./CreateGalleryDialog"
+
+export function GalleryList() {
+  const searchParams = useSearchParams()
+  const [searchQuery, setSearchQuery] = useState("")
+
+  // SWR mock data tracking local assets mapping multiple views
+  const galleries = [
+    {
+      id: "gal-1",
+      name: "Wedding Highlights",
+      clientName: "Rohan & Priya",
+      slug: "rohan-priya-wedding",
+      eventType: "Wedding",
+      shootDate: "12 Oct 2025",
+      status: "Selection Pending",
+      photoCount: 450,
+      videoCount: 2,
+      sizeGb: 12.4,
+      selectedCount: 45,
+      selectionQuota: 100,
+      uploadProgress: 100,
+      accessType: "PIN Protected",
+      expiryDate: "12 Nov 2025",
+      coverUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      id: "gal-2",
+      name: "Engagement Shoot",
+      clientName: "Neha Sharma",
+      slug: "neha-sharma-engagement",
+      eventType: "Pre-Wedding",
+      shootDate: "15 Oct 2025",
+      status: "Uploading",
+      photoCount: 120,
+      videoCount: 0,
+      sizeGb: 3.2,
+      selectedCount: 0,
+      selectionQuota: 20,
+      uploadProgress: 45,
+      accessType: "PIN Protected",
+      coverUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      id: "gal-3",
+      name: "Corporate Launch",
+      clientName: "XYZ Corp",
+      slug: "xyz-corp-launch",
+      eventType: "Engagement",
+      shootDate: "05 Sep 2025",
+      status: "Delivered",
+      photoCount: 850,
+      videoCount: 5,
+      sizeGb: 45.1,
+      selectedCount: 0,
+      selectionQuota: 0,
+      uploadProgress: 100,
+      accessType: "Public",
+      coverUrl: null
+    }
+  ]
+
+  // Note: searchParams for `?status=pending` logic would naturally filter the grid here.
+
+  return (
+    <div className="flex-1 flex flex-col h-full bg-background overflow-hidden relative">
+      
+      {/* Header Toolbar */}
+      <div className="px-8 pt-8 pb-6 shrink-0 space-y-4 border-b border-border/40">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-3xl font-bold tracking-tight">Galleries</h1>
+              <span className="px-2 py-0.5 rounded-full bg-muted text-xs font-semibold text-muted-foreground">{galleries.length} total</span>
+            </div>
+            <p className="text-muted-foreground mt-1 text-sm">Organize and share deliverables directly with clients.</p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input 
+                placeholder="Search event, client..." 
+                className="pl-9 w-[200px] lg:w-[280px] bg-muted/40 border-border/60"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            
+            <Button variant="outline" className="bg-background border-border/60">
+              <Filter className="w-4 h-4 mr-2" />
+              Filter
+            </Button>
+
+            <CreateGalleryDialog>
+              <Button className="shrink-0">
+                <Plus className="w-4 h-4 mr-2" />
+                New Gallery
+              </Button>
+            </CreateGalleryDialog>
+          </div>
+        </div>
+      </div>
+
+      {/* Grid Container */}
+      <div className="flex-1 overflow-y-auto px-8 py-6 custom-scrollbar bg-muted/5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {galleries.map(gal => (
+            <GalleryCard key={gal.id} gallery={gal} />
+          ))}
+        </div>
+
+        {galleries.length === 0 && (
+          <div className="flex flex-col items-center justify-center p-24 text-center text-muted-foreground bg-white border border-border/40 rounded-xl mt-4">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+              <Folder className="w-8 h-8 opacity-50" />
+            </div>
+            <p className="font-medium text-foreground mb-1">No galleries mapped</p>
+            <p className="text-sm">Create your first isolated gallery container delivering high-res files.</p>
+          </div>
+        )}
+      </div>
+
+    </div>
+  )
+}

@@ -1,20 +1,50 @@
-import { NextRequest } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
-import { Response } from '@/lib/response'
+import { NextResponse, type NextRequest } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
+import { Response as ApiResponse } from '@/lib/response'
 import { AuthService } from '@/lib/services/auth.service'
 import { logError } from '@/lib/logger'
+import { env } from '@/lib/env'
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = createClient()
     const body = await req.json()
+    let response = NextResponse.json({ data: null, error: null })
+
+    const supabase = createServerClient(
+      env.NEXT_PUBLIC_SUPABASE_URL,
+      env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
+        cookies: {
+          getAll() {
+            return req.cookies.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              response.cookies.set(name, value, options)
+            )
+          },
+        },
+      }
+    )
+
     const result = await AuthService.login(supabase, body)
-    return Response.ok(result)
+    
+    // Create the final success response
+    const finalResponse = ApiResponse.ok(result)
+    
+    // Copy cookies from our temporary response object to the final one
+    response.cookies.getAll().forEach(cookie => {
+      finalResponse.cookies.set(cookie.name, cookie.value)
+    })
+    
+    return finalResponse
   } catch (err: any) {
     if (err.name === 'ZodError') {
-      return Response.error(err.errors[0]?.message || 'Validation failed', 'VALIDATION_ERROR', 400)
+      return ApiResponse.error(err.errors[0]?.message || 'Validation failed', 'VALIDATION_ERROR', 400)
     }
     await logError({ message: String(err), requestUrl: req.url })
-    return Response.error(err.message || 'Invalid credentials', err.code || 'AUTH_ERROR', 401)
+    return ApiResponse.error(err.message || 'Invalid credentials', err.code || 'AUTH_ERROR', 401)
   }
 }
+
+
