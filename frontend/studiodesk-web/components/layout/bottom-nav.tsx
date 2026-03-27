@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation"
 import { LayoutDashboard, CalendarDays, Receipt, Image as ImageIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
+import { useAuth } from "@/hooks/use-auth"
+
 const MOBILE_NAV_ITEMS = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
     { icon: CalendarDays, label: "Bookings", href: "/bookings" },
@@ -15,6 +17,7 @@ const MOBILE_NAV_ITEMS = [
 
 export function BottomNav() {
     const pathname = usePathname()
+    const { brandColor } = useAuth()
 
     return (
         <nav className="fixed bottom-0 left-0 z-40 flex h-16 w-full items-center justify-around border-t bg-background pb-safe md:hidden">
@@ -29,6 +32,7 @@ export function BottomNav() {
                             "flex flex-col items-center justify-center gap-1 transition-colors duration-200",
                             isActive ? "text-primary" : "text-muted-foreground"
                         )}
+                        style={isActive && brandColor ? { color: brandColor } : {}}
                     >
                         <item.icon className="h-5 w-5" />
                         <span className="text-[10px] font-medium">{item.label}</span>

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Geist } from 'next/font/google'
 import './globals.css'
-import { ThemeProvider } from 'next-themes'
+import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from 'sonner'
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip"

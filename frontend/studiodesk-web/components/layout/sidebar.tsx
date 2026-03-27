@@ -37,6 +37,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { useAuth } from "@/hooks/use-auth"
+import { signOut } from "@/lib/auth"
 
 const NAV_ITEMS = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
@@ -55,12 +57,27 @@ const BOTTOM_ITEMS = [
 export function Sidebar() {
     const pathname = usePathname()
     const { theme, setTheme } = useTheme()
+    const { user, member, brandColor } = useAuth()
+
+    const initials = member?.display_name
+        ?.split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase() || user?.email?.[0].toUpperCase() || "U"
+
+    const [mounted, setMounted] = React.useState(false)
+    React.useEffect(() => {
+        setMounted(true)
+    }, [])
 
     return (
         <aside className="fixed left-0 top-0 z-40 hidden h-screen w-16 flex-col items-center border-r bg-sidebar md:flex">
             {/* Logo */}
             <div className="flex h-14 items-center justify-center">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+                <div
+                    className="flex h-10 w-10 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: brandColor || 'rgba(255, 255, 255, 0.1)' }}
+                >
                     <Camera className="h-[22px] w-[22px] text-white" />
                 </div>
             </div>
@@ -83,6 +100,7 @@ export function Sidebar() {
                                                 ? "bg-sidebar-active text-white rounded-xl"
                                                 : "text-sidebar-muted hover:bg-white/10 hover:text-white rounded-xl"
                                         )}
+                                        style={isActive && brandColor ? { backgroundColor: brandColor } : {}}
                                     >
                                         <item.icon className="h-5 w-5" />
                                         <span className="sr-only">{item.label}</span>
@@ -113,6 +131,7 @@ export function Sidebar() {
                                                 ? "bg-sidebar-active text-white rounded-xl"
                                                 : "text-sidebar-muted hover:bg-white/10 hover:text-white rounded-xl"
                                         )}
+                                        style={isActive && brandColor ? { backgroundColor: brandColor } : {}}
                                     >
                                         <item.icon className="h-5 w-5" />
                                         <span className="sr-only">{item.label}</span>
@@ -135,12 +154,19 @@ export function Sidebar() {
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-10 w-10 p-0 hover:bg-white/10 rounded-full overflow-hidden border border-white/10">
                             <Avatar className="h-8 w-8">
-                                <AvatarFallback className="bg-white/20 text-white text-xs font-bold">AR</AvatarFallback>
+                                <AvatarFallback className="bg-white/20 text-white text-xs font-bold">
+                                    {initials}
+                                </AvatarFallback>
                             </Avatar>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent side="right" align="end" sideOffset={10} className="w-56">
-                        <DropdownMenuLabel>Account</DropdownMenuLabel>
+                        <DropdownMenuLabel>
+                            <div className="flex flex-col space-y-1">
+                                <p className="text-sm font-medium leading-none">{member?.display_name || 'My Studio'}</p>
+                                <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                            </div>
+                        </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                             <Link href="/settings/profile" className="cursor-pointer">
@@ -159,20 +185,20 @@ export function Sidebar() {
                             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                             className="cursor-pointer"
                         >
-                            {theme === "dark" ? (
-                                <>
-                                    <Sun className="mr-2 h-4 w-4" />
-                                    <span>Light Mode</span>
-                                </>
+                            {!mounted ? (
+                                <div className="h-4 w-4 mr-2" />
+                            ) : theme === "dark" ? (
+                                <Sun className="mr-2 h-4 w-4" />
                             ) : (
-                                <>
-                                    <Moon className="mr-2 h-4 w-4" />
-                                    <span>Dark Mode</span>
-                                </>
+                                <Moon className="mr-2 h-4 w-4" />
                             )}
+                            <span>{!mounted ? '...' : theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">
+                        <DropdownMenuItem
+                            className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+                            onClick={() => signOut()}
+                        >
                             <LogOut className="mr-2 h-4 w-4" />
                             <span>Logout</span>
                         </DropdownMenuItem>

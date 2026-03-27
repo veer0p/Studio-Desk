@@ -7,64 +7,91 @@
 
 @layer base {
   :root {
-    --background: 249 250 251;
+    --background: 248 249 250;
+    /* #F8F9FA */
     --foreground: 17 24 39;
+    /* #111827 */
     --card: 255 255 255;
+    /* #FFFFFF */
     --card-foreground: 17 24 39;
     --popover: 255 255 255;
     --popover-foreground: 17 24 39;
-    --primary: 14 165 233;
+    --primary: 42 126 200;
+    /* #2A7EC8 */
     --primary-foreground: 255 255 255;
     --secondary: 243 244 246;
-    --secondary-foreground: 17 24 39;
+    /* #F3F4F6 */
+    --secondary-foreground: 107 114 128;
+    /* #6B7280 */
     --muted: 243 244 246;
     --muted-foreground: 107 114 128;
+    /* #6B7280 */
     --accent: 243 244 246;
     --accent-foreground: 17 24 39;
     --destructive: 220 38 38;
+    /* #DC2626 */
     --destructive-foreground: 255 255 255;
     --border: 229 231 235;
+    /* #E5E7EB */
     --input: 229 231 235;
-    --ring: 14 165 233;
+    --ring: 42 126 200;
+    /* #2A7EC8 */
     --radius: 0.75rem;
 
-    --sidebar: 13 79 79;
+    --sidebar: 26 60 94;
+    /* #1A3C5E */
     --sidebar-foreground: 255 255 255;
     --sidebar-active: rgba(255, 255, 255, 0.15);
     --sidebar-muted: rgba(255, 255, 255, 0.5);
 
-    --success: 5 150 105;
+    --success: 22 163 74;
+    /* #16A34A */
     --success-foreground: 255 255 255;
-    --success-bg: 236 253 245;
+    --success-bg: 220 252 231;
+    /* #DCFCE7 */
     --warning: 217 119 6;
+    /* #D97706 */
     --warning-foreground: 255 255 255;
-    --warning-bg: 255 251 235;
+    --warning-bg: 254 249 195;
+    /* #FEF9C3 */
     --danger: 220 38 38;
+    /* #DC2626 */
     --danger-foreground: 255 255 255;
-    --danger-bg: 254 242 242;
+    --danger-bg: 254 226 226;
+    /* #FEE2E2 */
     --whatsapp: 37 211 102;
+    /* #25D366 */
   }
 
   .dark {
-    --background: 10 15 15;
+    --background: 15 17 23;
+    /* #0F1117 */
     --foreground: 249 250 251;
-    --card: 17 27 27;
+    /* #F9FAFB */
+    --card: 26 29 39;
+    /* #1A1D27 */
     --card-foreground: 249 250 251;
-    --popover: 17 27 27;
+    /* #F9FAFB */
+    --popover: 26 29 39;
     --popover-foreground: 249 250 251;
-    --primary: 14 165 233;
+    --primary: 42 126 200;
+    /* #2A7EC8 */
     --primary-foreground: 255 255 255;
-    --secondary: 26 37 37;
-    --secondary-foreground: 249 250 251;
-    --muted: 26 37 37;
+    --secondary: 45 55 72;
+    /* #2D3748 */
+    --secondary-foreground: 156 163 175;
+    /* #9CA3AF */
+    --muted: 45 55 72;
     --muted-foreground: 156 163 175;
-    --accent: 26 37 37;
+    /* #9CA3AF */
+    --accent: 45 55 72;
     --accent-foreground: 249 250 251;
     --destructive: 220 38 38;
     --destructive-foreground: 255 255 255;
-    --border: 31 47 47;
-    --input: 31 47 47;
-    --ring: 14 165 233;
+    --border: 45 55 72;
+    /* #2D3748 */
+    --input: 45 55 72;
+    --ring: 42 126 200;
   }
 }
 

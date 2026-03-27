@@ -10,18 +10,28 @@ import { getMe } from '@/lib/auth'
  */
 
 interface AuthContext {
-    user: { id: string; email: string } | null
+    user: {
+        id: string;
+        email: string;
+        user_metadata: {
+            full_name?: string;
+            avatar_url?: string;
+        };
+    } | null
     studio: {
         id: string;
         name: string;
         slug: string;
         plan_tier: string;
         onboarding_completed: boolean;
+        brand_color?: string;
+        logo_url?: string;
     } | null
     member: {
         id: string;
         role: 'owner' | 'admin' | 'editor' | 'viewer';
         display_name: string;
+        profile_photo_url?: string;
     } | null
 }
 
@@ -49,6 +59,7 @@ export function useAuth() {
         isLoading,
         isError: error,
         isOwner: member?.role === 'owner',
+        brandColor: isUnauthorized ? null : studio?.brand_color || '#1A3C5E',
         mutate,
     }
 }
