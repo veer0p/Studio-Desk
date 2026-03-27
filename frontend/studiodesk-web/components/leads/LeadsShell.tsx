@@ -1,0 +1,82 @@
+"use client"
+
+import { useRouter, useSearchParams } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { LayoutGrid, List as ListIcon, Plus, Search, Filter } from "lucide-react"
+
+export function LeadsShell({ children, count = 0 }: { children: React.ReactNode, count?: number }) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const currentView = searchParams.get("view") || "kanban"
+  const searchQuery = searchParams.get("search") || ""
+
+  const setView = (view: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("view", view)
+    router.push(`/leads?${params.toString()}`)
+  }
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    const params = new URLSearchParams(searchParams.toString())
+    if (val) {
+      params.set("search", val)
+    } else {
+      params.delete("search")
+    }
+    router.replace(`/leads?${params.toString()}`)
+  }
+
+  return (
+    <div className="w-full h-full flex flex-col">
+      <div className="sticky top-0 z-30 border-b border-border/40 bg-background/95 backdrop-blur shrink-0 px-6 py-6 md:px-8 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="flex flex-col">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight uppercase font-mono">Leads</h1>
+          <p className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground mt-2">{count} active inquiries • {count > 0 ? "3 overdue" : "All caught up"}</p>
+        </div>
+
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search leads..." 
+              className="pl-9 h-9 rounded-sm font-mono text-xs tracking-wider" 
+              defaultValue={searchQuery}
+              onChange={(e) => handleSearch(e)}
+            />
+          </div>
+
+          <Button variant="outline" size="sm" className="h-9 rounded-sm text-[10px] font-mono font-bold tracking-widest uppercase border hover:bg-muted/50 hidden md:flex shrink-0">
+            <Filter className="w-4 h-4 mr-2" />
+            Filter
+          </Button>
+
+          <div className="flex items-center bg-muted/20 p-0.5 rounded-sm border border-border/40 shrink-0">
+            <button 
+              onClick={() => setView("kanban")}
+              className={`p-1.5 rounded-sm transition-colors ${currentView === "kanban" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => setView("list")}
+              className={`p-1.5 rounded-sm transition-colors ${currentView === "list" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              <ListIcon className="w-4 h-4" />
+            </button>
+          </div>
+
+          <Button size="sm" className="h-9 rounded-sm bg-foreground text-background hover:bg-foreground/90 text-[10px] font-mono font-bold tracking-widest uppercase px-6 shrink-0 shadow-sm">
+            <Plus className="w-3.5 h-3.5 mr-2" />
+            Quick Add
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-hidden relative bg-muted/5">
+        {children}
+      </div>
+    </div>
+  )
+}

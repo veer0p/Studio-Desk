@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import useSWR from "swr"
-import { fetcher } from "@/lib/api"
+import useSWR, { useSWRConfig } from "swr"
+import { fetchBookingsList, updateBookingStage } from "@/lib/api"
 import { useSearchParams, useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { EventTypeDot } from "@/components/bookings/shared/EventTypeDot"
 import { BookingStatusBadge } from "@/components/bookings/shared/BookingStatusBadge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -38,7 +39,19 @@ export default function BookingsList() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading } = useSWR(`/api/v1/bookings?${queryString}`, fetcher, { dedupingInterval: 60000 })
+  const { data, isLoading } = useSWR(`/api/v1/bookings?${queryString}`, fetchBookingsList, { dedupingInterval: 60000 })
+  const { mutate } = useSWRConfig()
+
+  const handleMarkConfirmed = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    try {
+      await updateBookingStage(id, "Confirmed")
+      toast.success("Booking marked as Confirmed")
+      mutate(key => typeof key === 'string' && key.startsWith('/api/v1/bookings'))
+    } catch {
+      toast.error("Failed to update booking status")
+    }
+  }
 
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -104,7 +117,7 @@ export default function BookingsList() {
         return (
           <div className="flex -space-x-2">
             {team.slice(0, 3).map((member: any, i: number) => (
-              <div key={i} className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center text-[10px] font-medium overflow-hidden shrink-0">
+              <div key={i} className="w-5 h-5 rounded-sm bg-muted border border-background flex items-center justify-center text-[9px] font-mono tracking-widest uppercase overflow-hidden shrink-0">
                 {member.avatar ? (
                   <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
@@ -113,7 +126,7 @@ export default function BookingsList() {
               </div>
             ))}
             {team.length > 3 && (
-              <div className="w-6 h-6 rounded-full bg-background border-2 border-background flex items-center justify-center text-[10px] font-medium text-muted-foreground z-10 shrink-0">
+              <div className="w-5 h-5 rounded-sm bg-background border border-border/40 flex items-center justify-center text-[9px] font-mono tracking-widest uppercase text-muted-foreground z-10 shrink-0">
                 +{team.length - 3}
               </div>
             )}
@@ -134,7 +147,7 @@ export default function BookingsList() {
         )
       },
       cell: ({ row }: any) => (
-        <div className="text-right font-mono text-sm">{formatAmount(row.original.amount)}</div>
+        <div className="text-right font-mono text-[11px] uppercase tracking-widest mt-0.5">{formatAmount(row.original.amount)}</div>
       )
     },
     {
@@ -143,7 +156,7 @@ export default function BookingsList() {
       cell: ({ row }: any) => {
         const bal = row.original.balanceDue || 0
         return (
-          <div className={`text-right font-mono text-sm ${bal > 0 ? "text-amber-500 font-medium" : "text-muted-foreground"}`}>
+          <div className={`text-right font-mono text-[11px] uppercase tracking-widest mt-0.5 ${bal > 0 ? "text-foreground" : "text-muted-foreground/50"}`}>
             {formatAmount(bal)}
           </div>
         )
@@ -171,14 +184,14 @@ export default function BookingsList() {
                 <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                   Send proposal
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                <DropdownMenuItem onClick={(e) => handleMarkConfirmed(row.original.id as string, e)}>
                   Mark confirmed
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                   Add payment
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-red-600" onClick={(e) => e.stopPropagation()}>
+                <DropdownMenuItem className="text-muted-foreground" disabled onClick={(e) => e.stopPropagation()}>
                   Delete booking
                 </DropdownMenuItem>
               </DropdownMenuContent>

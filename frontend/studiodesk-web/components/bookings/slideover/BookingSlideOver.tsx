@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import useSWR from "swr"
-import { fetcher } from "@/lib/api"
+import { fetchBookingDetail } from "@/lib/api"
 import { EventTypeDot } from "@/components/bookings/shared/EventTypeDot"
 import { BookingStatusBadge } from "@/components/bookings/shared/BookingStatusBadge"
 import { Button } from "@/components/ui/button"
@@ -14,7 +14,7 @@ export default function BookingSlideOver({ bookingId }: { bookingId: string }) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const { data: booking, isLoading } = useSWR(`/api/v1/bookings/${bookingId}`, fetcher, {
+  const { data: booking, isLoading } = useSWR(`/api/v1/bookings/${bookingId}`, fetchBookingDetail, {
     dedupingInterval: 60000
   })
 
@@ -61,10 +61,10 @@ export default function BookingSlideOver({ bookingId }: { bookingId: string }) {
           </div>
           
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-sm">
               <MoreHorizontal className="w-4 h-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={closeSlideOver}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-sm" onClick={closeSlideOver}>
               <X className="w-4 h-4" />
             </Button>
           </div>

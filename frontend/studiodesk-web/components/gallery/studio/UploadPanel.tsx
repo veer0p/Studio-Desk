@@ -38,26 +38,26 @@ export function UploadPanel() {
         onDragOver={(e) => { e.preventDefault(); setIsHovering(true) }}
         onDragLeave={() => setIsHovering(false)}
         onDrop={mockHandleDrop}
-        className={`m-4 p-8 border-2 border-dashed rounded-xl flex flex-col items-center justify-center text-center transition-colors ${isHovering ? 'border-primary bg-primary/5' : 'border-border/60 bg-muted/20'}`}
+        className={`m-4 p-8 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-center transition-colors ${isHovering ? 'border-primary bg-primary/5' : 'border-border/60 bg-muted/20'}`}
       >
-        <UploadCloud className={`w-10 h-10 mb-3 ${isHovering ? 'text-primary' : 'text-muted-foreground'}`} />
-        <p className="text-sm font-medium text-foreground">Drop photos here</p>
-        <p className="text-xs text-muted-foreground mt-1 mb-4">Accepts JPG, PNG, RAW</p>
-        <Button variant="secondary" size="sm">Browse Files</Button>
+        <UploadCloud className={`w-8 h-8 mb-3 ${isHovering ? 'text-primary' : 'text-muted-foreground'}`} strokeWidth={1.5} />
+        <p className="text-[10px] font-mono font-bold tracking-widest uppercase text-foreground">Drop photos here</p>
+        <p className="text-[9px] font-mono tracking-widest uppercase text-muted-foreground mt-1 mb-4">Accepts JPG, PNG, RAW</p>
+        <Button variant="outline" size="sm" className="h-8 rounded-sm font-mono text-[9px] tracking-widest uppercase">Browse Files</Button>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 pb-4">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Queue ({uploads.length})</span>
-          {uploads.length > 0 && <span className="text-xs text-primary font-medium cursor-pointer">Clear All</span>}
+        <div className="flex items-center justify-between mb-3 px-1">
+          <span className="text-[9px] font-mono font-bold text-muted-foreground uppercase tracking-widest">Queue ({uploads.length})</span>
+          {uploads.length > 0 && <span className="text-[9px] font-mono font-bold text-primary uppercase tracking-widest cursor-pointer">Clear</span>}
         </div>
 
         <div className="space-y-2">
           {uploads.map(file => (
-            <div key={file.id} className="p-3 bg-background rounded-lg border border-border/60 relative overflow-hidden group">
+            <div key={file.id} className="p-3 bg-background rounded-sm border border-border/60 relative overflow-hidden group">
               {file.status === 'uploading' && (
                 <div 
-                  className="absolute left-0 bottom-0 h-1 bg-primary/20 transition-all duration-300"
+                  className="absolute left-0 bottom-0 h-0.5 bg-primary/40 transition-all duration-300"
                   style={{ width: `${file.progress}%` }}
                 />
               )}
@@ -66,12 +66,12 @@ export function UploadPanel() {
                 <FileImage className="w-8 h-8 text-muted-foreground shrink-0" strokeWidth={1.5} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-foreground truncate max-w-[120px]">{file.name}</p>
-                    <span className="text-xs text-muted-foreground">{file.size}</span>
+                    <p className="text-[11px] font-medium text-foreground truncate max-w-[120px]">{file.name}</p>
+                    <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">{file.size}</span>
                   </div>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-[10px] text-muted-foreground uppercase font-semibold">
-                      {file.status === 'done' ? 'Completed' : `Uploading ${file.progress}%`}
+                    <span className="text-[9px] text-muted-foreground uppercase font-mono font-bold tracking-widest">
+                      {file.status === 'done' ? 'Ready' : `Uploading ${file.progress}%`}
                     </span>
                     {file.status === 'done' ? (
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />

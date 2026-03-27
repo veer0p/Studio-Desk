@@ -1,23 +1,24 @@
 "use client"
 
 import useSWR from "swr"
-import { fetcher } from "@/lib/api"
+import { DashboardToday, fetchDashboardToday } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ArrowRight, Plus } from "lucide-react"
 import Link from "next/link"
 
 const eventColors: Record<string, string> = {
-  Wedding: "bg-indigo-500",
-  Engagement: "bg-rose-500",
-  Corporate: "bg-blue-500",
-  Birthday: "bg-amber-500",
-  "Product Shoot": "bg-teal-500",
-  Other: "bg-slate-500",
+  Wedding: "bg-foreground",
+  Engagement: "bg-muted-foreground",
+  Corporate: "bg-foreground",
+  Birthday: "bg-muted-foreground",
+  "Product Shoot": "bg-foreground",
+  Other: "bg-muted-foreground",
 }
 
 export default function TodayStrip() {
-  const { data, isLoading } = useSWR("/api/v1/dashboard/today", fetcher, { dedupingInterval: 60000 })
+  const { data, isLoading } = useSWR<DashboardToday>("/api/v1/dashboard/today", fetchDashboardToday, { dedupingInterval: 60000 })
+  const shoots = data?.shoots ?? []
 
   const todayDate = new Date().toLocaleDateString("en-IN", {
     weekday: "long",
@@ -32,9 +33,9 @@ export default function TodayStrip() {
       <div className="flex justify-between items-end">
         <div>
           <h2 className="text-xl font-semibold tracking-tight">Today</h2>
-          <p className="text-sm text-muted-foreground font-mono">{todayDate}</p>
+          <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider mt-1">{todayDate}</p>
         </div>
-        <Button size="sm">
+        <Button size="sm" className="bg-foreground text-background hover:bg-foreground/90 rounded-sm">
           <Plus className="w-4 h-4 mr-2" />
           New Booking
         </Button>
@@ -42,49 +43,51 @@ export default function TodayStrip() {
 
       {/* Content */}
       {isLoading ? (
-        <div className="flex gap-4 overflow-x-auto pb-4">
-          <Skeleton className="min-w-[260px] h-[120px] rounded-xl" />
-          <Skeleton className="min-w-[260px] h-[120px] rounded-xl" />
+        <div className="flex gap-4 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden">
+          <Skeleton className="min-w-[260px] h-[120px] rounded-md" />
+          <Skeleton className="min-w-[260px] h-[120px] rounded-md" />
         </div>
-      ) : data?.shoots?.length > 0 ? (
-        <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
-          {data.shoots.map((shoot: any) => (
+      ) : shoots.length > 0 ? (
+        <div className="flex gap-4 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden">
+          {shoots.map((shoot) => (
             <Link 
               href={`/bookings/${shoot.id}`} 
               key={shoot.id}
-              className="group min-w-[260px] flex bg-card border border-border/60 hover:border-border transition-colors rounded-xl overflow-hidden shadow-sm hover:shadow-md cursor-pointer relative"
+              className="group min-w-[260px] flex bg-card border border-border/60 hover:border-foreground/20 transition-colors rounded-md overflow-hidden shadow-none cursor-pointer relative"
             >
-              <div className={`w-[3px] h-full ${eventColors[shoot.eventType] || eventColors.Other}`} />
-              <div className="p-4 flex flex-col flex-1 gap-2">
-                <div className="flex justify-between items-start">
-                  <span className="font-medium text-sm line-clamp-1 pr-2">{shoot.clientName}</span>
-                  <span className="text-xs text-muted-foreground whitespace-nowrap">{shoot.time}</span>
+              <div className="p-4 flex flex-col flex-1 gap-3">
+                <div className="flex justify-between items-start gap-4">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-1.5 h-1.5 rounded-sm ${eventColors[shoot.eventType] || eventColors.Other}`} />
+                    <span className="font-medium text-sm line-clamp-1">{shoot.clientName}</span>
+                  </div>
+                  <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider whitespace-nowrap pt-0.5">{shoot.time}</span>
                 </div>
-                <div className="text-sm text-muted-foreground line-clamp-1 mb-2">
+                <div className="text-xs text-muted-foreground line-clamp-1 font-mono uppercase tracking-widest">
                   {shoot.venue}
                 </div>
-                <div className="flex justify-between items-center mt-auto">
-                  <div className="flex -space-x-2">
-                    {shoot.team.slice(0, 3).map((member: any, i: number) => (
-                      <div key={i} className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center text-[10px] font-medium overflow-hidden">
+                <div className="flex justify-between items-center mt-auto pt-2 border-t border-border/20">
+                  <div className="flex -space-x-1.5">
+                    {shoot.team.slice(0, 3).map((member, i: number) => (
+                      <div key={i} className="w-5 h-5 rounded-sm bg-muted border border-background flex items-center justify-center text-[9px] font-mono text-muted-foreground overflow-hidden">
                         {member.avatar ? (
-                          <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                          <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover grayscale" />
                         ) : (
                           member.name.charAt(0)
                         )}
                       </div>
                     ))}
                     {shoot.team.length > 3 && (
-                      <div className="w-6 h-6 rounded-full bg-background border-2 border-background flex items-center justify-center text-[10px] font-medium text-muted-foreground z-10">
+                      <div className="w-5 h-5 rounded-sm bg-background border border-background flex items-center justify-center text-[9px] font-mono text-muted-foreground z-10">
                         +{shoot.team.length - 3}
                       </div>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">
+                    <span className="text-[9px] uppercase font-mono tracking-widest px-1.5 py-0.5 rounded-sm border border-border/40 text-muted-foreground">
                       {shoot.status}
                     </span>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                    <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </div>
                 </div>
               </div>
@@ -92,8 +95,8 @@ export default function TodayStrip() {
           ))}
         </div>
       ) : (
-        <div className="p-6 rounded-xl border border-dashed border-border/60 flex items-center justify-center text-sm text-muted-foreground bg-muted/10">
-          No shoots today. Enjoy the day.
+        <div className="p-6 rounded-md border border-border/60 flex items-center justify-center text-[11px] font-mono tracking-widest uppercase text-muted-foreground bg-muted/5">
+          No shoots today
         </div>
       )}
     </div>

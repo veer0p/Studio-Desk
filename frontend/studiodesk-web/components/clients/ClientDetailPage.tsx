@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 import { useState } from "react"
 import useSWR from "swr"
-import { fetcher } from "@/lib/api"
+import { fetchClientDetail } from "@/lib/api"
 import { useSearchParams, useRouter } from "next/navigation"
 import { ClientAvatar } from "./shared/ClientAvatar"
 import { Button } from "@/components/ui/button"
@@ -36,7 +36,7 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
   const searchParams = useSearchParams()
   const currentTab = searchParams.get("tab") || "overview"
 
-  const { data: client, isLoading } = useSWR(`/api/v1/clients/${clientId}`, fetcher, { dedupingInterval: 10000 })
+  const { data: client, isLoading } = useSWR(`/api/v1/clients/${clientId}`, fetchClientDetail, { dedupingInterval: 10000 })
 
   const setTab = (tab: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -47,8 +47,8 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
   if (isLoading) {
     return (
       <div className="p-8 space-y-8">
-        <Skeleton className="w-full h-32 rounded-xl" />
-        <Skeleton className="w-full h-[400px] rounded-xl" />
+        <Skeleton className="w-full h-32 rounded-md" />
+        <Skeleton className="w-full h-[400px] rounded-md" />
       </div>
     )
   }
@@ -106,7 +106,7 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
             </div>
             <div className="flex items-center gap-1.5 flex-wrap">
               {client.tags?.map((tag: string, i: number) => (
-                <span key={i} className="px-2 py-0.5 rounded-full bg-muted border border-border/40 text-[10px] font-medium text-muted-foreground">
+                <span key={i} className="px-1.5 py-0.5 rounded-sm bg-muted border border-border/40 text-[9px] font-mono tracking-widest uppercase text-muted-foreground">
                   {tag}
                 </span>
               ))}
@@ -116,25 +116,25 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
 
         <div className="flex items-center gap-2">
           {/* Action Row */}
-          <Button variant="ghost" className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-500/10" asChild>
+          <Button variant="outline" className="text-[11px] font-mono tracking-widest uppercase h-9 rounded-sm" asChild>
             <a href={whatsappLink} target="_blank" rel="noreferrer">
-              <MessageCircle className="w-4 h-4 mr-2" />
+              <MessageCircle className="w-3.5 h-3.5 mr-2" />
               WhatsApp
             </a>
           </Button>
 
           <EditClientSheet client={client}>
-            <Button variant="ghost">Edit</Button>
+            <Button variant="ghost" className="text-[11px] font-mono tracking-widest uppercase h-9 rounded-sm">Edit</Button>
           </EditClientSheet>
 
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
+          <Button className="text-[11px] font-mono tracking-widest uppercase h-9 rounded-sm">
+            <Plus className="w-3.5 h-3.5 mr-2" />
             New Booking
           </Button>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="px-2">
+              <Button variant="ghost" className="px-2 h-9 rounded-sm">
                 <MoreHorizontal className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -150,24 +150,24 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
 
       {/* KPI Stats Bar */}
       <div className="px-6 mt-6 shrink-0">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-xl bg-card border border-border/60">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-md bg-muted/5 border border-border/60">
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground mb-1 font-medium">Total Bookings</span>
-            <span className="font-semibold text-lg">{client.bookingsCount || 0}</span>
+            <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Total Bookings</span>
+            <span className="font-mono text-sm tracking-widest uppercase text-foreground">{client.bookingsCount || 0}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground mb-1 font-medium">Total Spend</span>
-            <span className="font-semibold text-lg font-mono tracking-tight">{formatAmount(client.totalSpend)}</span>
+            <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Total Spend</span>
+            <span className="font-mono text-sm tracking-widest uppercase text-foreground">{formatAmount(client.totalSpend)}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground mb-1 font-medium">Avg Booking Value</span>
-            <span className="font-semibold text-lg font-mono tracking-tight">
+            <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Avg Booking Value</span>
+            <span className="font-mono text-sm tracking-widest uppercase text-foreground">
               {formatAmount((client.totalSpend || 0) / Math.max(1, client.bookingsCount || 1))}
             </span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground mb-1 font-medium">Last Booking Date</span>
-            <span className="font-semibold text-lg">{client.lastBookingDate || "Never"}</span>
+            <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Last Booking Date</span>
+            <span className="font-mono text-sm tracking-widest uppercase text-muted-foreground">{client.lastBookingDate || "Never"}</span>
           </div>
         </div>
       </div>

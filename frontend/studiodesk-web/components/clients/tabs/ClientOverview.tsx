@@ -142,7 +142,7 @@ export function ClientOverview({ client }: { client: any }) {
               {client.tags && client.tags.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {client.tags.map((tag: string, i: number) => (
-                    <span key={i} className="px-2.5 py-1 rounded-md bg-muted border border-border/40 text-xs font-medium text-foreground">
+                    <span key={i} className="px-1.5 py-0.5 rounded-sm bg-muted border border-border/40 text-[9px] font-mono tracking-widest uppercase text-muted-foreground">
                       {tag}
                     </span>
                   ))}
@@ -164,20 +164,20 @@ export function ClientOverview({ client }: { client: any }) {
           <CardContent className="p-0">
             <div className="grid grid-cols-2 divide-x divide-y divide-border/40 text-sm">
               <div className="p-4 flex flex-col">
-                <span className="text-muted-foreground text-xs font-medium mb-1">Total Bookings</span>
-                <span className="font-semibold">{client.bookingsCount || 0}</span>
+                <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Total Bookings</span>
+                <span className="font-mono tracking-widest text-[11px] uppercase text-foreground">{client.bookingsCount || 0}</span>
               </div>
               <div className="p-4 flex flex-col">
-                <span className="text-muted-foreground text-xs font-medium mb-1">Completed</span>
-                <span className="font-semibold text-emerald-600">{client.completedBookings || 0}</span>
+                <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Completed</span>
+                <span className="font-mono tracking-widest text-[11px] uppercase text-foreground">{client.completedBookings || 0}</span>
               </div>
               <div className="p-4 flex flex-col">
-                <span className="text-muted-foreground text-xs font-medium mb-1">Total Paid</span>
-                <span className="font-semibold font-mono">{formatAmount(client.totalPaid || 0)}</span>
+                <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Total Paid</span>
+                <span className="font-mono tracking-widest text-[11px] uppercase text-foreground">{formatAmount(client.totalPaid || 0)}</span>
               </div>
               <div className="p-4 flex flex-col">
-                <span className="text-muted-foreground text-xs font-medium mb-1">Outstanding</span>
-                <span className={`font-semibold font-mono ${outstandingBalance > 0 ? 'text-amber-500' : 'text-emerald-600'}`}>
+                <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Outstanding</span>
+                <span className={`font-mono tracking-widest text-[11px] uppercase ${outstandingBalance > 0 ? 'text-foreground' : 'text-muted-foreground/50'}`}>
                   {formatAmount(outstandingBalance)}
                 </span>
               </div>

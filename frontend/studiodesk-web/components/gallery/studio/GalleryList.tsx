@@ -7,66 +7,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { GalleryCard } from "./GalleryCard"
 import { CreateGalleryDialog } from "./CreateGalleryDialog"
+import useSWR from "swr"
+import { fetchGalleriesList } from "@/lib/api"
 
 export function GalleryList() {
   const searchParams = useSearchParams()
   const [searchQuery, setSearchQuery] = useState("")
 
   // SWR mock data tracking local assets mapping multiple views
-  const galleries = [
-    {
-      id: "gal-1",
-      name: "Wedding Highlights",
-      clientName: "Rohan & Priya",
-      slug: "rohan-priya-wedding",
-      eventType: "Wedding",
-      shootDate: "12 Oct 2025",
-      status: "Selection Pending",
-      photoCount: 450,
-      videoCount: 2,
-      sizeGb: 12.4,
-      selectedCount: 45,
-      selectionQuota: 100,
-      uploadProgress: 100,
-      accessType: "PIN Protected",
-      expiryDate: "12 Nov 2025",
-      coverUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop"
-    },
-    {
-      id: "gal-2",
-      name: "Engagement Shoot",
-      clientName: "Neha Sharma",
-      slug: "neha-sharma-engagement",
-      eventType: "Pre-Wedding",
-      shootDate: "15 Oct 2025",
-      status: "Uploading",
-      photoCount: 120,
-      videoCount: 0,
-      sizeGb: 3.2,
-      selectedCount: 0,
-      selectionQuota: 20,
-      uploadProgress: 45,
-      accessType: "PIN Protected",
-      coverUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop"
-    },
-    {
-      id: "gal-3",
-      name: "Corporate Launch",
-      clientName: "XYZ Corp",
-      slug: "xyz-corp-launch",
-      eventType: "Engagement",
-      shootDate: "05 Sep 2025",
-      status: "Delivered",
-      photoCount: 850,
-      videoCount: 5,
-      sizeGb: 45.1,
-      selectedCount: 0,
-      selectionQuota: 0,
-      uploadProgress: 100,
-      accessType: "Public",
-      coverUrl: null
-    }
-  ]
+  const { data: galleries = [], isLoading } = useSWR("/api/v1/galleries", fetchGalleriesList)
 
   // Note: searchParams for `?status=pending` logic would naturally filter the grid here.
 
@@ -79,7 +28,7 @@ export function GalleryList() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-3xl font-bold tracking-tight">Galleries</h1>
-              <span className="px-2 py-0.5 rounded-full bg-muted text-xs font-semibold text-muted-foreground">{galleries.length} total</span>
+              <span className="px-2 py-0.5 rounded-sm bg-muted text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">{galleries.length} total</span>
             </div>
             <p className="text-muted-foreground mt-1 text-sm">Organize and share deliverables directly with clients.</p>
           </div>
@@ -113,9 +62,15 @@ export function GalleryList() {
       {/* Grid Container */}
       <div className="flex-1 overflow-y-auto px-8 py-6 custom-scrollbar bg-muted/5">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {galleries.map(gal => (
-            <GalleryCard key={gal.id} gallery={gal} />
-          ))}
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-80 bg-muted animate-pulse rounded-md" />
+            ))
+          ) : (
+            galleries.map(gal => (
+              <GalleryCard key={gal.id} gallery={gal} />
+            ))
+          )}
         </div>
 
         {galleries.length === 0 && (

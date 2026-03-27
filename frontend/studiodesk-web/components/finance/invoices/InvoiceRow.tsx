@@ -23,12 +23,12 @@ const formatINR = (amount: number) => {
 
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
-    case 'draft': return 'bg-slate-500/10 text-slate-600 border-slate-500/20'
-    case 'sent': return 'bg-blue-500/10 text-blue-600 border-blue-500/20'
-    case 'viewed': return 'bg-indigo-500/10 text-indigo-600 border-indigo-500/20'
-    case 'partial': return 'bg-amber-500/10 text-amber-600 border-amber-500/20'
-    case 'paid': return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
-    case 'overdue': return 'bg-red-500/10 text-red-600 border-red-500/20'
+    case 'draft': return 'bg-muted text-muted-foreground border-border/40'
+    case 'sent': return 'bg-muted text-foreground border-primary/20'
+    case 'viewed': return 'bg-muted text-foreground border-primary/40'
+    case 'partial': return 'bg-muted text-foreground border-primary/30'
+    case 'paid': return 'bg-muted text-foreground border-border/60'
+    case 'overdue': return 'bg-muted text-red-600 border-red-500/30'
     case 'cancelled': return 'bg-muted text-muted-foreground border-border/40 line-through'
     default: return 'bg-muted text-muted-foreground border-border/40'
   }
@@ -76,28 +76,30 @@ export function InvoiceRow({ invoice, onRowClick }: { invoice: any, onRowClick: 
       </td>
 
       <td className="px-4 py-3 whitespace-nowrap">
-        <span className={`text-sm font-medium ${isOverdue ? 'text-red-500' : isDueSoon ? 'text-amber-500' : 'text-muted-foreground'}`}>
+        <span className={`text-[11px] font-mono tracking-widest uppercase font-medium ${isOverdue ? 'text-red-500' : isDueSoon ? 'text-amber-500' : 'text-muted-foreground'}`}>
           {invoice.dueDate}
         </span>
-        {isDueSoon && !isOverdue && <span className="ml-1.5 text-[10px] uppercase font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">Soon</span>}
+        {isDueSoon && !isOverdue && <span className="ml-1.5 text-[9px] uppercase font-mono tracking-widest font-bold text-amber-500 bg-amber-500/5 border border-amber-500/20 px-1.5 py-0.5 rounded-sm">Soon</span>}
       </td>
 
-      <td className="px-4 py-3 text-right font-mono text-sm font-medium">
-        {formatINR(invoice.amount)}
+        <span className="text-[11px] font-mono tracking-widest uppercase">
+          {formatINR(invoice.amount)}
+        </span>
+
+      <td className="px-4 py-3 text-right text-muted-foreground">
+        <span className="text-[11px] font-mono tracking-widest uppercase">
+          {formatINR(invoice.paidAmount)}
+        </span>
       </td>
 
-      <td className="px-4 py-3 text-right font-mono text-sm text-muted-foreground">
-        {formatINR(invoice.paidAmount)}
-      </td>
-
-      <td className="px-4 py-3 text-right font-mono text-sm font-semibold">
-        <span className={invoice.balance === 0 ? "text-emerald-500" : isOverdue ? "text-red-500" : "text-amber-500"}>
+      <td className="px-4 py-3 text-right">
+        <span className={`text-[11px] font-mono tracking-widest uppercase font-semibold ${invoice.balance === 0 ? "text-emerald-500" : isOverdue ? "text-red-500" : "text-amber-500"}`}>
           {formatINR(invoice.balance)}
         </span>
       </td>
 
       <td className="px-4 py-3">
-        <div className={`px-2 py-0.5 rounded-full border text-[11px] font-semibold tracking-wide uppercase w-fit text-center ${getStatusColor(invoice.status)}`}>
+        <div className={`px-2 py-0.5 rounded-sm border text-[9px] font-mono font-bold tracking-widest uppercase w-fit text-center ${getStatusColor(invoice.status)}`}>
           {invoice.status}
         </div>
       </td>

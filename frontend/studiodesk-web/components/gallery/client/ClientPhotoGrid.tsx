@@ -46,7 +46,7 @@ export function ClientPhotoGrid({ selectedPhotos, toggleSelection, allowDownload
           return (
             <div 
               key={photo.id} 
-              className={`relative group overflow-hidden rounded-xl break-inside-avoid bg-muted/30 cursor-pointer ${photo.aspectRatio} ${isSelected ? 'ring-4 ring-primary ring-offset-2' : ''}`}
+              className={`relative group overflow-hidden rounded-md break-inside-avoid bg-muted/30 cursor-pointer ${photo.aspectRatio} ${isSelected ? 'ring-2 ring-primary ring-offset-2' : ''}`}
               onClick={() => openLightbox(idx)}
             >
               <img 
@@ -59,19 +59,19 @@ export function ClientPhotoGrid({ selectedPhotos, toggleSelection, allowDownload
               {/* Interaction Overlay */}
               <div className={`absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3 ${isSelected ? 'opacity-100 bg-black/10' : ''}`}>
                 <div className="flex justify-end gap-2">
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); toggleSelection(photo.id) }}
-                    className={`p-2 rounded-full backdrop-blur-md transition-colors ${isSelected ? 'bg-primary text-primary-foreground' : 'bg-white/20 hover:bg-white/40 text-white'}`}
-                  >
-                    <Heart className="w-4 h-4" fill={isSelected ? "currentColor" : "none"} />
-                  </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); toggleSelection(photo.id) }}
+                      className={`p-2 rounded-sm backdrop-blur-md transition-colors ${isSelected ? 'bg-primary text-primary-foreground' : 'bg-black/30 hover:bg-black/50 text-white border border-white/10'}`}
+                    >
+                      <Heart className="w-4 h-4" fill={isSelected ? "currentColor" : "none"} />
+                    </button>
                 </div>
                 
                 {allowDownload && (
                   <div className="flex justify-start">
                     <button 
                       onClick={(e) => e.stopPropagation()} 
-                      className="p-1.5 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-md text-white transition-colors"
+                      className="p-1.5 rounded-sm bg-black/30 hover:bg-black/50 backdrop-blur-md text-white border border-white/10 transition-colors"
                     >
                       <Download className="w-3.5 h-3.5" />
                     </button>
@@ -87,8 +87,8 @@ export function ClientPhotoGrid({ selectedPhotos, toggleSelection, allowDownload
       {lightboxIndex !== null && (
         <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center overscroll-none touch-none">
           <div className="absolute top-4 right-4 flex items-center gap-4 z-50">
-            <span className="text-white/60 text-sm font-medium tracking-widest">{lightboxIndex + 1} / {mockPhotos.length}</span>
-            <button onClick={closeLightbox} className="p-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors">
+            <span className="text-white/60 text-[10px] font-mono font-bold tracking-widest uppercase">{lightboxIndex + 1} / {mockPhotos.length}</span>
+            <button onClick={closeLightbox} className="p-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-sm border border-white/10 transition-colors">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -116,22 +116,22 @@ export function ClientPhotoGrid({ selectedPhotos, toggleSelection, allowDownload
           </button>
 
           {/* Lightbox Actions */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/10 rounded-full z-50">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 px-6 py-3 bg-black/40 backdrop-blur-md border border-white/10 rounded-md z-50">
             <button 
               onClick={() => toggleSelection(mockPhotos[lightboxIndex].id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-sm text-[10px] font-mono font-bold tracking-widest uppercase transition-colors ${
                 selectedPhotos.has(mockPhotos[lightboxIndex].id) 
                   ? 'bg-primary text-primary-foreground' 
-                  : 'bg-white/20 text-white hover:bg-white/30'
+                  : 'bg-white/10 text-white hover:bg-white/20'
               }`}
             >
-              <Heart className="w-4 h-4" fill={selectedPhotos.has(mockPhotos[lightboxIndex].id) ? "currentColor" : "none"} />
+              <Heart className="w-3.5 h-3.5" fill={selectedPhotos.has(mockPhotos[lightboxIndex].id) ? "currentColor" : "none"} />
               {selectedPhotos.has(mockPhotos[lightboxIndex].id) ? 'Selected' : 'Select'}
             </button>
             
             {allowDownload && (
-              <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 text-white hover:bg-white/30 text-sm font-medium transition-colors">
-                <Download className="w-4 h-4" /> Download
+              <button className="flex items-center gap-2 px-4 py-2 rounded-sm bg-white/10 text-white hover:bg-white/20 text-[10px] font-mono font-bold tracking-widest uppercase transition-colors">
+                <Download className="w-3.5 h-3.5" /> Download
               </button>
             )}
           </div>

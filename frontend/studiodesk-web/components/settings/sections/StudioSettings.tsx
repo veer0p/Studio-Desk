@@ -72,13 +72,13 @@ export function StudioSettings() {
       <SettingsSection title="Studio Identity" description="Basic information that represents your brand publicly and on invoices.">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label>Studio Name *</Label>
-            <Input {...register("name")} />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Studio Name *</Label>
+            <Input {...register("name")} className="rounded-sm h-10 bg-muted/5" />
           </div>
           <div className="space-y-2 flex flex-col justify-end">
-            <Label>Studio Type *</Label>
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Studio Type *</Label>
             <Select onValueChange={(val) => setValue("type", val)} defaultValue={form.getValues("type")}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger className="rounded-sm h-10 bg-muted/5"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="Photography">Photography</SelectItem>
                 <SelectItem value="Videography">Videography</SelectItem>
@@ -90,27 +90,27 @@ export function StudioSettings() {
         </div>
 
         <div className="space-y-2">
-          <Label>Tagline <span className="text-muted-foreground font-normal ml-1">(Max 120 chars)</span></Label>
-          <Input {...register("tagline")} />
+          <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Tagline <span className="opacity-60 font-normal ml-1">(Max 120 chars)</span></Label>
+          <Input {...register("tagline")} className="rounded-sm h-10 bg-muted/5" />
         </div>
 
         <div className="space-y-2">
-          <Label>About / Bio</Label>
-          <Textarea className="min-h-[100px]" {...register("about")} />
+          <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">About / Bio</Label>
+          <Textarea className="min-h-[100px] rounded-sm bg-muted/5" {...register("about")} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-border/40">
           <div className="space-y-2">
-            <Label>Website URL</Label>
-            <Input {...register("website")} placeholder="https://" />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Website URL</Label>
+            <Input {...register("website")} placeholder="https://" className="rounded-sm h-10 bg-muted/5" />
           </div>
           <div className="space-y-2">
-            <Label>Instagram Handle</Label>
-            <Input {...register("instagram")} placeholder="@handle" />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Instagram Handle</Label>
+            <Input {...register("instagram")} placeholder="@handle" className="rounded-sm h-10 bg-muted/5" />
           </div>
           <div className="space-y-2">
-            <Label>Facebook Page</Label>
-            <Input {...register("facebook")} />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Facebook Page</Label>
+            <Input {...register("facebook")} className="rounded-sm h-10 bg-muted/5" />
           </div>
         </div>
       </SettingsSection>
@@ -118,33 +118,33 @@ export function StudioSettings() {
       <SettingsSection title="Location" description="The registered address of your studio. This appears on invoices.">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label>Address Line 1 *</Label>
-            <Input {...register("address1")} />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Address Line 1 *</Label>
+            <Input {...register("address1")} className="rounded-sm h-10 bg-muted/5" />
           </div>
           <div className="space-y-2">
-            <Label>Address Line 2</Label>
-            <Input {...register("address2")} />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Address Line 2</Label>
+            <Input {...register("address2")} className="rounded-sm h-10 bg-muted/5" />
           </div>
           <div className="space-y-2">
-            <Label>City *</Label>
-            <Input {...register("city")} />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">City *</Label>
+            <Input {...register("city")} className="rounded-sm h-10 bg-muted/5" />
           </div>
           <div className="space-y-2 flex flex-col justify-end">
-            <Label>State *</Label>
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">State *</Label>
             <Select onValueChange={(val) => setValue("state", val)} defaultValue={form.getValues("state")}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger className="rounded-sm h-10 bg-muted/5"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {indianStates.map(st => <SelectItem key={st} value={st}>{st}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>PIN Code *</Label>
-            <Input {...register("pincode")} maxLength={6} />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">PIN Code *</Label>
+            <Input {...register("pincode")} maxLength={6} className="rounded-sm h-10 bg-muted/5" />
           </div>
           <div className="space-y-2">
-            <Label>Country</Label>
-            <Input disabled value="India" />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Country</Label>
+            <Input disabled value="India" className="rounded-sm h-10 bg-muted/5 opacity-50" />
           </div>
         </div>
       </SettingsSection>
@@ -152,30 +152,30 @@ export function StudioSettings() {
       <SettingsSection title="Contact Information" description="How clients and StudioDesk platform operations will reach you.">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label>Primary Phone *</Label>
-            <div className="flex">
-              <span className="flex items-center px-3 border border-r-0 border-border/60 rounded-l-md bg-muted/30 text-muted-foreground text-sm">+91</span>
-              <Input {...register("phone")} className="rounded-l-none" maxLength={10} />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Primary Phone *</Label>
+            <div className="flex h-10">
+              <span className="flex items-center px-3 border border-r-0 border-border/60 rounded-l-sm bg-muted text-[11px] font-mono font-bold">+91</span>
+              <Input {...register("phone")} className="rounded-l-none rounded-r-sm h-10 bg-muted/5" maxLength={10} />
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Support Email</Label>
-            <Input type="email" {...register("email")} />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Support Email</Label>
+            <Input type="email" {...register("email")} className="rounded-sm h-10 bg-muted/5" />
           </div>
         </div>
         
-        <div className="p-4 bg-muted/20 border border-border/60 rounded-xl max-w-md mt-4">
+        <div className="p-4 bg-muted/20 border border-border/40 rounded-md max-w-md mt-4">
           <div className="flex items-center justify-between mb-4">
-            <Label>WhatsApp Number</Label>
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">WhatsApp Number</Label>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">Same as primary</span>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground opacity-60">Same as primary</span>
               <Switch checked={wAppSame} onCheckedChange={(val) => setValue("whatsappSameAsPhone", val)} />
             </div>
           </div>
           {!wAppSame && (
-            <div className="flex animate-in fade-in slide-in-from-top-2">
-              <span className="flex items-center px-3 border border-r-0 border-border/60 rounded-l-md bg-muted/30 text-muted-foreground text-sm">+91</span>
-              <Input {...register("whatsapp")} className="rounded-l-none" maxLength={10} />
+            <div className="flex h-10 animate-in fade-in slide-in-from-top-2">
+              <span className="flex items-center px-3 border border-r-0 border-border/60 rounded-l-sm bg-muted text-[11px] font-mono font-bold">+91</span>
+              <Input {...register("whatsapp")} className="rounded-l-none rounded-r-sm h-10 bg-muted/5" maxLength={10} />
             </div>
           )}
         </div>
@@ -184,12 +184,12 @@ export function StudioSettings() {
       <SettingsSection title="Working Hours" description="Used for scheduling and availability checks against your Team assignments.">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2 flex flex-col justify-end">
-            <Label>Shoot Start Time</Label>
-            <Input type="time" {...register("startTime")} />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Shoot Start Time</Label>
+            <Input type="time" {...register("startTime")} className="rounded-sm h-10 bg-muted/5" />
           </div>
           <div className="space-y-2 flex flex-col justify-end">
-            <Label>Shoot End Time</Label>
-            <Input type="time" {...register("endTime")} />
+            <Label className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">Shoot End Time</Label>
+            <Input type="time" {...register("endTime")} className="rounded-sm h-10 bg-muted/5" />
           </div>
         </div>
       </SettingsSection>

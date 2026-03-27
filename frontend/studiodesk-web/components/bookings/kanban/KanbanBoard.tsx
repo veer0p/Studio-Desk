@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react"
 import useSWR from "swr"
-import { fetcher, updateBookingStage } from "@/lib/api"
+import { fetchBookingsList, updateBookingStage } from "@/lib/api"
 import { toast } from "sonner"
 import { useSearchParams } from "next/navigation"
 
@@ -34,7 +34,7 @@ const PIPELINE_STAGES = [
 export default function KanbanBoard() {
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading, mutate } = useSWR(`/api/v1/bookings?view=kanban&${queryString}`, fetcher, {
+  const { data, isLoading, mutate } = useSWR(`/api/v1/bookings?pageSize=100&${queryString}`, fetchBookingsList, {
     dedupingInterval: 60000,
   })
 
@@ -56,8 +56,11 @@ export default function KanbanBoard() {
   // But since SWR caches, we can manipulate the cache directly optimistically
   // Fallback to empty mappings if loading
   const columns = useMemo(() => {
-    if (!data?.stages) return PIPELINE_STAGES.reduce((acc, stage) => ({ ...acc, [stage]: [] }), {} as Record<string, any[]>)
-    return data.stages
+    const list = Array.isArray(data?.list) ? data.list : []
+    return PIPELINE_STAGES.reduce((acc, stage) => {
+      acc[stage] = list.filter((booking: any) => booking.stage === stage)
+      return acc
+    }, {} as Record<string, any[]>)
   }, [data])
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -90,25 +93,18 @@ export default function KanbanBoard() {
     mutate(
       (currentData: any) => {
         if (!currentData) return currentData
-        const newStages = { ...currentData.stages }
+        const currentList = Array.isArray(currentData.list) ? [...currentData.list] : []
         
         // Find booking
-        let bookingToMove = null
-        if (newStages[activeStage]) {
-          const index = newStages[activeStage].findIndex((b: any) => b.id === bookingId)
-          if (index > -1) {
-            bookingToMove = newStages[activeStage][index]
-            newStages[activeStage].splice(index, 1)
-          }
-        }
-        
-        if (bookingToMove) {
-          bookingToMove.stage = overStage
-          if (!newStages[overStage]) newStages[overStage] = []
-          newStages[overStage].push(bookingToMove)
+        const index = currentList.findIndex((booking: any) => booking.id === bookingId)
+        if (index === -1) {
+          return currentData
         }
 
-        return { ...currentData, stages: newStages }
+        const bookingToMove = { ...currentList[index], stage: overStage }
+        currentList.splice(index, 1, bookingToMove)
+
+        return { ...currentData, list: currentList }
       },
       false // do not revalidate yet
     )

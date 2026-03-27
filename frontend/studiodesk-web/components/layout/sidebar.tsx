@@ -17,7 +17,11 @@ import {
     LogOut,
     User,
     Sun,
-    Moon
+    Moon,
+    Contact2,
+    FileText,
+    ShieldCheck,
+    Zap
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -42,9 +46,13 @@ import { signOut } from "@/lib/auth"
 
 const NAV_ITEMS = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
+    { icon: Contact2, label: "Leads", href: "/leads" },
     { icon: CalendarDays, label: "Bookings", href: "/bookings" },
     { icon: Users, label: "Clients", href: "/clients" },
+    { icon: FileText, label: "Proposals", href: "/proposals" },
+    { icon: ShieldCheck, label: "Contracts", href: "/contracts" },
     { icon: Receipt, label: "Finance", href: "/finance" },
+    { icon: Zap, label: "Addons", href: "/addons" },
     { icon: ImageIcon, label: "Gallery", href: "/gallery" },
     { icon: Users2, label: "Team", href: "/team" },
 ]

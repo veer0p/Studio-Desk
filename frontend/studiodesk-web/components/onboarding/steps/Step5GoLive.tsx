@@ -24,7 +24,7 @@ export default function Step5GoLive({ formData, onBack, isSubmitting, setIsSubmi
   const handleGoLive = async () => {
     setIsSubmitting(true)
     try {
-      if (formData.step1) await submitStudioProfile(formData.step1)
+      if (formData.step1) await submitStudioProfile(formData.step1, formData.step2?.phone)
       if (formData.step2) await submitOwnerProfile(formData.step2)
       if (formData.step3 && formData.step3.members.length > 0) await submitTeamMembers(formData.step3)
       if (formData.step4 && formData.step4.packages.length > 0) await submitPackages(formData.step4)
@@ -46,7 +46,7 @@ export default function Step5GoLive({ formData, onBack, isSubmitting, setIsSubmi
         <div className="w-16 h-16 bg-primary/10 text-primary flex items-center justify-center rounded-full mx-auto mb-4">
           <CheckCircle2 className="w-8 h-8" />
         </div>
-        <h2 className="text-3xl font-semibold tracking-tight mb-2">You're all set! 🎉</h2>
+        <h2 className="text-3xl font-semibold tracking-tight mb-2">You are all set! 🎉</h2>
         <p className="text-muted-foreground">Review your studio profile before going live.</p>
       </div>
       

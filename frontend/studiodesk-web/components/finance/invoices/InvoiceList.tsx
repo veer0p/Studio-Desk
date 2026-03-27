@@ -8,72 +8,16 @@ import { Input } from "@/components/ui/input"
 import { InvoiceRow } from "./InvoiceRow"
 import { InvoiceDetail } from "./InvoiceDetail"
 import { CreateInvoiceDialog } from "./CreateInvoiceDialog"
+import useSWR from "swr"
+import { fetchInvoicesList } from "@/lib/api"
 
 export function InvoiceList() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [searchQuery, setSearchQuery] = useState("")
 
-  // Stub data - will eventually use SWR mapping to lib/api.ts
-  const invoices = [
-    {
-      id: "INV-2026-001",
-      invoiceNumber: "INV-2026-001",
-      clientName: "Rohan & Priya",
-      clientCity: "Mumbai",
-      bookingName: "Wedding Coverage",
-      bookingId: "b-001",
-      issueDate: "12 Oct 2025",
-      dueDate: "27 Oct 2025",
-      amount: 240000,
-      paidAmount: 100000,
-      balance: 140000,
-      status: "Partial",
-      daysToDue: 5
-    },
-    {
-      id: "INV-2026-002",
-      invoiceNumber: "INV-2026-002",
-      clientName: "Neha Sharma",
-      clientCity: "Delhi",
-      bookingName: "Pre-wedding Shoot",
-      bookingId: "b-002",
-      issueDate: "15 Oct 2025",
-      dueDate: "16 Oct 2025",
-      amount: 45000,
-      paidAmount: 0,
-      balance: 45000,
-      status: "Overdue",
-      daysToDue: -2
-    },
-    {
-      id: "INV-2026-003",
-      invoiceNumber: "INV-2026-003",
-      clientName: "Amit Patel",
-      clientCity: "Ahmedabad",
-      bookingName: "Corporate Event",
-      issueDate: "18 Oct 2025",
-      dueDate: "02 Nov 2025",
-      amount: 120000,
-      paidAmount: 120000,
-      balance: 0,
-      status: "Paid"
-    },
-    {
-      id: "INV-2026-004",
-      invoiceNumber: "INV-2026-004",
-      clientName: "XYZ Corp",
-      clientCity: "Bangalore",
-      bookingName: "Product Launch",
-      issueDate: "20 Oct 2025",
-      dueDate: "25 Oct 2025",
-      amount: 85000,
-      paidAmount: 0,
-      balance: 85000,
-      status: "Sent",
-      daysToDue: 2
-    }
-  ]
+  const { data: response, isLoading } = useSWR("/api/v1/invoices", fetchInvoicesList)
+  const invoices = response?.list || []
 
   // If URL has id, it implies slide-over is open
   const openInvoiceId = searchParams.get("id")
@@ -97,8 +41,8 @@ export function InvoiceList() {
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 shrink-0">
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-semibold tracking-tight">Invoices</h2>
-            <span className="px-2 py-0.5 rounded-full bg-muted text-xs font-semibold text-muted-foreground">{invoices.length} total</span>
+            <h2 className="text-xl font-bold tracking-tight">Invoices</h2>
+            <span className="px-2 py-0.5 rounded-sm bg-muted text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">{invoices.length} total</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -127,7 +71,7 @@ export function InvoiceList() {
         </div>
 
         {/* Table Render */}
-        <div className="flex-1 bg-card border border-border/60 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div className="flex-1 bg-card border border-border/60 rounded-md overflow-hidden shadow-sm flex flex-col">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead className="bg-muted/50 border-b border-border/40 text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">
@@ -145,9 +89,19 @@ export function InvoiceList() {
                 </tr>
               </thead>
               <tbody>
-                {invoices.map((inv) => (
-                  <InvoiceRow key={inv.id} invoice={inv} onRowClick={handleRowClick} />
-                ))}
+                {isLoading ? (
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <tr key={i} className="animate-pulse border-b border-border/40">
+                      <td className="px-4 py-4" colSpan={10}>
+                        <div className="h-4 bg-muted rounded-sm w-full" />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  invoices.map((inv) => (
+                    <InvoiceRow key={inv.id} invoice={inv} onRowClick={handleRowClick} />
+                  ))
+                )}
               </tbody>
             </table>
           </div>

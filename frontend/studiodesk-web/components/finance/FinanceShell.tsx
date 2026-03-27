@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import useSWR from "swr"
-import { fetcher } from "@/lib/api"
+import { fetchFinanceSummary } from "@/lib/api"
 import { FinanceSummaryBar } from "./FinanceSummaryBar"
 
 export function FinanceShell({ children }: { children: React.ReactNode }) {
@@ -11,7 +11,7 @@ export function FinanceShell({ children }: { children: React.ReactNode }) {
   const currentTab = searchParams.get("tab") || "invoices"
 
   // Mock standard empty fetch for now until backend is populated
-  const { data: summary } = useSWR("/api/v1/finance/summary", fetcher, { 
+  const { data: summary } = useSWR("/api/v1/finance/summary", fetchFinanceSummary, { 
     fallbackData: {
       revenue: 320000,
       revenueGrowth: 18,
@@ -65,7 +65,7 @@ export function FinanceShell({ children }: { children: React.ReactNode }) {
             <button
               key={tab.id}
               onClick={() => setTab(tab.id)}
-              className={`pb-3 pt-1 px-4 text-sm font-medium whitespace-nowrap transition-colors border-b-2
+              className={`pb-3 pt-1 px-4 text-xs font-mono tracking-widest uppercase transition-colors border-b-2
                 ${currentTab === tab.id 
                   ? "border-primary text-foreground" 
                   : "border-transparent text-muted-foreground hover:text-foreground"

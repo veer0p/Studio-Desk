@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PaymentMethodBadge } from "../shared/PaymentMethodBadge"
 import { AddPaymentDialog } from "./AddPaymentDialog"
+import useSWR from "swr"
+import { fetchPaymentsList } from "@/lib/api"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,43 +20,9 @@ const formatINR = (amt: number) => new Intl.NumberFormat("en-IN", { style: "curr
 
 export function PaymentList() {
   const router = useRouter()
+  const { data: response, isLoading } = useSWR("/api/v1/payments", fetchPaymentsList)
   const [searchQuery, setSearchQuery] = useState("")
-
-  const payments = [
-    {
-      id: "pay-1",
-      date: "12 Oct 2025",
-      clientName: "Rohan & Priya",
-      bookingName: "Wedding Coverage",
-      invoiceRef: "INV-2026-001",
-      amount: 100000,
-      method: "Bank Transfer",
-      reference: "IMPS1234901",
-      recordedBy: "Ankit (Admin)"
-    },
-    {
-      id: "pay-2",
-      date: "10 Oct 2025",
-      clientName: "Amit Patel",
-      bookingName: "Corporate Event",
-      invoiceRef: "INV-2026-003",
-      amount: 120000,
-      method: "Cheque",
-      reference: "CHQ-009182",
-      recordedBy: "Priya (Manager)"
-    },
-    {
-      id: "pay-3",
-      date: "05 Oct 2025",
-      clientName: "Neha Sharma",
-      bookingName: "Pre-wedding Shoot",
-      invoiceRef: "",
-      amount: 15000,
-      method: "UPI",
-      reference: "TXN991203",
-      recordedBy: "Ankit (Admin)"
-    }
-  ]
+  const payments = response?.list || []
 
   const totalPayments = payments.reduce((acc, curr) => acc + curr.amount, 0)
 
@@ -62,8 +30,8 @@ export function PaymentList() {
     <div className="flex flex-col h-full space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">Payments Received</h2>
-          <span className="px-2 py-0.5 rounded-full bg-muted text-xs font-semibold text-muted-foreground">{payments.length} mapped</span>
+          <h2 className="text-xl font-bold tracking-tight">Payments Received</h2>
+          <span className="px-2 py-0.5 rounded-sm bg-muted text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">{payments.length} mapped</span>
         </div>
 
         <div className="flex items-center gap-3">
@@ -91,7 +59,7 @@ export function PaymentList() {
         </div>
       </div>
 
-      <div className="flex-1 bg-card border border-border/60 rounded-xl overflow-hidden shadow-sm flex flex-col">
+      <div className="flex-1 bg-card border border-border/60 rounded-md overflow-hidden shadow-sm flex flex-col">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead className="bg-muted/50 border-b border-border/40 text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">
@@ -108,56 +76,70 @@ export function PaymentList() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border/40">
-              {payments.map((pay) => (
-                <tr key={pay.id} className="hover:bg-muted/30 transition-colors">
-                  <td className="px-4 py-3 text-sm text-foreground whitespace-nowrap">{pay.date}</td>
-                  <td className="px-4 py-3 text-sm font-medium">{pay.clientName}</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground truncate max-w-[150px]">{pay.bookingName}</td>
-                  <td className="px-4 py-3 text-sm">
-                    {pay.invoiceRef ? (
-                      <span 
-                        onClick={() => router.push(`/finance?tab=invoices&id=${pay.invoiceRef}`)}
-                        className="font-mono text-primary hover:underline cursor-pointer"
-                      >
-                        {pay.invoiceRef}
+              {isLoading ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse">
+                    <td className="px-4 py-4" colSpan={9}>
+                      <div className="h-4 bg-muted rounded-sm w-full" />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                payments.map((pay) => (
+                  <tr key={pay.id} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-4 py-3 text-[11px] font-mono tracking-widest uppercase text-foreground whitespace-nowrap">{pay.date}</td>
+                    <td className="px-4 py-3 text-sm font-medium">{pay.clientName}</td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground truncate max-w-[150px]">{pay.bookingName}</td>
+                    <td className="px-4 py-3 text-sm">
+                      {pay.invoiceRef ? (
+                        <span 
+                          onClick={() => router.push(`/finance?tab=invoices&id=${pay.invoiceRef}`)}
+                          className="font-mono text-primary hover:underline cursor-pointer"
+                        >
+                          {pay.invoiceRef}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground italic text-[10px] uppercase font-mono tracking-widest">Unlinked</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <span className="text-[11px] font-mono tracking-widest uppercase font-semibold text-emerald-600">
+                        {formatINR(pay.amount)}
                       </span>
-                    ) : (
-                      <span className="text-muted-foreground italic text-xs">Unlinked</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right font-mono font-semibold text-emerald-600">{formatINR(pay.amount)}</td>
-                  <td className="px-4 py-3">
-                    <PaymentMethodBadge method={pay.method} />
-                  </td>
-                  <td className="px-4 py-3 text-xs font-mono text-muted-foreground">{pay.reference || "—"}</td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">{pay.recordedBy}</td>
-                  <td className="px-4 py-3 text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                          <Edit2 className="mr-2 h-4 w-4" /> Edit mapping
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
-                          <Trash2 className="mr-2 h-4 w-4" /> Delete payment
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-4 py-3">
+                      <PaymentMethodBadge method={pay.method} />
+                    </td>
+                    <td className="px-4 py-3 text-[10px] font-mono text-muted-foreground tracking-widest uppercase">{pay.reference || "—"}</td>
+                    <td className="px-4 py-3 text-[10px] font-mono text-muted-foreground uppercase tracking-widest">{pay.recordedBy}</td>
+                    <td className="px-4 py-3 text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Edit2 className="mr-2 h-4 w-4" /> Edit mapping
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="text-red-600">
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete payment
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
-      <div className="shrink-0 flex items-center justify-between p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-emerald-700 dark:text-emerald-400">
-        <span className="text-sm font-medium">Total logged payments this period</span>
-        <span className="font-mono font-bold text-lg">{formatINR(totalPayments)}</span>
+      <div className="shrink-0 flex items-center justify-between p-4 bg-muted border border-border/40 rounded-md text-emerald-600">
+        <span className="text-xs font-mono tracking-widest uppercase font-bold">Total logged payments this period</span>
+        <span className="font-mono font-bold text-lg tracking-widest uppercase">{formatINR(totalPayments)}</span>
       </div>
 
     </div>

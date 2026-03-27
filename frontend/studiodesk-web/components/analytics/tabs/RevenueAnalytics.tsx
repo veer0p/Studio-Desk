@@ -58,15 +58,15 @@ export function RevenueAnalytics() {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={timeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} dy={10} />
-              <YAxis tickFormatter={formatINR} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
+              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))", fontFamily: "var(--font-mono)" }} dy={10} />
+              <YAxis tickFormatter={formatINR} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))", fontFamily: "var(--font-mono)" }} />
               <Tooltip 
                 cursor={{ stroke: "hsl(var(--border))" }}
-                contentStyle={{ backgroundColor: "hsl(var(--popover))", borderRadius: "8px", border: "1px solid hsl(var(--border))" }}
+                contentStyle={{ backgroundColor: "hsl(var(--popover))", borderRadius: "4px", border: "1px solid hsl(var(--border))", fontSize: "10px", fontFamily: "var(--font-mono)" }}
                 formatter={(val: any) => [formatINR(val)]}
               />
-              <Line type="monotone" dataKey="rev" name="Revenue" stroke="#6366f1" strokeWidth={3} dot={false} activeDot={{ r: 6 }} />
-              <Line type="monotone" dataKey="exp" name="Expenses" stroke="#f43f5e" strokeWidth={3} dot={false} />
+              <Line type="monotone" dataKey="rev" name="Revenue" stroke="hsl(var(--foreground))" strokeWidth={2} dot={false} activeDot={{ r: 4, strokeWidth: 0 }} />
+              <Line type="monotone" dataKey="exp" name="Expenses" stroke="hsl(var(--muted-foreground))" strokeWidth={2} strokeDasharray="5 5" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -77,14 +77,14 @@ export function RevenueAnalytics() {
              <ResponsiveContainer width="100%" height="100%">
                <BarChart data={eventData} layout="vertical" margin={{ top: 0, right: 30, left: -20, bottom: 0 }}>
                  <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="hsl(var(--border))" />
-                 <XAxis type="number" tickFormatter={formatINR} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
-                 <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} dx={-10} />
+                 <XAxis type="number" tickFormatter={formatINR} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))", fontFamily: "var(--font-mono)" }} />
+                 <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))", fontFamily: "var(--font-mono)" }} dx={-10} />
                  <Tooltip 
                     cursor={{ fill: "hsl(var(--muted)/0.3)" }}
-                    contentStyle={{ backgroundColor: "hsl(var(--popover))", borderRadius: "8px", border: "1px solid hsl(var(--border))" }}
+                    contentStyle={{ backgroundColor: "hsl(var(--popover))", borderRadius: "4px", border: "1px solid hsl(var(--border))", fontSize: "10px", fontFamily: "var(--font-mono)" }}
                     formatter={(val: any) => [formatINR(val), "Revenue"]}
                  />
-                 <Bar dataKey="rev" fill="#6366f1" radius={[0, 4, 4, 0]} barSize={24} />
+                 <Bar dataKey="rev" fill="hsl(var(--foreground))" radius={[0, 2, 2, 0]} barSize={16} />
                </BarChart>
              </ResponsiveContainer>
           </ChartCard>
@@ -93,18 +93,18 @@ export function RevenueAnalytics() {
              <ResponsiveContainer width="100%" height="100%">
                <PieChart>
                  <Pie data={paymentData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={2} dataKey="value">
-                   {paymentData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                   {paymentData.map((entry, index) => <Cell key={`cell-${index}`} fill={`hsl(var(--foreground) / ${1 - index * 0.2})`} strokeWidth={0} />)}
                  </Pie>
                  <Tooltip 
-                    contentStyle={{ backgroundColor: "hsl(var(--popover))", borderRadius: "8px", border: "1px solid hsl(var(--border))" }}
+                    contentStyle={{ backgroundColor: "hsl(var(--popover))", borderRadius: "4px", border: "1px solid hsl(var(--border))", fontSize: "10px", fontFamily: "var(--font-mono)" }}
                     formatter={(val: any) => [formatINR(val), "Volume"]}
                  />
                </PieChart>
              </ResponsiveContainer>
              <div className="flex flex-wrap items-center justify-center gap-4 mt-2">
-                {paymentData.map(p => (
-                   <div key={p.name} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
+                {paymentData.map((p, index) => (
+                   <div key={p.name} className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest uppercase text-muted-foreground">
+                      <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: `hsl(var(--foreground) / ${1 - index * 0.2})` }} />
                       {p.name}
                    </div>
                 ))}
@@ -113,32 +113,32 @@ export function RevenueAnalytics() {
         </div>
 
         {/* PnL Table */}
-        <div className="bg-card border border-border/60 rounded-xl p-5 shadow-sm overflow-hidden">
+        <div className="bg-card border border-border/60 rounded-md p-5 shadow-sm overflow-hidden">
            <div className="flex items-center justify-between mb-4">
-             <h3 className="font-semibold text-foreground tracking-tight">Monthly P&L Ledger</h3>
-             <Button variant="outline" size="sm" className="h-8"><Download className="w-3 h-3 mr-2" /> CSV</Button>
+             <h3 className="text-[10px] font-mono font-bold tracking-widest uppercase text-foreground">Monthly P&L Ledger</h3>
+             <Button variant="outline" size="sm" className="h-8 rounded-sm text-[10px] font-mono font-bold tracking-widest uppercase"><Download className="w-3 h-3 mr-2" /> CSV</Button>
            </div>
            <div className="overflow-x-auto">
              <table className="w-full text-sm text-left">
-               <thead className="bg-muted/30 text-xs text-muted-foreground uppercase tracking-wider">
+               <thead className="bg-muted text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest border-y border-border/40">
                  <tr>
-                   <th className="font-medium px-4 py-3">Month</th>
-                   <th className="font-medium px-4 py-3 text-right">Revenue</th>
-                   <th className="font-medium px-4 py-3 text-right">Expenses</th>
-                   <th className="font-medium px-4 py-3 text-right">Net Income</th>
-                   <th className="font-medium px-4 py-3 text-right">Bookings</th>
-                   <th className="font-medium px-4 py-3 text-right">Avg Value</th>
+                   <th className="px-4 py-3">Month</th>
+                   <th className="px-4 py-3 text-right">Revenue</th>
+                   <th className="px-4 py-3 text-right">Expenses</th>
+                   <th className="px-4 py-3 text-right">Net Income</th>
+                   <th className="px-4 py-3 text-right">Bookings</th>
+                   <th className="px-4 py-3 text-right">Avg Value</th>
                  </tr>
                </thead>
                <tbody className="divide-y divide-border/40">
                  {timeData.map(row => (
-                   <tr key={row.name} className="hover:bg-muted/10">
-                     <td className="px-4 py-3 font-medium">{row.name}</td>
-                     <td className="px-4 py-3 text-right font-mono text-emerald-600">{row.rev.toLocaleString("en-IN")}</td>
-                     <td className="px-4 py-3 text-right font-mono text-red-500">{row.exp.toLocaleString("en-IN")}</td>
-                     <td className="px-4 py-3 text-right font-mono font-bold">{(row.rev - row.exp).toLocaleString("en-IN")}</td>
-                     <td className="px-4 py-3 text-right text-muted-foreground">12</td>
-                     <td className="px-4 py-3 text-right font-mono text-muted-foreground">{Math.round((row.rev)/12).toLocaleString("en-IN")}</td>
+                   <tr key={row.name} className="hover:bg-muted/10 transition-colors">
+                     <td className="px-4 py-3 font-mono text-[11px] font-bold">{row.name}</td>
+                     <td className="px-4 py-3 text-right font-mono text-[11px] text-foreground">{row.rev.toLocaleString("en-IN")}</td>
+                     <td className="px-4 py-3 text-right font-mono text-[11px] text-muted-foreground">{row.exp.toLocaleString("en-IN")}</td>
+                     <td className="px-4 py-3 text-right font-mono text-[11px] font-bold">{(row.rev - row.exp).toLocaleString("en-IN")}</td>
+                     <td className="px-4 py-3 text-right text-[11px] text-muted-foreground font-mono">12</td>
+                     <td className="px-4 py-3 text-right font-mono text-[11px] text-muted-foreground">{Math.round((row.rev)/12).toLocaleString("en-IN")}</td>
                    </tr>
                  ))}
                </tbody>

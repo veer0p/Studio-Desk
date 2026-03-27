@@ -93,7 +93,7 @@ export function NewClientDialog({ children }: { children: React.ReactNode }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[480px]">
+      <DialogContent className="sm:max-w-[480px] sm:rounded-md">
         <DialogHeader>
           <DialogTitle>New Client</DialogTitle>
         </DialogHeader>

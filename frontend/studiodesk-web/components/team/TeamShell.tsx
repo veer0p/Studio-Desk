@@ -34,15 +34,15 @@ export function TeamShell() {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-3xl font-bold tracking-tight">Team & HR</h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-wider">8 Members</span>
+              <span className="px-2.5 py-1 rounded-sm bg-muted border border-border/60 text-[10px] font-mono font-bold tracking-widest uppercase">8 Members</span>
             </div>
             <p className="text-muted-foreground mt-1 text-sm">Organize availability, detect shoot conflicts, and map TDS validations actively.</p>
           </div>
 
           <div className="flex items-center gap-3">
             <InviteMemberDialog>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
+              <Button className="rounded-sm font-mono text-[11px] font-bold tracking-widest uppercase px-6">
+                <Plus className="w-3.5 h-3.5 mr-2" />
                 Invite Member
               </Button>
             </InviteMemberDialog>
@@ -54,7 +54,7 @@ export function TeamShell() {
             <button
               key={tab.id}
               onClick={() => setTab(tab.id)}
-              className={`pb-3 pt-1 px-4 text-sm font-medium whitespace-nowrap transition-colors border-b-2
+              className={`pb-3 pt-1 px-4 text-[10px] font-mono font-bold tracking-widest uppercase whitespace-nowrap transition-colors border-b-2
                 ${currentTab === tab.id 
                   ? "border-primary text-foreground" 
                   : "border-transparent text-muted-foreground hover:text-foreground"

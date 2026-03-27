@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import useSWR from "swr"
-import { fetcher } from "@/lib/api"
+import { fetchClientsList } from "@/lib/api"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
@@ -37,7 +37,7 @@ export default function ClientsTable() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading } = useSWR(`/api/v1/clients?${queryString}`, fetcher, { dedupingInterval: 60000 })
+  const { data, isLoading } = useSWR(`/api/v1/clients?${queryString}`, fetchClientsList, { dedupingInterval: 60000 })
 
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -81,17 +81,17 @@ export default function ClientsTable() {
       header: "Tags",
       cell: ({ row }: any) => {
         const tags = row.original.tags || []
-        if (tags.length === 0) return <span className="text-xs text-muted-foreground">-</span>
+        if (tags.length === 0) return <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">-</span>
         
         return (
           <div className="flex items-center gap-1.5 flex-wrap max-w-[180px]">
             {tags.slice(0, 2).map((tag: string, i: number) => (
-              <span key={i} className="px-2 py-0.5 rounded-full bg-muted border border-border/40 text-[10px] font-medium text-muted-foreground whitespace-nowrap">
+              <span key={i} className="px-1.5 py-0.5 rounded-sm bg-muted border border-border/40 text-[9px] font-mono tracking-widest uppercase text-muted-foreground whitespace-nowrap">
                 {tag}
               </span>
             ))}
             {tags.length > 2 && (
-              <span className="text-[10px] text-muted-foreground font-medium">+{tags.length - 2}</span>
+              <span className="text-[9px] text-muted-foreground font-mono tracking-widest uppercase">+{tags.length - 2}</span>
             )}
           </div>
         )
@@ -108,7 +108,7 @@ export default function ClientsTable() {
         )
       },
       cell: ({ row }: any) => (
-        <span className="text-sm">{row.original.bookingsCount || 0}</span>
+        <span className="text-[11px] font-mono tracking-widest uppercase">{row.original.bookingsCount || 0}</span>
       )
     },
     {
@@ -124,7 +124,7 @@ export default function ClientsTable() {
         )
       },
       cell: ({ row }: any) => (
-        <div className="text-right font-mono text-sm font-medium">{formatAmount(row.original.totalSpend)}</div>
+        <div className="text-right font-mono text-[11px] tracking-widest uppercase font-medium mt-0.5">{formatAmount(row.original.totalSpend)}</div>
       )
     },
     {
@@ -140,7 +140,7 @@ export default function ClientsTable() {
         )
       },
       cell: ({ row }: any) => (
-        <div className="text-right text-sm text-muted-foreground">{row.original.lastBookingDate || "Never"}</div>
+        <div className="text-right text-[11px] font-mono tracking-widest uppercase text-muted-foreground mt-0.5">{row.original.lastBookingDate || "Never"}</div>
       )
     },
     {

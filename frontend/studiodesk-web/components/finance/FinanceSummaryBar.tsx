@@ -62,14 +62,14 @@ export function FinanceSummaryBar({ summary, onFilter }: { summary: any, onFilte
         {boxes.map((box) => (
           <Card 
             key={box.id} 
-            className={`w-[240px] shrink-0 border-border/60 shadow-sm transition-colors ${box.onClick ? 'cursor-pointer hover:border-primary/40' : ''}`}
+            className={`w-[240px] shrink-0 border-border/60 rounded-md shadow-sm transition-colors ${box.onClick ? 'cursor-pointer hover:border-primary/40' : ''}`}
             onClick={box.onClick}
           >
             <CardContent className="p-4 flex flex-col justify-center">
               <span className="text-sm font-medium text-muted-foreground mb-1">
                 {box.title}
               </span>
-              <span className={`text-2xl font-bold font-mono tracking-tight ${box.valueColor || "text-foreground"}`}>
+              <span className={`text-2xl font-bold font-mono tracking-widest uppercase ${box.valueColor || "text-foreground"}`}>
                 {box.value}
               </span>
               <div className="flex items-center mt-1">

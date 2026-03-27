@@ -6,60 +6,45 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { MemberCard } from "./MemberCard"
 
+import useSWR from "swr"
+import { fetchTeamMembers, TeamMember } from "@/lib/api"
+
 export function MemberList() {
   const [search, setSearch] = useState("")
+  const { data, isLoading } = useSWR("/api/v1/team", fetchTeamMembers)
 
-  const mockMembers = [
-    {
-      id: "m-001", name: "Rahul Sharma", initials: "RS", colorHash: "#ec4899", 
-      role: "Owner", designation: "Lead Photographer & Founder", 
-      phone: "+91 98765 43210", availability: "available",
-      shootsThisMonth: 14, pendingPayout: 0
-    },
-    {
-      id: "m-002", name: "Vikram Singh", initials: "VS", colorHash: "#3b82f6", 
-      role: "Videographer", designation: "Cinematic Film Director", 
-      phone: "+91 87654 32109", availability: "partial",
-      shootsThisMonth: 8, pendingPayout: 45000
-    },
-    {
-      id: "m-003", name: "Ananya Patel", initials: "AP", colorHash: "#10b981", 
-      role: "Editor", designation: "Colorist & Post-Production", 
-      phone: "+91 76543 21098", availability: "available",
-      shootsThisMonth: 0, pendingPayout: 12500
-    },
-    {
-      id: "m-004", name: "Karan Desai", initials: "KD", colorHash: "#f59e0b", 
-      role: "Drone Operator", designation: "Aerial Specialist", 
-      phone: "+91 65432 10987", availability: "partial",
-      shootsThisMonth: 5, pendingPayout: 25000
-    },
-    {
-      id: "m-005", name: "Amit Verma", initials: "AV", colorHash: "#8b5cf6", 
-      role: "Freelancer", designation: "Second Shooter", 
-      phone: "+91 54321 09876", availability: "unavailable",
-      shootsThisMonth: 2, pendingPayout: 8000
-    }
-  ]
+  const members = data?.list || []
+  const filtered = members.filter(m => 
+    m.name.toLowerCase().includes(search.toLowerCase()) || 
+    m.role.toLowerCase().includes(search.toLowerCase())
+  )
 
-  const filtered = mockMembers.filter(m => m.name.toLowerCase().includes(search.toLowerCase()) || m.role.toLowerCase().includes(search.toLowerCase()))
+  if (isLoading) {
+    return (
+      <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="h-48 rounded-md bg-muted/20 animate-pulse border border-border/40" />
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div className="h-full flex flex-col p-8">
       
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
         <div className="relative w-full sm:w-[320px]">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <Input 
             placeholder="Search by name, role..." 
-            className="pl-9 bg-background border-border/60 shadow-sm"
+            className="pl-9 bg-background border-border/60 shadow-sm rounded-sm h-9 text-xs font-mono"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <div className="flex items-center gap-2 max-sm:w-full">
-          <Button variant="outline" className="bg-background max-sm:flex-1">
-            <Filter className="w-4 h-4 mr-2" /> Role Filters
+          <Button variant="outline" className="bg-background max-sm:flex-1 rounded-sm h-9 text-[10px] font-mono font-bold tracking-widest uppercase border-border/60">
+            <Filter className="w-3.5 h-3.5 mr-2" /> Filters
           </Button>
         </div>
       </div>

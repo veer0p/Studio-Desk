@@ -4,7 +4,8 @@ import { Errors } from '@/lib/errors'
 import { studioRepo } from '@/lib/repositories/studio.repo'
 import { teamRepo } from '@/lib/repositories/team.repo'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { signupSchema, loginSchema, updatePasswordSchema } from '@/lib/validations/auth.schema'
+import { getMemberByUserId } from '@/lib/supabase/queries'
+import { signupSchema, loginSchema, updateMeSchema, updatePasswordSchema } from '@/lib/validations/auth.schema'
 
 export class AuthService {
   static async signup(supabase: any, input: unknown) {
@@ -130,6 +131,72 @@ export class AuthService {
       password: validated.password
     })
     if (error) throw error
+  }
+
+  static async updateMe(supabase: any, input: unknown) {
+    const validated = updateMeSchema.parse(input)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) throw Errors.unauthorized()
+
+    const member = await getMemberByUserId(supabase, user.id)
+    if (!member) throw Errors.forbidden()
+
+    const admin = createAdminClient()
+    const now = new Date().toISOString()
+
+    const nextMetadata = {
+      ...(user.user_metadata ?? {}),
+    } as Record<string, unknown>
+
+    if (validated.full_name !== undefined) nextMetadata.full_name = validated.full_name
+    if (validated.preferred_language !== undefined) nextMetadata.preferred_language = validated.preferred_language
+    if (validated.designation !== undefined) nextMetadata.designation = validated.designation
+
+    if (
+      validated.full_name !== undefined ||
+      validated.preferred_language !== undefined ||
+      validated.designation !== undefined
+    ) {
+      const { error: authUpdateError } = await admin.auth.admin.updateUserById(user.id, {
+        user_metadata: nextMetadata,
+      })
+      if (authUpdateError) throw authUpdateError
+    }
+
+    const memberUpdate: Record<string, unknown> = {
+      updated_at: now,
+    }
+    if (validated.full_name !== undefined) memberUpdate.display_name = validated.full_name
+    if (validated.phone !== undefined) memberUpdate.phone = validated.phone
+    if (validated.whatsapp !== undefined) memberUpdate.whatsapp = validated.whatsapp
+
+    if (Object.keys(memberUpdate).length > 1) {
+      const { error: memberUpdateError } = await admin
+        .from('studio_members')
+        .update(memberUpdate)
+        .eq('id', member.member_id)
+        .eq('user_id', user.id)
+
+      if (memberUpdateError) {
+        throw Errors.validation('Failed to update member profile')
+      }
+    }
+
+    if (validated.full_name !== undefined) {
+      const { error: userUpdateError } = await admin
+        .from('users')
+        .update({
+          full_name: validated.full_name,
+          updated_at: now,
+        } as any)
+        .eq('id', user.id)
+
+      if (userUpdateError) {
+        throw Errors.validation('Failed to update user profile')
+      }
+    }
+
+    return this.me(supabase)
   }
 
   static async me(supabase: any) {

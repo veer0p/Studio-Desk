@@ -37,23 +37,23 @@ export function ClientGallery({ slug }: { slug: string }) {
       <div className="w-full bg-background border-b border-border/40 sticky top-0 z-40 bg-background/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-bold tracking-widest text-primary uppercase mb-1">{gallery.studioName}</p>
-            <h1 className="text-xl md:text-2xl font-semibold tracking-tight">{gallery.title}</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">{gallery.date}</p>
+            <p className="text-[10px] font-mono tracking-widest text-primary uppercase mb-1">{gallery.studioName}</p>
+            <h1 className="text-xl md:text-2xl font-bold tracking-tight">{gallery.title}</h1>
+            <p className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground mt-1">{gallery.date}</p>
           </div>
 
-          <div className="flex bg-muted/30 p-1 rounded-xl border border-border/40">
+          <div className="flex bg-muted/40 p-1 rounded-md border border-border/60">
             <button
               onClick={() => setActiveTab("photos")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'photos' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-sm text-[10px] font-mono font-bold tracking-widest uppercase transition-colors ${activeTab === 'photos' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
             >
-              <ImageIcon className="w-4 h-4" /> Photos
+              <ImageIcon className="w-3.5 h-3.5" /> Photos
             </button>
             <button
               onClick={() => setActiveTab("videos")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'videos' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-sm text-[10px] font-mono font-bold tracking-widest uppercase transition-colors ${activeTab === 'videos' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
             >
-              <Video className="w-4 h-4" /> Videos
+              <Video className="w-3.5 h-3.5" /> Videos
             </button>
           </div>
         </div>
@@ -85,8 +85,8 @@ export function ClientGallery({ slug }: { slug: string }) {
       )}
       
       {/* Footer */}
-      <div className="py-8 text-center text-xs text-muted-foreground border-t border-border/20 mt-auto">
-        Powered by <span className="font-semibold text-foreground/70">StudioDesk</span>
+      <div className="py-8 text-center text-[10px] font-mono tracking-widest uppercase text-muted-foreground border-t border-border/20 mt-auto">
+        Powered by <span className="font-bold text-foreground">StudioDesk</span>
       </div>
 
     </div>

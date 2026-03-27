@@ -1,12 +1,11 @@
 // app/portal/[studioSlug]/gallery/page.tsx
 import Link from "next/link"
-import { ImageIcon, ArrowRight, Lock } from "lucide-react"
+import Image from "next/image"
+import { ArrowRight, Lock } from "lucide-react"
 
 export const metadata = { title: "My Galleries | Client Portal" }
 
-export default async function PortalGalleriesPage(props: { params: Promise<{ studioSlug: string }> }) {
-  const params = await props.params
-  
+export default function PortalGalleriesPage() {
   const galleries = [
     {
        name: "Priya & Raj - Haldi & Mehndi",
@@ -35,10 +34,18 @@ export default async function PortalGalleriesPage(props: { params: Promise<{ stu
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {galleries.map(g => (
           g.status === 'Published' ? (
-             <Link key={g.slug} href={`/gallery/${g.slug}`} className="block group">
+             <Link key={g.slug} href={`/gallery/p/${g.slug}`} className="block group">
                <div className="bg-card border border-border/60 hover:border-[hsl(var(--portal-primary))/40] rounded-2xl overflow-hidden shadow-sm transition-all h-full">
                  <div className="w-full h-48 bg-muted relative overflow-hidden">
-                   {g.cover && <img src={g.cover} alt={g.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />}
+                   {g.cover && (
+                     <Image
+                       src={g.cover}
+                       alt={g.name}
+                       fill
+                       sizes="(min-width: 768px) 50vw, 100vw"
+                       className="object-cover transition-transform duration-700 group-hover:scale-105"
+                     />
+                   )}
                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                    <div className="absolute bottom-4 left-4 text-white">
                       <span className="text-xs font-bold uppercase tracking-widest bg-white/20 backdrop-blur-md px-2 py-0.5 rounded shadow">Unlocked</span>

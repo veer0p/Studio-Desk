@@ -20,22 +20,22 @@ export function ClientFinance({ client }: { client: any }) {
       
       {/* Finance Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border-border/60 shadow-sm">
-          <CardContent className="p-6 flex flex-col">
-            <span className="text-sm font-medium text-muted-foreground mb-2">Total Invoiced</span>
-            <span className="text-2xl font-semibold font-mono">{formatAmount(totalInvoiced)}</span>
+        <Card className="border-border/60 shadow-none bg-muted/5 rounded-md">
+          <CardContent className="p-6 flex flex-col justify-center">
+            <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Total Invoiced</span>
+            <span className="text-sm font-mono tracking-widest uppercase text-foreground">{formatAmount(totalInvoiced)}</span>
           </CardContent>
         </Card>
-        <Card className="border-border/60 shadow-sm">
-          <CardContent className="p-6 flex flex-col">
-            <span className="text-sm font-medium text-muted-foreground mb-2">Total Paid</span>
-            <span className="text-2xl font-semibold font-mono text-emerald-600">{formatAmount(totalPaid)}</span>
+        <Card className="border-border/60 shadow-none bg-muted/5 rounded-md">
+          <CardContent className="p-6 flex flex-col justify-center">
+            <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Total Paid</span>
+            <span className="text-sm font-mono tracking-widest uppercase text-foreground">{formatAmount(totalPaid)}</span>
           </CardContent>
         </Card>
-        <Card className={`border-border/60 shadow-sm ${outstanding > 0 ? "bg-amber-500/5 border-amber-500/20" : ""}`}>
-          <CardContent className="p-6 flex flex-col">
-            <span className="text-sm font-medium text-muted-foreground mb-2">Outstanding Balance</span>
-            <span className={`text-2xl font-semibold font-mono ${outstanding > 0 ? "text-amber-600" : ""}`}>
+        <Card className="border-border/60 shadow-none bg-muted/5 rounded-md">
+          <CardContent className="p-6 flex flex-col justify-center">
+            <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Outstanding Balance</span>
+            <span className={`text-sm font-mono tracking-widest uppercase ${outstanding > 0 ? "text-foreground" : "text-muted-foreground/50"}`}>
               {formatAmount(outstanding)}
             </span>
           </CardContent>
@@ -45,16 +45,16 @@ export function ClientFinance({ client }: { client: any }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
         {/* Invoices List */}
         <div className="flex flex-col space-y-4">
-          <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Recent Invoices</h3>
+          <h3 className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">Recent Invoices</h3>
           
-          <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
+          <div className="rounded-md border border-border/60 bg-card overflow-hidden text-sm">
             {client.invoices && client.invoices.length > 0 ? (
               <table className="w-full text-sm text-left">
-                <thead className="bg-muted/50 text-xs text-muted-foreground border-b border-border/40">
+                <thead className="bg-muted/5 text-[10px] font-mono tracking-widest uppercase text-muted-foreground border-b border-border/40">
                   <tr>
                     <th className="px-4 py-3 font-medium">Invoice</th>
-                    <th className="px-4 py-3 font-medium">Amount</th>
-                    <th className="px-4 py-3 font-medium">Status</th>
+                    <th className="px-4 py-3 font-medium text-right">Amount</th>
+                    <th className="px-4 py-3 font-medium text-center">Status</th>
                     <th className="px-4 py-3 text-right font-medium"></th>
                   </tr>
                 </thead>
@@ -62,15 +62,15 @@ export function ClientFinance({ client }: { client: any }) {
                   {client.invoices.map((inv: any) => (
                     <tr key={inv.id} className="hover:bg-muted/30 transition-colors">
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="font-medium">{inv.number}</div>
-                        <div className="text-xs text-muted-foreground">{inv.date}</div>
+                        <div className="font-mono text-[11px] uppercase tracking-widest">{inv.number}</div>
+                        <div className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mt-0.5">{inv.date}</div>
                       </td>
-                      <td className="px-4 py-3 font-mono">{formatAmount(inv.amount)}</td>
-                      <td className="px-4 py-3">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                          inv.status === "Paid" ? "bg-emerald-500/10 text-emerald-600" :
-                          inv.status === "Sent" ? "bg-blue-500/10 text-blue-600" :
-                          "bg-amber-500/10 text-amber-600"
+                      <td className="px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-right">{formatAmount(inv.amount)}</td>
+                      <td className="px-4 py-3 text-center">
+                        <span className={`px-1.5 py-0.5 rounded-sm text-[9px] font-mono tracking-widest uppercase border ${
+                          inv.status === "Paid" ? "bg-muted/50 text-foreground border-border/60" :
+                          inv.status === "Sent" ? "bg-muted/30 text-muted-foreground border-border/40" :
+                          "bg-foreground text-background border-foreground"
                         }`}>
                           {inv.status}
                         </span>
@@ -95,27 +95,27 @@ export function ClientFinance({ client }: { client: any }) {
 
         {/* Payments List */}
         <div className="flex flex-col space-y-4">
-          <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Payment History</h3>
+          <h3 className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">Payment History</h3>
           
-          <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
+          <div className="rounded-md border border-border/60 bg-card overflow-hidden text-sm">
             {client.payments && client.payments.length > 0 ? (
               <table className="w-full text-sm text-left">
-                <thead className="bg-muted/50 text-xs text-muted-foreground border-b border-border/40">
+                <thead className="bg-muted/5 text-[10px] font-mono tracking-widest uppercase text-muted-foreground border-b border-border/40">
                   <tr>
                     <th className="px-4 py-3 font-medium">Date</th>
-                    <th className="px-4 py-3 font-medium">Amount</th>
+                    <th className="px-4 py-3 font-medium text-right">Amount</th>
                     <th className="px-4 py-3 font-medium">Method</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
                   {client.payments.map((pay: any) => (
                     <tr key={pay.id} className="hover:bg-muted/30 transition-colors">
-                      <td className="px-4 py-3 whitespace-nowrap text-muted-foreground">{pay.date}</td>
-                      <td className="px-4 py-3 font-mono font-medium text-emerald-600">{formatAmount(pay.amount)}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-[11px] font-mono tracking-widest uppercase text-muted-foreground">{pay.date}</td>
+                      <td className="px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-right">{formatAmount(pay.amount)}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs">{pay.method}</span>
-                          {pay.reference && <span className="text-[10px] text-muted-foreground isolate px-1.5 rounded bg-muted">Ref: {pay.reference}</span>}
+                          <span className="text-[11px] font-mono uppercase tracking-widest">{pay.method}</span>
+                          {pay.reference && <span className="text-[9px] font-mono tracking-widest uppercase text-muted-foreground isolate px-1.5 rounded-sm bg-muted border border-border/40">Ref: {pay.reference}</span>}
                         </div>
                       </td>
                     </tr>

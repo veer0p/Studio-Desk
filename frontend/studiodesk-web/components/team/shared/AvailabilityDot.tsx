@@ -10,9 +10,9 @@ export function AvailabilityDot({ status }: { status: "available" | "partial" | 
   const [bgClass, ringClass] = colors[status].split(" ")
   
   return (
-    <span className="relative flex h-3 w-3">
-      <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-40 ${bgClass}`}></span>
-      <span className={`relative inline-flex rounded-full h-3 w-3 border border-white/20 shadow-sm ${bgClass}`}></span>
+    <span className="relative flex h-2.5 w-2.5">
+      <span className={`animate-pulse absolute inline-flex h-full w-full rounded-sm opacity-30 ${bgClass}`}></span>
+      <span className={`relative inline-flex rounded-sm h-2.5 w-2.5 border border-white/20 shadow-sm ${bgClass}`}></span>
     </span>
   )
 }

@@ -15,17 +15,17 @@ import {
 const formatINR = (amt: number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(amt)
 
 const getCategoryBadge = (category: string) => {
-  const base = "flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium tracking-wide w-fit border"
+  const base = "flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-[9px] font-mono font-bold tracking-widest uppercase w-fit border bg-muted text-foreground"
   switch (category.toLowerCase()) {
-    case 'equipment': return <span className={`${base} bg-blue-500/10 text-blue-600 border-blue-500/20`}><Camera className="w-3 h-3"/> Equipment</span>
-    case 'travel': return <span className={`${base} bg-amber-500/10 text-amber-600 border-amber-500/20`}><Car className="w-3 h-3"/> Travel</span>
-    case 'studio rent': return <span className={`${base} bg-indigo-500/10 text-indigo-600 border-indigo-500/20`}><Building2 className="w-3 h-3"/> Studio Rent</span>
-    case 'freelancer fee': return <span className={`${base} bg-emerald-500/10 text-emerald-600 border-emerald-500/20`}><Users className="w-3 h-3"/> Freelancer</span>
-    case 'software': return <span className={`${base} bg-violet-500/10 text-violet-600 border-violet-500/20`}><Monitor className="w-3 h-3"/> Software</span>
-    case 'marketing': return <span className={`${base} bg-pink-500/10 text-pink-600 border-pink-500/20`}><Megaphone className="w-3 h-3"/> Marketing</span>
-    case 'printing': return <span className={`${base} bg-slate-500/10 text-slate-600 border-slate-500/20`}><Printer className="w-3 h-3"/> Printing</span>
-    case 'food & misc': return <span className={`${base} bg-orange-500/10 text-orange-600 border-orange-500/20`}><Coffee className="w-3 h-3"/> Food & Misc</span>
-    default: return <span className={`${base} bg-muted text-muted-foreground border-border/40`}><HelpCircle className="w-3 h-3"/> Other</span>
+    case 'equipment': return <span className={`${base} border-primary/20`}><Camera className="w-3 h-3"/> Equipment</span>
+    case 'travel': return <span className={`${base} border-primary/40`}><Car className="w-3 h-3"/> Travel</span>
+    case 'studio rent': return <span className={`${base} border-primary/30`}><Building2 className="w-3 h-3"/> Rent</span>
+    case 'freelancer fee': return <span className={`${base} border-primary/50`}><Users className="w-3 h-3"/> Freelancer</span>
+    case 'software': return <span className={`${base} border-border/60`}><Monitor className="w-3 h-3"/> Software</span>
+    case 'marketing': return <span className={`${base} border-border/40`}><Megaphone className="w-3 h-3"/> Marketing</span>
+    case 'printing': return <span className={`${base} border-border/30`}><Printer className="w-3 h-3"/> Printing</span>
+    case 'food & misc': return <span className={`${base} border-border/20`}><Coffee className="w-3 h-3"/> Food & Misc</span>
+    default: return <span className={`${base} border-border/40`}><HelpCircle className="w-3 h-3"/> Other</span>
   }
 }
 
@@ -82,8 +82,8 @@ export function ExpenseList() {
     <div className="flex flex-col h-full space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">Expenses</h2>
-          <span className="px-2 py-0.5 rounded-full bg-muted text-xs font-semibold text-muted-foreground">{expenses.length} records</span>
+          <h2 className="text-xl font-bold tracking-tight">Expenses</h2>
+          <span className="px-2 py-0.5 rounded-sm bg-muted text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">{expenses.length} records</span>
         </div>
 
         <div className="flex items-center gap-3">
@@ -111,7 +111,7 @@ export function ExpenseList() {
         </div>
       </div>
 
-      <div className="flex-1 bg-card border border-border/60 rounded-xl overflow-hidden shadow-sm flex flex-col">
+      <div className="flex-1 bg-card border border-border/60 rounded-md overflow-hidden shadow-sm flex flex-col">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead className="bg-muted/50 border-b border-border/40 text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">
@@ -129,13 +129,20 @@ export function ExpenseList() {
             <tbody className="divide-y divide-border/40">
               {expenses.map((exp) => (
                 <tr key={exp.id} className="hover:bg-muted/30 transition-colors">
-                  <td className="px-4 py-3 text-sm text-foreground whitespace-nowrap">{exp.date}</td>
+                  <td className="px-4 py-3 text-[11px] font-mono tracking-widest uppercase text-foreground whitespace-nowrap">{exp.date}</td>
                   <td className="px-4 py-3 text-sm font-medium text-foreground">{exp.description}</td>
                   <td className="px-4 py-3">{getCategoryBadge(exp.category)}</td>
                   <td className="px-4 py-3 text-sm text-muted-foreground">{exp.vendor || "—"}</td>
-                  <td className="px-4 py-3 text-right font-mono font-semibold text-foreground">{formatINR(exp.amount)}</td>
-                  <td className="px-4 py-3 text-right font-mono text-xs text-emerald-600">{exp.gstInput > 0 ? formatINR(exp.gstInput) : "—"}</td>
-                  <td className="px-4 py-3 text-center">
+                  <td className="px-4 py-3 text-right">
+                    <span className="text-[11px] font-mono tracking-widest uppercase font-semibold text-foreground">
+                      {formatINR(exp.amount)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <span className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">
+                      {exp.gstInput > 0 ? formatINR(exp.gstInput) : "—"}
+                    </span>
+                  </td>                  <td className="px-4 py-3 text-center">
                     {exp.hasReceipt ? (
                       <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full bg-muted/50 text-blue-500 hover:text-blue-600 hover:bg-blue-500/10">
                         <Paperclip className="w-3.5 h-3.5" />
@@ -168,14 +175,14 @@ export function ExpenseList() {
         </div>
       </div>
 
-      <div className="shrink-0 flex items-center justify-between p-4 bg-muted border border-border/60 rounded-xl text-foreground">
+      <div className="shrink-0 flex items-center justify-between p-4 bg-muted border border-border/60 rounded-md text-foreground">
         <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1">Total Expenses</span>
-          <span className="font-mono font-bold text-lg">{formatINR(totalExp)}</span>
+          <span className="text-[10px] text-muted-foreground font-mono font-bold uppercase tracking-widest mb-1">Total Expenses</span>
+          <span className="font-mono font-bold text-lg tracking-widest uppercase">{formatINR(totalExp)}</span>
         </div>
         <div className="flex flex-col text-right">
-          <span className="text-xs text-emerald-600 font-medium uppercase tracking-wider mb-1">Total GST Input Credit</span>
-          <span className="font-mono font-bold text-emerald-600">{formatINR(totalGst)}</span>
+          <span className="text-[10px] text-muted-foreground font-mono font-bold uppercase tracking-widest mb-1">Total GST Input Credit</span>
+          <span className="font-mono font-bold text-foreground tracking-widest uppercase">{formatINR(totalGst)}</span>
         </div>
       </div>
 

@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import useSWR from "swr"
-import { fetcher } from "@/lib/api"
+import { fetchBookingDetail } from "@/lib/api"
 import SlideOverTabs from "@/components/bookings/slideover/SlideOverTabs"
 import { EventTypeDot } from "@/components/bookings/shared/EventTypeDot"
 import { BookingStatusBadge } from "@/components/bookings/shared/BookingStatusBadge"
@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function MobileBookingDetail({ id }: { id: string }) {
   const router = useRouter()
-  const { data: booking, isLoading } = useSWR(`/api/v1/bookings/${id}`, fetcher, { dedupingInterval: 60000 })
+  const { data: booking, isLoading } = useSWR(`/api/v1/bookings/${id}`, fetchBookingDetail, { dedupingInterval: 60000 })
 
   useEffect(() => {
     // If on large screens, automatically route to the slideover experience

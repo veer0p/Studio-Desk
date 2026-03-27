@@ -39,16 +39,16 @@ export function ClientAvatar({ name, size = "md", className }: ClientAvatarProps
   const initials = getInitials(name || "Unknown")
 
   const sizeClasses = {
-    sm: "w-8 h-8 text-[11px]",       // 32px
-    md: "w-10 h-10 text-[13px]",     // 40px
-    lg: "w-16 h-16 text-xl",         // 64px
-    xl: "w-20 h-20 text-2xl",        // 80px
+    sm: "w-8 h-8 text-[9px]",
+    md: "w-10 h-10 text-[10px]",
+    lg: "w-16 h-16 text-sm",
+    xl: "w-20 h-20 text-base",
   }
 
   return (
     <div 
       className={cn(
-        "rounded-full flex items-center justify-center font-semibold text-white tracking-wider shrink-0 overflow-hidden",
+        "rounded-sm flex items-center justify-center font-mono tracking-widest uppercase text-white shrink-0 overflow-hidden",
         bgColor,
         sizeClasses[size],
         className

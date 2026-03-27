@@ -54,16 +54,16 @@ export function GalleryAccessGate({ slug, children }: { slug: string, children: 
       <div className="w-full max-w-sm text-center space-y-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">StudioDesk Defaults</h1>
-          <p className="text-muted-foreground text-sm mt-2">Rohan & Priya — Wedding Highlights</p>
+          <p className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mt-2">Rohan & Priya — Wedding Highlights</p>
         </div>
 
-        <div className="bg-card p-8 rounded-2xl shadow-sm border border-border/60">
-          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Lock className="w-5 h-5 text-primary" />
+        <div className="bg-card p-8 rounded-md shadow-sm border border-border/60">
+          <div className="w-10 h-10 bg-muted border border-border/40 rounded-sm flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-4 h-4 text-muted-foreground" />
           </div>
           
-          <h2 className="font-semibold text-lg mb-2">Enter Gallery PIN</h2>
-          <p className="text-sm text-muted-foreground mb-6">This gallery is protected by a 4-digit PIN.</p>
+          <h2 className="font-bold text-lg mb-1 tracking-tight">Enter Gallery PIN</h2>
+          <p className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground mb-6">Protected Content</p>
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="flex justify-center gap-3">
@@ -76,19 +76,19 @@ export function GalleryAccessGate({ slug, children }: { slug: string, children: 
                   value={digit}
                   onChange={(e) => handlePinChange(idx, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(idx, e)}
-                  className={`w-14 h-16 text-center text-2xl font-bold rounded-xl border-2 transition-colors ${
+                  className={`w-14 h-16 text-center text-2xl font-mono font-bold rounded-md border-2 transition-colors ${
                     error ? 'border-red-500 bg-red-500/5' : 
                     digit ? 'border-primary bg-primary/5' : 'border-border/60 bg-muted/20'
-                  } focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/20`}
+                  } focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20`}
                 />
               ))}
             </div>
             
-            {error && <p className="text-sm text-red-500 font-medium">Incorrect PIN. Try 1928.</p>}
+            {error && <p className="text-[10px] font-mono font-bold tracking-widest uppercase text-red-500">Incorrect PIN. Try 1928.</p>}
             
             <Button 
               type="submit" 
-              className="w-full h-12 rounded-xl text-base"
+              className="w-full h-12 rounded-md text-[11px] font-mono font-bold tracking-widest uppercase"
               disabled={pin.join("").length < 4}
             >
               Unlock Gallery

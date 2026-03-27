@@ -14,7 +14,7 @@ export default function ClientCard({ client }: { client: any }) {
   const tags = client.tags || []
 
   return (
-    <div className="flex flex-col bg-card border border-border/60 rounded-xl overflow-hidden shadow-sm hover:ring-1 hover:ring-primary/30 hover:scale-[1.01] transition-all duration-200">
+    <div className="flex flex-col bg-card border border-border/60 rounded-md overflow-hidden shadow-none hover:ring-1 hover:ring-foreground/10 transition-all duration-200">
       <div className="p-6 flex flex-col items-center text-center">
         <ClientAvatar name={client.name || "Unknown"} size="lg" className="mb-4" />
         
@@ -23,12 +23,12 @@ export default function ClientCard({ client }: { client: any }) {
         
         <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 w-full h-6">
           {tags.slice(0, 3).map((tag: string, i: number) => (
-            <span key={i} className="px-2 py-0.5 rounded-full bg-muted border border-border/40 text-[10px] font-medium text-muted-foreground whitespace-nowrap">
+            <span key={i} className="px-1.5 py-0.5 rounded-sm bg-muted border border-border/40 text-[9px] font-mono uppercase tracking-widest text-muted-foreground whitespace-nowrap">
               {tag}
             </span>
           ))}
           {tags.length > 3 && (
-            <span className="text-[10px] text-muted-foreground font-medium">+{tags.length - 3}</span>
+            <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">+{tags.length - 3}</span>
           )}
         </div>
       </div>
@@ -37,25 +37,25 @@ export default function ClientCard({ client }: { client: any }) {
 
       <div className="grid grid-cols-3 divide-x divide-border/40 p-4 shrink-0 text-center">
         <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground mb-1 font-medium">Bookings</span>
-          <span className="font-semibold">{client.bookingsCount || 0}</span>
+          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Bookings</span>
+          <span className="text-[11px] font-mono tracking-widest uppercase text-foreground">{client.bookingsCount || 0}</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground mb-1 font-medium">Total Spend</span>
-          <span className="font-mono font-semibold">{formatAmount(client.totalSpend)}</span>
+          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Total Spend</span>
+          <span className="text-[11px] font-mono tracking-widest uppercase text-foreground">{formatAmount(client.totalSpend)}</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground mb-1 font-medium">Last Seen</span>
-          <span className="text-sm">{client.lastBookingDate || "Never"}</span>
+          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Last Seen</span>
+          <span className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">{client.lastBookingDate || "Never"}</span>
         </div>
       </div>
 
       <div className="border-t border-border/40" />
 
-      <div className="grid grid-cols-2 p-2 gap-2 bg-muted/10">
+      <div className="grid grid-cols-2 p-2 gap-2 bg-muted/5 border-t border-border/40">
         <Button 
           variant="ghost" 
-          className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 font-medium"
+          className="text-muted-foreground hover:text-foreground text-[11px] font-mono uppercase tracking-widest"
           asChild
         >
           <a href={`https://wa.me/${client.phone?.replace(/\D/g, "") || ""}`} target="_blank" rel="noreferrer">
@@ -64,6 +64,7 @@ export default function ClientCard({ client }: { client: any }) {
         </Button>
         <Button 
           variant="ghost" 
+          className="text-foreground text-[11px] font-mono uppercase tracking-widest"
           onClick={() => router.push(`/clients/${client.id}`)}
         >
           View Profile

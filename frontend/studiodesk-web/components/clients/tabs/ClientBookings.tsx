@@ -57,9 +57,9 @@ export function ClientBookings({ client }: { client: any }) {
 
       {/* Bookings List */}
       {filteredBookings.length === 0 ? (
-        <Card className="border-dashed border-2 bg-muted/10 h-64 flex items-center justify-center">
+        <Card className="border-dashed border-border/60 bg-muted/5 h-64 flex items-center justify-center rounded-md shadow-none">
           <CardContent className="flex flex-col items-center pt-6">
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
+            <div className="w-12 h-12 rounded-sm bg-muted flex items-center justify-center mb-4">
               <span className="text-xl opacity-50">📅</span>
             </div>
             <p className="font-medium text-muted-foreground mb-1">No bookings found</p>
@@ -74,10 +74,10 @@ export function ClientBookings({ client }: { client: any }) {
             <div 
               key={booking.id}
               onClick={() => router.push(`/bookings?id=${booking.id}`)}
-              className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-border/60 bg-card hover:border-primary/30 transition-colors cursor-pointer shadow-sm"
+              className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-md border border-border/60 bg-card hover:border-foreground/20 transition-colors cursor-pointer shadow-none"
             >
               <div className="flex items-center gap-4 mb-3 sm:mb-0">
-                <div className="hidden sm:flex w-10 h-10 rounded-full bg-muted items-center justify-center">
+                <div className="hidden sm:flex w-10 h-10 rounded-sm bg-muted items-center justify-center border border-border/40">
                   <EventTypeDot type={booking.eventType} />
                 </div>
                 <div className="flex flex-col">
@@ -95,11 +95,11 @@ export function ClientBookings({ client }: { client: any }) {
 
               <div className="flex items-center justify-between sm:justify-end gap-6 sm:gap-8">
                 <div className="flex flex-col sm:items-end">
-                  <span className="font-mono font-semibold text-sm">{formatAmount(booking.amount)}</span>
+                  <span className="font-mono text-[11px] tracking-widest uppercase mt-0.5">{formatAmount(booking.amount)}</span>
                   {(booking.balanceDue > 0) ? (
-                    <span className="text-[10px] font-medium text-amber-500">Balance: {formatAmount(booking.balanceDue)}</span>
+                    <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mt-0.5">Balance: <span className="text-foreground">{formatAmount(booking.balanceDue)}</span></span>
                   ) : (
-                    <span className="text-[10px] font-medium text-emerald-600">Paid in full</span>
+                    <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mt-0.5">Paid in full</span>
                   )}
                 </div>
                 <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />

@@ -33,7 +33,7 @@ export function AnalyticsShell() {
       <div className="shrink-0 border-b border-border/40 bg-card px-6 py-4 md:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl md:text-2xl font-bold tracking-tight">Analytics & Reports</h1>
-          <p className="text-xs text-muted-foreground mt-1 font-medium px-2 py-0.5 bg-muted/50 rounded-md inline-block">FY 2025-26 India Basis</p>
+          <p className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground mt-1 px-2 py-1 bg-muted border border-border/60 rounded-sm inline-block">FY 2025-26 India Basis</p>
         </div>
         
         <div className="flex items-center gap-3">
@@ -49,13 +49,13 @@ export function AnalyticsShell() {
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`group flex items-center gap-2 py-3.5 border-b-[3px] transition-colors whitespace-nowrap text-sm font-semibold tracking-tight
+              className={`group flex items-center gap-2 py-3.5 border-b-2 transition-colors whitespace-nowrap text-[10px] font-mono font-bold tracking-widest uppercase
                 ${currentTab === t.id 
                   ? 'border-primary text-foreground' 
                   : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
                 }`}
             >
-              <t.icon className={`w-4 h-4 ${currentTab === t.id ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground/80'}`} />
+              <t.icon className={`w-3.5 h-3.5 ${currentTab === t.id ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground/80'}`} />
               {t.label}
             </button>
           ))}

@@ -27,18 +27,17 @@ export function SettingsNav() {
           <Link
             key={link.href}
             href={link.href}
-            className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap min-w-max relative
+            className={`group flex items-center gap-3 px-3 py-2.5 rounded-sm text-[10px] font-mono font-bold tracking-widest uppercase transition-colors whitespace-nowrap min-w-max relative border
               ${isActive 
-                ? link.danger ? 'bg-red-500/10 text-red-600' : 'bg-muted/60 text-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]' 
-                : link.danger ? 'text-red-500/70 hover:bg-red-500/5 hover:text-red-500' : 'text-muted-foreground hover:bg-muted/30 hover:text-foreground'
+                ? link.danger ? 'bg-red-500/5 text-red-600 border-red-500/20' : 'bg-foreground text-background border-foreground shadow-sm' 
+                : link.danger ? 'text-red-500/70 border-transparent hover:bg-red-500/5 hover:text-red-500' : 'text-muted-foreground border-transparent hover:bg-muted/50 hover:text-foreground'
               }
             `}
           >
             {/* Active Indication Mapping Side-Tab Native Next Link Bounds */}
-            {isActive && !link.danger && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[60%] w-[3px] bg-primary rounded-r-md hidden md:block" />}
-            {isActive && link.danger && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[60%] w-[3px] bg-red-600 rounded-r-md hidden md:block" />}
+            {isActive && !link.danger && <div className="absolute left-[-1px] top-1/2 -translate-y-1/2 h-4 w-[2px] bg-background hidden md:block z-10" />}
             
-            <link.icon className={`w-[18px] h-[18px] shrink-0 ${isActive && link.danger ? 'text-red-600' : isActive ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground/80'} transition-colors`} />
+            <link.icon className={`w-[14px] h-[14px] shrink-0 ${isActive && link.danger ? 'text-red-600' : isActive ? 'text-background' : 'text-muted-foreground group-hover:text-foreground/80'} transition-colors`} />
             {link.label}
           </Link>
         )
