@@ -1,18 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { step2Schema, Step2Data } from "@/lib/validations/onboarding"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-
-const LANGUAGES = [
-  "Hindi", "English", "Gujarati", "Marathi", "Tamil", "Telugu", "Other"
-]
 
 interface Step2Props {
   initialData?: Step2Data;
@@ -21,8 +14,6 @@ interface Step2Props {
 }
 
 export default function Step2OwnerDetails({ initialData, onNext, onBack }: Step2Props) {
-  const [sameAsPhone, setSameAsPhone] = useState(false)
-
   const form = useForm<Step2Data>({
     resolver: zodResolver(step2Schema),
     defaultValues: initialData || {
@@ -33,110 +24,38 @@ export default function Step2OwnerDetails({ initialData, onNext, onBack }: Step2
     },
   })
 
-  // Sync WhatsApp field if connected
-  const phoneValue = form.watch("phone")
-  useEffect(() => {
-    if (sameAsPhone && phoneValue) {
-      form.setValue("whatsapp", phoneValue, { shouldValidate: true })
-    }
-  }, [sameAsPhone, phoneValue, form])
-
   const onSubmit = (data: Step2Data) => {
     onNext(data)
   }
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold tracking-tight mb-1">About you</h2>
-      <p className="text-sm text-muted-foreground mb-6">Your personal profile inside StudioDesk</p>
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-2">
+          About the Owner
+        </h2>
+        <p className="text-base text-muted-foreground">
+          Tell us a bit about yourself. This helps us personalize your experience.
+        </p>
+      </div>
       
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <FormField
-            control={form.control}
-            name="fullName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full Name *</FormLabel>
-                <FormControl>
-                  <Input placeholder="Rohan Sharma" {...field} autoFocus />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
-              name="phone"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number *</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Full Name *</FormLabel>
                   <FormControl>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground text-sm font-medium">
-                        +91
-                      </div>
-                      <Input placeholder="9876543210" className="pl-10" maxLength={10} {...field} />
-                    </div>
+                    <Input 
+                      placeholder="e.g. Rahul Sharma" 
+                      className="h-12 bg-background/50 border-white/20 focus:border-primary/50 transition-all duration-300" 
+                      {...field} 
+                      autoFocus 
+                    />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="whatsapp"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center mb-2">
-                    <FormLabel className="mb-0">WhatsApp Number</FormLabel>
-                    <div className="flex items-center space-x-2 mr-1">
-                      <Checkbox 
-                        id="sameAsPhone" 
-                        checked={sameAsPhone} 
-                        onCheckedChange={(checked) => setSameAsPhone(checked === true)} 
-                      />
-                      <label htmlFor="sameAsPhone" className="text-[10px] font-medium leading-none cursor-pointer">
-                        Same as phone
-                      </label>
-                    </div>
-                  </div>
-                  <FormControl>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground text-sm font-medium">
-                        +91
-                      </div>
-                      <Input placeholder="9876543210" className="pl-10" maxLength={10} {...field} disabled={sameAsPhone} />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <FormField
-              control={form.control}
-              name="language"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Preferred Language</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select language" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {LANGUAGES.map(lang => (
-                        <SelectItem key={lang} value={lang}>{lang}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -144,12 +63,16 @@ export default function Step2OwnerDetails({ initialData, onNext, onBack }: Step2
             
             <FormField
               control={form.control}
-              name="designation"
+              name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Designation</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Phone Number *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Founder & Lead Photographer" {...field} />
+                    <Input 
+                      placeholder="e.g. +91 98765 43210" 
+                      className="h-12 bg-background/50 border-white/20 focus:border-primary/50 transition-all duration-300" 
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -157,11 +80,49 @@ export default function Step2OwnerDetails({ initialData, onNext, onBack }: Step2
             />
           </div>
 
-          <div className="pt-8 flex justify-between items-center border-t border-border/40 mt-8">
-            <Button type="button" variant="ghost" onClick={onBack}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="designation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Designation</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="e.g. Founder & Lead Photographer" 
+                      className="h-12 bg-background/50 border-white/20 focus:border-primary/50 transition-all duration-300" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="whatsapp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">WhatsApp Number</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="e.g. +91 98765 43210" 
+                      className="h-12 bg-background/50 border-white/20 focus:border-primary/50 transition-all duration-300" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="mt-10 pt-6 border-t border-white/10 flex justify-between items-center">
+            <Button variant="ghost" type="button" onClick={onBack} className="h-12 px-6 hover:bg-white/5 transition-colors">
               Back
             </Button>
-            <Button type="submit">
+            <Button size="lg" type="submit" className="px-10 h-12 font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300">
               Continue
             </Button>
           </div>

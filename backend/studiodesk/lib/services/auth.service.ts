@@ -6,7 +6,6 @@ import { teamRepo } from '@/lib/repositories/team.repo'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getMemberByUserId } from '@/lib/supabase/queries'
 import { signupSchema, loginSchema, updateMeSchema, updatePasswordSchema } from '@/lib/validations/auth.schema'
-
 export class AuthService {
   static async signup(supabase: any, input: unknown) {
     console.log('[AuthService] Initiating signup for:', (input as any)?.email)
@@ -15,7 +14,9 @@ export class AuthService {
 
     const admin = createAdminClient()
 
-    // 1. Create user via Admin API (auto-confirms email, no SMTP needed)
+    // 1. Create or check user via Admin API
+    let userId: string
+
     const { data: authData, error: authError } = await admin.auth.admin.createUser({
       email: validated.email,
       password: validated.password,
@@ -26,22 +27,41 @@ export class AuthService {
     })
 
     if (authError) {
-      console.error('[AuthService] Auth signup error:', authError)
+      console.log('[AuthService] Auth signup error, checking if user exists:', authError.message)
       // Detect duplicate user
-      if (authError.message?.toLowerCase().includes('already registered') ||
+      if (
+        authError.message?.toLowerCase().includes('already registered') ||
         authError.message?.toLowerCase().includes('already been registered') ||
-        (authError as any).status === 422) {
-        throw Errors.conflict('An account with this email already exists')
+        (authError as any).status === 422
+      ) {
+        // If user exists, we check if they have a studio.
+        const { data: existingUser } = await admin.from('users').select('id').eq('email', validated.email).maybeSingle()
+        
+        if (existingUser) {
+          userId = existingUser.id
+          // Check if they already have a studio
+          const { data: existingMember } = await admin.from('studio_members').select('id').eq('user_id', userId).maybeSingle()
+          if (existingMember) {
+            throw Errors.conflict('An account with this email already exists and is associated with a studio')
+          }
+          console.log('[AuthService] Found existing user without studio, proceeding to DB creation phase:', userId)
+        } else {
+          const { data: { users }, error: listError } = await admin.auth.admin.listUsers()
+          const foundAuthUser = users?.find(u => u.email === validated.email)
+          if (!foundAuthUser) throw Errors.conflict('An account with this email already exists in Auth')
+          userId = foundAuthUser.id
+        }
+      } else {
+        throw authError
       }
-      throw authError
+    } else {
+      if (!authData.user) throw Errors.unauthorized()
+      userId = authData.user.id
+      console.log('[AuthService] Auth user created (auto-confirmed):', userId)
     }
-    if (!authData.user) throw Errors.unauthorized()
-    console.log('[AuthService] Auth user created (auto-confirmed):', authData.user.id)
-
-    const userId = authData.user.id
 
     try {
-      // 2. Create Studio (use admin client since user has no session yet)
+      // 2. Create Studio
       const studio = await studioRepo.createStudio(admin, {
         name: validated.studioName,
         slug: validated.studioSlug,
@@ -58,9 +78,9 @@ export class AuthService {
       })
 
       console.log('[AuthService] Signup complete — user, studio, member created')
-      return { user: authData.user, studio }
+      return { user: { id: userId, email: validated.email }, studio }
     } catch (err) {
-      console.error('[Signup] Phase 2 failed, user exists in Auth but not in DB:', err)
+      console.error('[Signup] DB phase failed:', err)
       throw err
     }
   }
@@ -68,38 +88,47 @@ export class AuthService {
   static async login(supabase: any, input: unknown) {
     console.log('[AuthService] Initiating login for:', (input as any)?.email)
     const validated = loginSchema.parse(input)
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email: validated.email,
       password: validated.password
     })
-    console.log('[AuthService] Login attempt finished. Error:', error?.message)
+    console.log('[AuthService] Login attempt finished. Error:', authError?.message)
 
-    if (error) throw error
-    if (!data.user) throw Errors.unauthorized()
+    if (authError) throw authError
+    if (!authData?.user) throw Errors.unauthorized()
 
     // Fetch member and studio info (same as me())
     const { data: member, error: memberError } = await supabase
       .from('studio_members')
       .select('*, studios (*)')
-      .eq('user_id', data.user.id)
+      .eq('user_id', authData.user.id)
       .single()
 
     if (memberError || !member) {
       // User exists in auth but has no studio — return user only
-      return { user: data.user, studio: null, member: null }
+      return { user: authData.user, studio: null, member: null }
     }
 
+    const studioData = Array.isArray((member as any).studios) 
+      ? (member as any).studios[0] 
+      : (member as any).studios
+
     return {
-      user: data.user,
+      user: authData.user,
       member: {
         ...member,
         studios: undefined
       },
-      studio: (member as any).studios
+      studio: studioData
     }
   }
 
   static async logout(supabase: any) {
+    const { data, error: sessionError } = await supabase.auth.getSession()
+    if (sessionError || !data?.session) {
+      console.log('[AuthService] Logout called without active session, skipping signOut')
+      return
+    }
     const { error } = await supabase.auth.signOut()
     if (error) throw error
   }
@@ -135,7 +164,8 @@ export class AuthService {
 
   static async updateMe(supabase: any, input: unknown) {
     const validated = updateMeSchema.parse(input)
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { data, error: authError } = await supabase.auth.getUser()
+    const user = data?.user
     if (authError || !user) throw Errors.unauthorized()
 
     const member = await getMemberByUserId(supabase, user.id)
@@ -200,7 +230,8 @@ export class AuthService {
   }
 
   static async me(supabase: any) {
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { data, error: authError } = await supabase.auth.getUser()
+    const user = data?.user
     if (authError || !user) throw Errors.unauthorized()
 
     // Fetch member and studio info
@@ -212,13 +243,17 @@ export class AuthService {
 
     if (memberError || !member) throw Errors.forbidden()
 
+    const studioData = Array.isArray((member as any).studios) 
+      ? (member as any).studios[0] 
+      : (member as any).studios
+
     return {
       user,
       member: {
         ...member,
         studios: undefined
       },
-      studio: (member as any).studios
+      studio: studioData
     }
   }
 }

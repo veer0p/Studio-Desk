@@ -741,31 +741,16 @@ function parseDeliverables(inclusions?: string) {
     .filter(Boolean);
 }
 
-export async function submitStudioProfile(data: Step1Data, ownerPhone?: string) {
-  if (ownerPhone) {
-    await completeOnboardingStep(1, {
-      name: data.name,
-      phone: ownerPhone,
-      city: data.city,
-      state: data.state,
-    });
-  }
-
-  const payload = compactObject({
-    name: ownerPhone ? undefined : data.name,
-    city: ownerPhone ? undefined : data.city,
-    state: ownerPhone ? undefined : data.state,
+export async function submitStudioProfile(data: Step1Data) {
+  // Directly call the onboarding step API which handles profile updates internally
+  return completeOnboardingStep(1, {
+    name: data.name,
+    city: data.city,
+    state: data.state,
+    experience: data.experience,
+    specialty: data.specialty,
     tagline: data.tagline || undefined,
   });
-
-  if (Object.keys(payload).length === 0) return null;
-
-  const res = await fetch("/api/v1/studio/profile", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  return parseOrThrow(res, "Failed to submit studio profile");
 }
 
 export async function submitOwnerProfile(data: Step2Data) {

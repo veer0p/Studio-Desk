@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: 'SaaS Dashboard for Indian Photography Studios',
 }
 
+import { SWRProvider } from "@/components/swr-provider"
+
 export default function RootLayout({
   children,
 }: {
@@ -34,8 +36,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-            {children}
-            <Toaster position="bottom-right" richColors />
+            <SWRProvider>
+              {children}
+              <Toaster position="bottom-right" richColors />
+            </SWRProvider>
           </TooltipProvider>
         </ThemeProvider>
       </body>

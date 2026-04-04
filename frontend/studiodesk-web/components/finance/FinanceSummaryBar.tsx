@@ -1,7 +1,9 @@
 "use client"
 
+import useSWR from "swr"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowDownRight, ArrowUpRight } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { ArrowDownRight, ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react"
 
 const formatAmountCompact = (amt: number) => {
   if (amt === undefined || amt === null) return "₹0"
@@ -10,7 +12,19 @@ const formatAmountCompact = (amt: number) => {
   return `₹${amt}`
 }
 
-export function FinanceSummaryBar({ summary, onFilter }: { summary: any, onFilter: (key: string) => void }) {
+export function FinanceSummaryBar({ onFilter }: { onFilter: (key: string) => void }) {
+  const { data: summary, isLoading } = useSWR("/api/v1/finance/summary")
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-4 min-w-max animate-pulse">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <Skeleton key={i} className="w-[240px] h-[100px] rounded-md" />
+        ))}
+      </div>
+    )
+  }
+
   if (!summary) return null
 
   const boxes = [

@@ -259,13 +259,13 @@ export const StudioService = {
     const skipped = Object.keys(data).length === 0
 
     if (step === 1) {
-      if (skipped) throw Errors.validation('Step 1 requires name, phone, city, state')
       const d = parsed.data as Step1Input
       await studioRepo.updateProfile(supabase, studioId, {
         name: d.name,
-        phone: d.phone,
+        phone: d.phone ?? undefined,
         city: d.city,
         state: d.state,
+        tagline: d.tagline ?? undefined,
       })
     }
 

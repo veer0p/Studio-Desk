@@ -37,7 +37,9 @@ export default function ClientsTable() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading } = useSWR(`/api/v1/clients?${queryString}`, fetchClientsList, { dedupingInterval: 60000 })
+  const { data, isLoading } = useSWR(`/api/v1/clients?${queryString}`, { 
+    refreshInterval: 60000 
+  })
 
   const [sorting, setSorting] = useState<SortingState>([])
 

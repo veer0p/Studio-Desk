@@ -3,6 +3,8 @@ import ClientsShell from "@/components/clients/ClientsShell"
 import ClientsTable from "@/components/clients/ClientsTable"
 import ClientsGrid from "@/components/clients/ClientsGrid"
 
+export const dynamic = "force-dynamic"
+
 export const metadata = {
   title: "Clients | StudioDesk",
   description: "Manage your studio clients and CRM",
@@ -17,14 +19,14 @@ export default async function ClientsPage({
   const isGridView = view === "grid"
 
   return (
-    <Suspense fallback={<div className="p-8 text-center text-muted-foreground animate-pulse">Loading Contacts...</div>}>
-      <ClientsShell>
+    <ClientsShell>
+      <Suspense fallback={<div className="p-8 text-center text-muted-foreground animate-pulse">Loading View...</div>}>
         {isGridView ? (
           <ClientsGrid />
         ) : (
           <ClientsTable />
         )}
-      </ClientsShell>
-    </Suspense>
+      </Suspense>
+    </ClientsShell>
   )
 }

@@ -38,9 +38,9 @@ export default function Step1StudioProfile({ initialData, onNext }: Step1Props) 
       name: "",
       city: "",
       tagline: "",
-      type: undefined,
+      specialty: undefined,
       state: undefined,
-      yearsInBusiness: undefined,
+      experience: undefined,
     },
   })
 
@@ -52,21 +52,32 @@ export default function Step1StudioProfile({ initialData, onNext }: Step1Props) 
   }
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold tracking-tight mb-1">Set up your studio</h2>
-      <p className="text-sm text-muted-foreground mb-6">This is what your clients will see</p>
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-2">
+          Tell us about your studio
+        </h2>
+        <p className="text-base text-muted-foreground">
+          Let's start with the basics. This information will be used to brand your client portal.
+        </p>
+      </div>
       
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Studio Name *</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Studio Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Sharma Photography" {...field} autoFocus />
+                    <Input 
+                      placeholder="e.g. Moonlight Studios" 
+                      className="h-12 bg-background/50 border-white/20 focus:border-primary/50 transition-all duration-300" 
+                      {...field} 
+                      autoFocus 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -75,14 +86,14 @@ export default function Step1StudioProfile({ initialData, onNext }: Step1Props) 
             
             <FormField
               control={form.control}
-              name="type"
+              name="specialty"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Studio Type *</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Studio Type *</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select type" />
+                      <SelectTrigger className="h-12 bg-background/50 border-white/20 focus:border-primary/50 transition-all duration-300">
+                        <SelectValue placeholder="Select your specialty" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -97,15 +108,19 @@ export default function Step1StudioProfile({ initialData, onNext }: Step1Props) 
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="city"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>City *</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">City *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Surat" {...field} />
+                    <Input 
+                      placeholder="e.g. Mumbai" 
+                      className="h-12 bg-background/50 border-white/20 focus:border-primary/50 transition-all duration-300" 
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,10 +132,10 @@ export default function Step1StudioProfile({ initialData, onNext }: Step1Props) 
               name="state"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>State *</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">State *</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-12 bg-background/50 border-white/20 focus:border-primary/50 transition-all duration-300">
                         <SelectValue placeholder="Select state" />
                       </SelectTrigger>
                     </FormControl>
@@ -138,12 +153,20 @@ export default function Step1StudioProfile({ initialData, onNext }: Step1Props) 
 
           <FormField
             control={form.control}
-            name="yearsInBusiness"
+            name="experience"
             render={({ field }) => (
-              <FormItem className="w-full md:w-1/2 md:pr-2.5">
-                <FormLabel>Years in Business</FormLabel>
+              <FormItem className="w-full md:w-1/2">
+                <FormLabel className="text-sm font-semibold text-foreground/80">Years in Business</FormLabel>
                 <FormControl>
-                  <Input type="number" min={0} max={50} placeholder="3" {...field} value={(field.value as any) ?? ""} />
+                  <Input 
+                    type="number" 
+                    min={0} 
+                    max={50} 
+                    placeholder="e.g. 5" 
+                    className="h-12 bg-background/50 border-white/20 focus:border-primary/50 transition-all duration-300" 
+                    {...field} 
+                    value={(field.value as any) ?? ""} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -156,13 +179,13 @@ export default function Step1StudioProfile({ initialData, onNext }: Step1Props) 
             render={({ field }) => (
               <FormItem>
                 <div className="flex justify-between items-end">
-                  <FormLabel>Studio Tagline</FormLabel>
-                  <span className="text-[10px] text-muted-foreground">{taglineValue.length}/120</span>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Studio Tagline</FormLabel>
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest">{taglineValue.length} / 120</span>
                 </div>
                 <FormControl>
                   <Textarea 
-                    placeholder="Capturing your best moments" 
-                    className="resize-none" 
+                    placeholder="e.g. Capturing memories that last a lifetime" 
+                    className="min-h-[100px] bg-background/50 border-white/20 focus:border-primary/50 transition-all duration-300 resize-none" 
                     maxLength={120}
                     {...field} 
                   />
@@ -172,8 +195,10 @@ export default function Step1StudioProfile({ initialData, onNext }: Step1Props) 
             )}
           />
 
-          <div className="mt-8 flex justify-end">
-            <Button type="submit">Continue</Button>
+          <div className="mt-10 flex justify-end">
+            <Button size="lg" type="submit" className="px-10 h-12 font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300">
+              Continue
+            </Button>
           </div>
         </form>
       </Form>

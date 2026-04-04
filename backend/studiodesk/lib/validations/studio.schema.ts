@@ -4,9 +4,12 @@ import { gstinSchema, panSchema, pincodeSchema, phoneSchema, ifscSchema, amountS
 // --- Onboarding step schemas ---
 export const step1Schema = z.object({
   name: z.string().min(2).max(100),
-  phone: phoneSchema,
+  phone: phoneSchema.optional().nullable(),
   city: z.string().min(2).max(100),
   state: z.string().min(2).max(100),
+  specialty: z.string().optional().nullable(),
+  experience: z.string().optional().nullable(),
+  tagline: z.string().max(200).optional().nullable(),
 })
 
 export const step2Schema = z

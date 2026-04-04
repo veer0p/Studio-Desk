@@ -39,7 +39,9 @@ export default function BookingsList() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading } = useSWR(`/api/v1/bookings?${queryString}`, fetchBookingsList, { dedupingInterval: 60000 })
+  const { data, isLoading } = useSWR(`/api/v1/bookings?${queryString}`, { 
+    refreshInterval: 60000 
+  })
   const { mutate } = useSWRConfig()
 
   const handleMarkConfirmed = async (id: string, e: React.MouseEvent) => {

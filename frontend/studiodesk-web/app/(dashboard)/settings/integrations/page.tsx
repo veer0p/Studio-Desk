@@ -1,5 +1,7 @@
 import { IntegrationsSettings } from "@/components/settings/sections/IntegrationsSettings"
 
-export default function IntegrationsSettingsPage() {
+export const dynamic = "force-dynamic"
+
+export default function IntegrationSettingsPage() {
   return <IntegrationsSettings />
 }

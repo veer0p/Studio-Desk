@@ -21,8 +21,8 @@ const ActionIcon = ({ type }: { type: string }) => {
 }
 
 export default function PendingActions() {
-  const { data, isLoading } = useSWR("/api/v1/dashboard/overview", fetchDashboardOverview, {
-    dedupingInterval: 60000,
+  const { data, isLoading } = useSWR("/api/v1/dashboard/actions", { 
+    refreshInterval: 30000 
   })
 
   const actions = Array.isArray(data?.attention_items) ? data.attention_items : []

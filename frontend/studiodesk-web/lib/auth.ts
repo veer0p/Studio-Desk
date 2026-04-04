@@ -15,7 +15,15 @@ export async function signIn(email: string, password: string) {
         credentials: 'include',
     })
 
-    const data = await res.json()
+    let data: any = {}
+    const text = await res.text()
+    try {
+        data = JSON.parse(text)
+    } catch {
+        console.error('[Auth] Failed to parse JSON response:', text)
+        data = { error: text || 'Internal server error' }
+    }
+
     console.log('[Auth] Login response status:', res.status, data)
 
     if (!res.ok) {
@@ -34,7 +42,15 @@ export async function signUp(email: string, password: string, fullName: string, 
         credentials: 'include',
     })
 
-    const data = await res.json()
+    let data: any = {}
+    const text = await res.text()
+    try {
+        data = JSON.parse(text)
+    } catch {
+        console.error('[Auth] Failed to parse JSON response:', text)
+        data = { error: text || 'Internal server error' }
+    }
+
     console.log('[Auth] Signup response status:', res.status, data)
 
     if (!res.ok) {
@@ -48,9 +64,9 @@ export async function signUp(email: string, password: string, fullName: string, 
 }
 
 export async function signOut() {
+    // Only call our proxy logout. It handles both clearing server session (via cookies)
+    // and correctly notifying Supabase server-side if needed.
     await fetch('/api/v1/auth/logout', { method: 'POST' })
-    const supabase = createClient()
-    await supabase.auth.signOut()
     window.location.href = '/login'
 }
 

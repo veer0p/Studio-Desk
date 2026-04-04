@@ -1,6 +1,8 @@
 import { Suspense } from "react"
 import { TeamShell } from "@/components/team/TeamShell"
 
+export const dynamic = "force-dynamic"
+
 export const metadata = {
   title: "Team & HR | StudioDesk",
   description: "Manage freelancers, schedules, and payroll.",

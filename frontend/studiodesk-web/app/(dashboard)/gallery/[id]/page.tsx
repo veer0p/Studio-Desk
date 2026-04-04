@@ -1,6 +1,8 @@
 import { Suspense } from "react"
 import { GalleryDetail } from "@/components/gallery/studio/GalleryDetail"
 
+export const dynamic = "force-dynamic"
+
 export const metadata = {
   title: "Gallery Management | StudioDesk",
   description: "Internal delivery hub mapping selection matrices.",
@@ -11,7 +13,7 @@ export default async function GalleryDetailPage({ params }: { params: Promise<{ 
   const resolvedParams = await params;
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">
-      <Suspense fallback={<div className="p-8 text-center text-muted-foreground animate-pulse">Loading gallery details...</div>}>
+      <Suspense fallback={<div className="p-8 text-center text-muted-foreground animate-pulse font-mono tracking-widest uppercase text-[10px]">Decompressing Face Clusters & Buffering 4K Thumbs...</div>}>
         <GalleryDetail galleryId={resolvedParams.id} />
       </Suspense>
     </div>

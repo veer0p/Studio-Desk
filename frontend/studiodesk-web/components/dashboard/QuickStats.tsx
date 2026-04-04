@@ -8,8 +8,8 @@ import { IndianRupee, CalendarCheck, Clock, UserPlus } from "lucide-react"
 const formatMoney = (value: unknown) => `Rs ${Number(value ?? 0).toLocaleString("en-IN")}`
 
 export default function QuickStats() {
-  const { data, isLoading } = useSWR("/api/v1/dashboard/overview", fetchDashboardOverview, {
-    dedupingInterval: 60000,
+  const { data, isLoading } = useSWR("/api/v1/dashboard/summary", { 
+    refreshInterval: 60000 
   })
 
   if (isLoading) {

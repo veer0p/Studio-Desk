@@ -1,9 +1,15 @@
-// app/portal/[studioSlug]/bookings/page.tsx
 import { ClientBookingList } from "@/components/portal/client-bookings/ClientBookingList"
+import { Suspense } from "react"
+import PortalBookingsSkeleton from "@/components/skeletons/PortalBookingsSkeleton"
 
-export const metadata = { title: "My Bookings | Client Portal" }
+export const dynamic = "force-dynamic"
 
-export default async function PortalBookingPage(props: { params: Promise<{ studioSlug: string }> }) {
+export default async function PortalBookingsPage(props: { params: Promise<{ studioSlug: string }> }) {
   const params = await props.params
-  return <ClientBookingList studioSlug={params.studioSlug} />
+  
+  return (
+    <Suspense fallback={<PortalBookingsSkeleton />}>
+      <ClientBookingList studioSlug={params.studioSlug} />
+    </Suspense>
+  )
 }

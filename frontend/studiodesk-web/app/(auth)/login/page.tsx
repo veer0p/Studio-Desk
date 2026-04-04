@@ -47,18 +47,26 @@ export default function LoginPage() {
     async function onSubmit(values: LoginFormValues) {
         setError(null)
         try {
+            console.log('[Login] Submitting credentials for:', values.email)
             const data = await signIn(values.email, values.password)
+            console.log('[Login] Signin successful, data received:', data)
 
             // Update local auth cache
             mutate(data)
 
             // Redirect based on onboarding status
-            if (data.studio?.onboarding_completed) {
+            if (data?.studio?.onboarding_completed) {
+                console.log('[Login] Redirecting to /dashboard')
                 router.push("/dashboard")
+            } else if (data?.studio) {
+                console.log('[Login] Redirecting to /onboarding')
+                router.push("/onboarding")
             } else {
+                console.warn('[Login] No studio found, redirecting to /onboarding as fallback')
                 router.push("/onboarding")
             }
         } catch (err) {
+            console.error('[Login] Submit error:', err)
             const message = err instanceof Error ? err.message : "Invalid email or password"
             setError(message)
         }

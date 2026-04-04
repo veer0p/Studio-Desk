@@ -1,8 +1,15 @@
-// app/portal/[studioSlug]/dashboard/page.tsx
 import { ClientHome } from "@/components/portal/client-dashboard/ClientHome"
+import { Suspense } from "react"
+import PortalHomeSkeleton from "@/components/skeletons/PortalHomeSkeleton"
+
+export const dynamic = "force-dynamic"
 
 export default async function PortalDashboardPage(props: { params: Promise<{ studioSlug: string }> }) {
   const params = await props.params
   
-  return <ClientHome studioSlug={params.studioSlug} />
+  return (
+    <Suspense fallback={<PortalHomeSkeleton />}>
+      <ClientHome studioSlug={params.studioSlug} />
+    </Suspense>
+  )
 }

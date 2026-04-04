@@ -1,6 +1,8 @@
 import { Suspense } from "react"
 import ClientDetailPage from "@/components/clients/ClientDetailPage"
 
+export const dynamic = "force-dynamic"
+
 export const metadata = {
   title: "Client Details | StudioDesk",
   description: "View and manage CRM profiles",

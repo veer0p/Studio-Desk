@@ -32,7 +32,17 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  let user = null
+  try {
+    const { data, error: authError } = await supabase.auth.getUser()
+    if (!authError) {
+      user = data?.user
+    } else {
+      console.error('Auth error in middleware:', authError)
+    }
+  } catch (err) {
+    console.error('Unexpected error in middleware auth check:', err)
+  }
 
   const isApiRoute = request.nextUrl.pathname.startsWith('/api')
   const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')

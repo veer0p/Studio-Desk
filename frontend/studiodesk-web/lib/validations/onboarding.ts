@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const step1Schema = z.object({
   name: z.string().min(2, "Studio Name must be at least 2 characters").max(80, "Studio Name must be at most 80 characters"),
-  type: z.enum(["Photography Only", "Videography Only", "Photo + Video", "Full Production House"], { message: "Studio Type is required" }),
+  specialty: z.enum(["Photography Only", "Videography Only", "Photo + Video", "Full Production House"], { message: "Studio Type is required" }),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
-  yearsInBusiness: z.coerce.number().optional().or(z.nan().transform(() => undefined)),
+  experience: z.coerce.string().optional(),
   tagline: z.string().max(120, "Tagline must be at most 120 characters").optional().or(z.literal("")),
 });
 

@@ -34,7 +34,7 @@ const PIPELINE_STAGES = [
 export default function KanbanBoard() {
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading, mutate } = useSWR(`/api/v1/bookings?pageSize=100&${queryString}`, fetchBookingsList, {
+  const { data, isLoading, mutate } = useSWR(`/api/v1/bookings?view=kanban&${queryString}`, {
     dedupingInterval: 60000,
   })
 

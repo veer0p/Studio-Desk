@@ -24,8 +24,8 @@ const formatAmount = (amount: number) => {
 }
 
 export default function BookingPipeline() {
-  const { data, isLoading } = useSWR("/api/v1/bookings?pageSize=100", fetchBookingsList, {
-    dedupingInterval: 60000,
+  const { data, isLoading } = useSWR("/api/v1/dashboard/pipeline", { 
+    refreshInterval: 60000 
   })
 
   const bookings = Array.isArray(data?.list) ? data.list : []

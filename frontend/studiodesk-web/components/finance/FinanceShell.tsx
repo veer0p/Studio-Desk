@@ -1,29 +1,12 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import useSWR from "swr"
-import { fetchFinanceSummary } from "@/lib/api"
 import { FinanceSummaryBar } from "./FinanceSummaryBar"
 
 export function FinanceShell({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentTab = searchParams.get("tab") || "invoices"
-
-  // Mock standard empty fetch for now until backend is populated
-  const { data: summary } = useSWR("/api/v1/finance/summary", fetchFinanceSummary, { 
-    fallbackData: {
-      revenue: 320000,
-      revenueGrowth: 18,
-      outstanding: 150000,
-      outstandingCount: 3,
-      overdue: 45000,
-      overdueCount: 1,
-      expenses: 85000,
-      expensesCount: 12,
-      net: 235000
-    }
-  })
 
   const setTab = (tab: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -58,7 +41,7 @@ export function FinanceShell({ children }: { children: React.ReactNode }) {
           <p className="text-muted-foreground mt-1">Manage billing, collect payments, and track studio expenses natively.</p>
         </div>
 
-        <FinanceSummaryBar summary={summary} onFilter={handleKPIFilter} />
+        <FinanceSummaryBar onFilter={handleKPIFilter} />
 
         <div className="flex sm:space-x-4 overflow-x-auto border-b border-border/40 custom-scrollbar">
           {tabs.map((tab) => (
