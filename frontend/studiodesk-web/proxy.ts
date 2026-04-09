@@ -3,7 +3,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { updateSession } from '@/lib/supabase/middleware'
 
 /**
- * middleware.ts
+ * proxy.ts
  * Enforces route protection and session refreshing.
  */
 
@@ -37,10 +37,20 @@ const PUBLIC_PATTERNS = [
     '/api/v1/gallery/.*/lookup'
 ]
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
+    const { pathname } = request.nextUrl
+
+    // 0. Forward API calls to backend (running on port 3002)
+    if (pathname.startsWith('/api/v1/')) {
+        const url = request.nextUrl.clone()
+        url.hostname = 'localhost'
+        url.port = '3001'
+        url.protocol = 'http:'
+        return NextResponse.rewrite(url)
+    }
+
     // 1. Refresh Supabase session
     const response = await updateSession(request)
-    const { pathname } = request.nextUrl
 
     // 2. Get user from response headers (updateSession adds it via supabase.auth.getUser())
     // Note: updateSession doesn't explicitly return the user, so we check for the auth cookie

@@ -35,8 +35,13 @@ import {
 } from "@/components/ui/select"
 import { Plus } from "lucide-react"
 
+const indianMobile = z
+  .string()
+  .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit mobile number")
+
 const newBookingSchema = z.object({
   clientName: z.string().min(2, "Required"),
+  phone: indianMobile,
   eventName: z.string().min(2, "Required"),
   eventType: z.string().min(1, "Required"),
   date: z.string().min(1, "Required"),
@@ -57,6 +62,7 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
     resolver: zodResolver(newBookingSchema),
     defaultValues: {
       clientName: "",
+      phone: "",
       eventName: "",
       eventType: "",
       date: "",
@@ -99,8 +105,14 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
-            
+          <form
+            onSubmit={form.handleSubmit(onSubmit, (errors) => {
+              console.error("Validation errors:", errors)
+              toast.error("Please fill in all required fields marked with *")
+            })}
+            className="space-y-4 mt-4"
+          >
+
             <FormField
               control={form.control}
               name="clientName"
@@ -109,6 +121,20 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
                   <FormLabel>Client Name *</FormLabel>
                   <FormControl>
                     <Input placeholder="Search or enter client name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mobile *</FormLabel>
+                  <FormControl>
+                    <Input type="tel" inputMode="numeric" autoComplete="tel" placeholder="9876543210" maxLength={10} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -135,7 +161,7 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Event Type *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value || undefined}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select type" />
@@ -164,7 +190,7 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
                   <FormItem>
                     <FormLabel>Event Date *</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input type="date" {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -222,7 +248,7 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Selected Package</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value || undefined}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select package" />
@@ -277,7 +303,7 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Initial Stage</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select stage" />

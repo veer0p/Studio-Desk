@@ -1,6 +1,14 @@
 import type { NextConfig } from 'next'
 
 const config: NextConfig = {
+  allowedDevOrigins: [
+    '*.*.*.*',
+    '**.local',
+    '**.lan',
+    '**.home',
+    '**.direct',
+    '10.48.230.6'
+  ],
   experimental: {
     optimizePackageImports: [
       'lucide-react',
@@ -19,7 +27,7 @@ const config: NextConfig = {
     return [
       {
         source: '/api/v1/:path*',
-        destination: 'http://127.0.0.1:3000/api/v1/:path*',
+        destination: 'http://127.0.0.1:3001/api/v1/:path*',
       },
     ]
   },

@@ -66,6 +66,19 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // 4. Handle CORS
+  response.headers.set('Access-Control-Allow-Origin', '*')
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Client-Info, X-Requested-With')
+  response.headers.set('Access-Control-Allow-Credentials', 'true')
+
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, {
+      status: 204,
+      headers: response.headers,
+    })
+  }
+
   return response
 }
 

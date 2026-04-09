@@ -1,0 +1,10 @@
+{
+  "name": "studio-desk",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c blue,magenta \"npm run dev --prefix backend/studiodesk\" \"npm run dev --prefix frontend/studiodesk-web\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

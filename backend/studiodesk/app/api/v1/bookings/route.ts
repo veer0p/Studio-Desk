@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   try {
     const { user, member, supabase } = await requireAuth(req)
     const { searchParams } = new URL(req.url)
-    
+
     const params = {
       status: searchParams.get('status') || undefined,
       event_type: searchParams.get('event_type') || undefined,
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
   } catch (err: unknown) {
     if (err instanceof ServiceError) return Response.error(err.message, err.code, err.status)
     if (err && typeof err === 'object' && 'name' in err && err.name === 'ZodError') {
-      return Response.error((err as any).errors[0]?.message || 'Validation failed', 'VALIDATION_ERROR', 400)
+      return Response.error((err as any).errors?.[0]?.message || 'Validation failed', 'VALIDATION_ERROR', 400)
     }
     await logError({ message: String(err), requestUrl: req.url })
     return Response.error('Internal server error', 'INTERNAL_ERROR', 500)

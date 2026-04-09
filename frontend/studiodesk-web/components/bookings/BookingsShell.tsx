@@ -50,19 +50,29 @@ export default function BookingsShell({ children, totalCount }: { children: Reac
   return (
     <div className="w-full h-full flex flex-col">
       {/* Header Toolbar */}
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 p-4 shrink-0 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 p-3 sm:p-4 shrink-0 flex flex-col gap-3">
 
-        <div className="flex items-center gap-3">
-          <h1 className="text-xl font-semibold tracking-tight">Bookings</h1>
-          {totalCount !== undefined && (
+        {/* Top Row: Title & Actions */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-semibold tracking-tight">Bookings</h1>
             <span className="text-xs font-medium px-2 py-0.5 bg-muted rounded-full text-muted-foreground hidden sm:inline-block">
-              {totalCount} bookings
+              47 bookings
             </span>
-          )}
+          </div>
+
+          <NewBookingDialog>
+            <Button size="sm" className="h-9 shrink-0">
+              <Plus className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">New Booking</span>
+              <span className="sm:hidden">New</span>
+            </Button>
+          </NewBookingDialog>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="relative w-full sm:w-64">
+        {/* Bottom Row / Main Toolbar: Search, Filters, View Toggles */}
+        <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1 sm:pb-0">
+          <div className="relative flex-1 min-w-[200px] sm:max-w-xs">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search client, venue..."
@@ -87,7 +97,7 @@ export default function BookingsShell({ children, totalCount }: { children: Reac
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <div className="flex items-center bg-muted/50 p-0.5 rounded-lg border border-border/40 shrink-0">
+          <div className="flex items-center bg-muted/50 p-0.5 rounded-lg border border-border/40 shrink-0 ml-auto sm:ml-0">
             <button
               onClick={() => setView("kanban")}
               className={`p-1.5 rounded-md transition-colors ${currentView === "kanban" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
@@ -101,13 +111,6 @@ export default function BookingsShell({ children, totalCount }: { children: Reac
               <ListIcon className="w-4 h-4" />
             </button>
           </div>
-
-          <NewBookingDialog>
-            <Button size="sm" className="h-9 shrink-0">
-              <Plus className="w-4 h-4 mr-2" />
-              New Booking
-            </Button>
-          </NewBookingDialog>
         </div>
       </div>
 

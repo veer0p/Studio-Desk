@@ -39,7 +39,7 @@ export default function BookingsList() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading, error, mutate } = useSWR(`/api/v1/bookings?${queryString}`, fetchBookingsList, {
+  const { data, isLoading } = useSWR(`/api/v1/bookings?${queryString}`, {
     refreshInterval: 60000
   })
   const { mutate: mutateGlobal } = useSWRConfig()
@@ -223,7 +223,7 @@ export default function BookingsList() {
   if (isLoading) {
     return (
       <div className="p-4 space-y-4">
-        {[1,2,3,4,5,6].map(i => (
+        {[1, 2, 3, 4, 5, 6].map(i => (
           <Skeleton key={i} className="w-full h-14 rounded-lg" />
         ))}
       </div>
@@ -245,53 +245,107 @@ export default function BookingsList() {
 
   return (
     <div className="w-full flex flex-col bg-card h-full">
-      <div className="flex-1 overflow-auto custom-scrollbar relative">
-        {table.getRowModel().rows.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-            <p className="text-lg font-medium text-foreground">No bookings found</p>
-            <p className="text-sm text-muted-foreground mt-1">Try adjusting your search or filters.</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0 z-10 hidden sm:table-header-group">
-                {table.getHeaderGroups().map(headerGroup => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map(header => {
-                      const colDef = header.column.columnDef as any
-                      const responsiveClass = colDef.meta?.responsive || ""
-                      return (
-                        <th key={header.id} className={`px-4 py-3 font-medium whitespace-nowrap ${responsiveClass}`}>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                        </th>
-                      )
-                    })}
-                  </tr>
+      <div className="flex-1 overflow-auto custom-scrollbar relative px-2 sm:px-0">
+
+        {/* Mobile Card View */}
+        <div className="flex flex-col gap-3 py-4 sm:hidden">
+          {table.getRowModel().rows.map(row => (
+            <div
+              key={row.id}
+              className="bg-card border border-border/60 rounded-xl p-4 shadow-sm cursor-pointer transition-colors hover:ring-1 hover:ring-primary/30"
+              onClick={() => openDetail(row.original.id as string)}
+            >
+              <div className="flex justify-between items-start gap-4">
+                <div>
+                  <h3 className="font-semibold text-base line-clamp-1">{row.original.clientName}</h3>
+                  <p className="text-xs text-muted-foreground">{row.original.city || "Unknown City"}</p>
+                </div>
+                <BookingStatusBadge stage={row.original.stage || "Inquiry"} />
+              </div>
+
+              <div className="flex justify-between items-center mt-3">
+                <div className="flex items-center gap-2 text-sm text-foreground">
+                  <EventTypeDot type={row.original.eventType} />
+                  <span className="font-medium">{row.original.eventName || row.original.eventType}</span>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium">{row.original.date}</p>
+                  {row.original.daysUntil && <p className="text-xs text-muted-foreground">{row.original.daysUntil}</p>}
+                </div>
+              </div>
+
+              <div className="flex justify-between items-end mt-4 pt-4 border-t border-border/40">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase text-muted-foreground tracking-wider font-semibold">Team</span>
+                  <div className="flex -space-x-2">
+                    {row.original.team?.length > 0 ? row.original.team.slice(0, 3).map((member: any, i: number) => (
+                      <div key={i} className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center text-[10px] uppercase font-mono overflow-hidden shrink-0">
+                        {member.avatar ? (
+                          <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          member.name?.charAt(0) || "U"
+                        )}
+                      </div>
+                    )) : (
+                      <div className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center text-[10px] text-muted-foreground shrink-0 border-dashed">
+                        ?
+                      </div>
+                    )}
+                    {(row.original.team?.length || 0) > 3 && (
+                      <div className="w-6 h-6 rounded-full bg-background border-2 border-border/40 flex items-center justify-center text-[10px] text-muted-foreground z-10 shrink-0">
+                        +{(row.original.team?.length || 0) - 3}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 text-right">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] uppercase text-muted-foreground tracking-wider font-semibold">Total</span>
+                    <span className="font-mono text-sm">{formatAmount(row.original.amount)}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] uppercase text-muted-foreground tracking-wider font-semibold">Due</span>
+                    <span className={`font-mono text-sm ${row.original.balanceDue > 0 ? "text-foreground font-semibold" : "text-muted-foreground/50"}`}>
+                      {formatAmount(row.original.balanceDue)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table View */}
+        <table className="hidden sm:table w-full text-sm text-left">
+          <thead className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0 z-10">
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th key={header.id} className="px-4 py-3 font-medium whitespace-nowrap">
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </th>
                 ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map(row => (
-                  <tr
-                    key={row.id}
-                    className="border-b border-border/40 hover:bg-muted/40 transition-colors cursor-pointer"
-                    onClick={() => openDetail(row.original.id as string)}
-                  >
-                    {row.getVisibleCells().map(cell => {
-                      const colDef = cell.column.columnDef as any
-                      const responsiveClass = colDef.meta?.responsive || ""
-                      return (
-                        <td key={cell.id} className={`px-4 py-3 align-middle whitespace-nowrap ${responsiveClass}`}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      )
-                    })}
-                  </tr>
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map(row => (
+              <tr
+                key={row.id}
+                className="border-b border-border/40 hover:bg-muted/40 transition-colors cursor-pointer"
+                onClick={() => openDetail(row.original.id as string)}
+              >
+                {row.getVisibleCells().map((cell, i) => (
+                  <td key={cell.id} className="px-4 py-3 align-middle">
+                    {flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
+                  </td>
                 ))}
               </tbody>
             </table>
@@ -322,6 +376,6 @@ export default function BookingsList() {
           </Button>
         </div>
       </div>
-    </div>
+    </div >
   )
 }

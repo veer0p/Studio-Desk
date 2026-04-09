@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -29,6 +29,10 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
+    const searchParams = useSearchParams()
+    const emailParam = searchParams.get("email")
+    const passwordParam = searchParams.get("password")
+
     const router = useRouter()
     const { mutate } = useAuth()
     const [showPassword, setShowPassword] = React.useState(false)
@@ -37,10 +41,18 @@ export default function LoginPage() {
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
-            email: "",
-            password: "",
+            email: emailParam || "",
+            password: passwordParam || "",
         },
     })
+
+    // Auto-submit if both params are present
+    React.useEffect(() => {
+        if (emailParam && passwordParam) {
+            console.log('[Login] Auto-submitting based on query parameters')
+            form.handleSubmit(onSubmit)()
+        }
+    }, [emailParam, passwordParam]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const isLoading = form.formState.isSubmitting
 

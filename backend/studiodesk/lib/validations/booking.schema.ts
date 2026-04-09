@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const eventTypes = ['wedding', 'pre_wedding', 'engagement', 'maternity', 'newborn', 'fashion', 'corporate', 'other'] as const
+const eventTypes = ['wedding', 'pre_wedding', 'engagement', 'portrait', 'birthday', 'corporate', 'product', 'maternity', 'newborn', 'other'] as const
 const bookingStatuses = ['new_lead', 'contacted', 'proposal_sent', 'booked', 'partially_paid', 'paid', 'shoot_completed', 'delivered', 'closed', 'lost'] as const
 
 export const createBookingSchema = z.object({

@@ -523,10 +523,10 @@ function normalizeBooking(row: BackendBookingRow): BookingSummary {
     packageInfo: row.package_name ? { name: row.package_name } : null,
     team: Array.isArray(row.assigned_team)
       ? row.assigned_team.map((member) => ({
-          name: String(member.name ?? "Team"),
-          role: String(member.role ?? "assistant"),
-          avatar: null,
-        }))
+        name: String(member.name ?? "Team"),
+        role: String(member.role ?? "assistant"),
+        avatar: null,
+      }))
       : Array.isArray(row.team)
         ? row.team
         : [],
@@ -558,11 +558,11 @@ function normalizeClientSummary(row: BackendClientSummary): ClientSummary {
 function normalizeClientDetail(row: BackendClientDetail): ClientDetail {
   const bookings = Array.isArray(row.bookings)
     ? row.bookings.map((booking) =>
-        normalizeBooking({
-          ...booking,
-          client_name: row.full_name ?? undefined,
-        })
-      )
+      normalizeBooking({
+        ...booking,
+        client_name: row.full_name ?? undefined,
+      })
+    )
     : [];
 
   const stats = row.stats ?? {};
@@ -594,19 +594,19 @@ function normalizeClientDetail(row: BackendClientDetail): ClientDetail {
 function normalizeTodayDashboard(row: BackendDashboardToday): DashboardToday {
   const shoots = Array.isArray(row.shoots)
     ? row.shoots.map((shoot) => ({
-        id: String(shoot.id ?? ""),
-        clientName: String(shoot.client_name ?? "Unknown Client"),
-        eventType: eventTypeLabel(shoot.event_type),
-        time: timeLabel(shoot.call_time ?? shoot.shoot_start_time),
-        venue: String(shoot.venue_name ?? shoot.venue_address ?? "Venue TBA"),
-        team: Array.isArray(shoot.assigned_team)
-          ? shoot.assigned_team.map((member) => ({
-              name: String(member.name ?? "Team"),
-              avatar: null,
-            }))
-          : [],
-        status: "In Progress",
-      }))
+      id: String(shoot.id ?? ""),
+      clientName: String(shoot.client_name ?? "Unknown Client"),
+      eventType: eventTypeLabel(shoot.event_type),
+      time: timeLabel(shoot.call_time ?? shoot.shoot_start_time),
+      venue: String(shoot.venue_name ?? shoot.venue_address ?? "Venue TBA"),
+      team: Array.isArray(shoot.assigned_team)
+        ? shoot.assigned_team.map((member) => ({
+          name: String(member.name ?? "Team"),
+          avatar: null,
+        }))
+        : [],
+      status: "In Progress",
+    }))
     : [];
 
   return {
@@ -938,10 +938,41 @@ export async function fetchGalleryDetail(url: string): Promise<GalleryDetail> {
 
 // Bookings Mutations
 export async function createBooking(data: JsonObject): Promise<BookingSummary> {
+  // First, create the client using the form's clientName string
+  const clientPayload = {
+    full_name: data.clientName as string,
+    phone: String(data.phone ?? "").replace(/\D/g, "").slice(0, 10),
+    city: data.city as string || undefined,
+  };
+  const newClient = await createClient(clientPayload);
+
+  // Map frontend event types to backend enums
+  let backendEventType = "other";
+  switch (data.eventType) {
+    case "Wedding": backendEventType = "wedding"; break;
+    case "Engagement": backendEventType = "engagement"; break;
+    case "Corporate": backendEventType = "corporate"; break;
+    case "Birthday": backendEventType = "birthday"; break;
+    case "Product Shoot": backendEventType = "product"; break;
+    default: backendEventType = "other"; break;
+  }
+
+  // Then structure the actual Booking database payload
+  const bookingPayload = {
+    client_id: newClient.id,
+    title: String(data.eventName),
+    event_type: backendEventType,
+    event_date: data.date ? new Date(data.date as string).toISOString() : null,
+    total_amount: Number(data.amount) || 0,
+    venue_name: (data.venue as string) || null,
+    venue_city: (data.city as string) || null,
+    notes: (data.notes as string) || null,
+  };
+
   const res = await fetch("/api/v1/bookings", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(bookingPayload),
   });
   if (!res.ok) throw new Error("Failed to create booking");
   const payload = await readJsonSafe<ApiEnvelope<BackendBookingRow>>(res);
