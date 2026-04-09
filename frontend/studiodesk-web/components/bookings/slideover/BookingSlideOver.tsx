@@ -14,7 +14,7 @@ export default function BookingSlideOver({ bookingId }: { bookingId: string }) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const { data: booking, isLoading } = useSWR(`/api/v1/bookings/${bookingId}`, fetchBookingDetail, {
+  const { data: booking, isLoading, error } = useSWR(`/api/v1/bookings/${bookingId}`, fetchBookingDetail, {
     dedupingInterval: 60000
   })
 
@@ -30,6 +30,16 @@ export default function BookingSlideOver({ bookingId }: { bookingId: string }) {
         <Skeleton className="w-48 h-8" />
         <Skeleton className="w-full h-64" />
         <Skeleton className="w-full h-64" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
+        <p className="text-sm text-muted-foreground mb-2">Failed to load booking.</p>
+        <p className="text-xs text-muted-foreground mb-4">{error.message || "Please try again later."}</p>
+        <Button variant="outline" size="sm" onClick={closeSlideOver}>Close</Button>
       </div>
     )
   }

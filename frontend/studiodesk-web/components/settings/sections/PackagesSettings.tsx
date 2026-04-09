@@ -14,12 +14,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { GripVertical, Pencil, Trash2, Plus } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet"
-
-const mockPackages = [
-  { id: "p1", name: "Premium Wedding Combo", type: "Photo + Video", duration: "12", price: 150000, active: true, inc: "2 Cinematographers, 2 Photographers, Drone" },
-  { id: "p2", name: "Pre-Wedding Shoot", type: "Photography", duration: "8", price: 45000, active: true, inc: "1 Photographer, 4 locations, Wardrobe guidance" },
-  { id: "p3", name: "Corporate Event Standard", type: "Photo + Video", duration: "6", price: 65000, active: false, inc: "1 Photo, 1 Video, Same-day edit" }
-]
+import useSWR, { mutate } from "swr"
+import { fetchPackages, createPackage, updatePackage, deletePackage } from "@/lib/api"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const packageSchema = z.object({
   name: z.string().min(1, "Name required"),
@@ -42,6 +39,9 @@ const defaultSchema = z.object({
 export function PackagesSettings() {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [editingPkg, setEditingPkg] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const { data: packages, isLoading } = useSWR("/api/v1/packages", fetchPackages)
 
   const defaultForm = useForm<z.infer<typeof defaultSchema>>({
     resolver: zodResolver(defaultSchema) as any,
@@ -58,9 +58,19 @@ export function PackagesSettings() {
     }
   })
 
-  const handleEdit = (id: string) => {
-    setEditingPkg(id)
-    // In real app, populate pkgForm with matching mockPackages[id]
+  const handleEdit = async (pkg: any) => {
+    setEditingPkg(pkg.id)
+    pkgForm.reset({
+      name: pkg.name || "",
+      type: pkg.type || "Photo + Video",
+      duration: pkg.duration_hours || pkg.duration || 8,
+      price: pkg.price || 50000,
+      deposit: pkg.deposit || 25000,
+      inclusions: pkg.inclusions || "",
+      deliverables: pkg.deliverables || "",
+      terms: pkg.terms || "",
+      active: pkg.active ?? true
+    })
     setSheetOpen(true)
   }
 
@@ -73,14 +83,54 @@ export function PackagesSettings() {
     setSheetOpen(true)
   }
 
-  const handleSaveDefaults = (data: any) => {
-    console.log("Saving defaults", data)
-    defaultForm.reset(data)
+  const handleSaveDefaults = async (data: any) => {
+    try {
+      const res = await fetch("/api/v1/studio/package-defaults", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error("Failed to save defaults")
+      defaultForm.reset(data)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
-  const handleSavePackage = (data: any) => {
-    console.log("Saving package", data)
-    setSheetOpen(false)
+  const handleSavePackage = async (data: any) => {
+    setIsSubmitting(true)
+    try {
+      if (editingPkg) {
+        await updatePackage(editingPkg, data)
+      } else {
+        await createPackage(data)
+      }
+      mutate("/api/v1/packages")
+      setSheetOpen(false)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleDeletePackage = async (id: string) => {
+    if (!confirm("Delete this package?")) return
+    try {
+      await deletePackage(id)
+      mutate("/api/v1/packages")
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleToggleActive = async (pkg: any) => {
+    try {
+      await updatePackage(pkg.id, { ...pkg, active: !pkg.active })
+      mutate("/api/v1/packages")
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (
@@ -94,7 +144,19 @@ export function PackagesSettings() {
       </div>
 
       <div className="space-y-3 pb-8">
-        {mockPackages.map(pkg => (
+        {isLoading && (
+          <div className="space-y-3">
+            {Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-20 w-full rounded-xl" />)}
+          </div>
+        )}
+
+        {!isLoading && packages?.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground">
+            <p className="text-sm">No packages defined yet.</p>
+          </div>
+        )}
+
+        {!isLoading && packages?.map((pkg: any) => (
           <div key={pkg.id} className="bg-card border border-border/60 rounded-xl p-4 shadow-sm flex items-center justify-between group transition-colors hover:border-border">
             <div className="flex items-center gap-4 flex-1">
               <GripVertical className="w-5 h-5 text-muted-foreground/30 cursor-grab hover:text-foreground transition-colors" />
@@ -104,20 +166,20 @@ export function PackagesSettings() {
                   <span className="px-2 py-0.5 bg-muted rounded-md text-[10px] font-medium text-muted-foreground uppercase">{pkg.type}</span>
                   {!pkg.active && <span className="px-2 py-0.5 bg-amber-500/10 text-amber-600 rounded-md text-[10px] font-bold uppercase">Inactive</span>}
                 </div>
-                <p className="text-sm text-muted-foreground truncate max-w-[300px] md:max-w-md">{pkg.inc}</p>
+                <p className="text-sm text-muted-foreground truncate max-w-[300px] md:max-w-md">{pkg.inclusions || "No inclusions listed"}</p>
               </div>
             </div>
 
             <div className="flex items-center gap-6">
               <div className="text-right hidden sm:block">
-                <p className="font-bold text-foreground font-mono">₹{pkg.price.toLocaleString("en-IN")}</p>
-                <p className="text-xs text-muted-foreground">{pkg.duration} Hours</p>
+                <p className="font-bold text-foreground font-mono">₹{(pkg.price || 0).toLocaleString("en-IN")}</p>
+                <p className="text-xs text-muted-foreground">{pkg.duration_hours || pkg.duration || 0} Hours</p>
               </div>
-              
+
               <div className="flex items-center gap-2 border-l border-border/60 pl-6">
-                <Switch checked={pkg.active} />
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary" onClick={() => handleEdit(pkg.id)}><Pencil className="w-4 h-4" /></Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-red-600"><Trash2 className="w-4 h-4" /></Button>
+                <Switch checked={pkg.active} onCheckedChange={() => handleToggleActive(pkg)} />
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary" onClick={() => handleEdit(pkg)}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-red-600" onClick={() => handleDeletePackage(pkg.id)}><Trash2 className="w-4 h-4" /></Button>
               </div>
             </div>
           </div>
@@ -204,7 +266,7 @@ export function PackagesSettings() {
               <Label>Deliverables (What does the client get?)</Label>
               <Textarea className="min-h-[80px]" placeholder="e.g. 500 Edited Photos, 4 Min Cinematic Teaser..." {...pkgForm.register("deliverables")} />
             </div>
-            
+
             <div className="space-y-2">
               <Label>Terms & Notes</Label>
               <Textarea className="min-h-[60px]" {...pkgForm.register("terms")} />
@@ -219,8 +281,8 @@ export function PackagesSettings() {
             </div>
 
             <SheetFooter className="pb-8">
-              <Button variant="ghost" type="button" onClick={() => setSheetOpen(false)}>Cancel</Button>
-              <Button type="submit">Save Package</Button>
+              <Button variant="ghost" type="button" onClick={() => setSheetOpen(false)} disabled={isSubmitting}>Cancel</Button>
+              <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Saving..." : "Save Package"}</Button>
             </SheetFooter>
           </form>
         </SheetContent>

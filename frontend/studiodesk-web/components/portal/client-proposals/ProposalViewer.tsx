@@ -14,7 +14,7 @@ export function ProposalViewer({ studioSlug, proposalId }: { studioSlug: string,
         
         {/* Header Cover */}
         <div className="h-48 w-full bg-muted/30 relative flex items-center justify-center overflow-hidden border-b border-border/60">
-           <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--portal-primary))/20] to-transparent pointer-events-none" />
+           <div className="absolute inset-0 bg-muted/10 pointer-events-none" />
            <h1 className="text-3xl font-bold tracking-tight text-foreground relative z-10 text-center px-4">
               Proposal for Priya & Raj
            </h1>

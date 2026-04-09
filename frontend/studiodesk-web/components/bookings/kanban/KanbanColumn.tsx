@@ -7,10 +7,11 @@ interface KanbanColumnProps {
   stage: string;
   bookings: any[];
   totalValue: number;
+  updatingId: string | null;
   onAdd?: (stage: string) => void;
 }
 
-export function KanbanColumn({ stage, bookings, totalValue, onAdd }: KanbanColumnProps) {
+export function KanbanColumn({ stage, bookings, totalValue, updatingId, onAdd }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: stage,
     data: {
@@ -49,7 +50,7 @@ export function KanbanColumn({ stage, bookings, totalValue, onAdd }: KanbanColum
       >
         <SortableContext items={bookingIds} strategy={verticalListSortingStrategy}>
           {bookings.map((booking) => (
-            <KanbanCard key={booking.id} booking={booking} />
+            <KanbanCard key={booking.id} booking={booking} isUpdating={updatingId === booking.id} />
           ))}
         </SortableContext>
 

@@ -1,11 +1,14 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import useSWR from "swr"
+import { fetchGalleryDetail, updateGallerySettings } from "@/lib/api"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
-import { ShieldAlert, DownloadCloud, PenTool, Image as ImageIcon } from "lucide-react"
+import { ShieldAlert, DownloadCloud, CheckCircle2 } from "lucide-react"
 import {
   Select,
   SelectContent,
@@ -14,34 +17,77 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export function DeliverySettings() {
+export function DeliverySettings({ galleryId }: { galleryId: string }) {
+  const router = useRouter()
+  const { data: gallery, isLoading } = useSWR(`/api/v1/galleries/${galleryId}`, fetchGalleryDetail)
+  const [isSaving, setIsSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+
+  const [accessType, setAccessType] = useState("public")
+  const [allowDownload, setAllowDownload] = useState(true)
+  const [expiryDate, setExpiryDate] = useState("")
+  const [galleryName, setGalleryName] = useState("")
+
+  if (gallery) {
+    if (!galleryName) setGalleryName(gallery.name || "")
+    if (accessType === "public" && gallery.accessType) setAccessType(gallery.accessType === "pin_protected" ? "pin" : "public")
+    if (gallery.shootDate && !expiryDate) setExpiryDate("")
+  }
+
+  const handleSave = async () => {
+    setIsSaving(true)
+    setSaved(false)
+    try {
+      const updates: Record<string, unknown> = {}
+      if (galleryName !== gallery?.name) updates.name = galleryName
+
+      if (Object.keys(updates).length > 0) {
+        await updateGallerySettings(galleryId, updates)
+      }
+
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+      router.refresh()
+    } catch (err) {
+      console.error("Failed to save settings:", err)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  if (isLoading) {
+    return <div className="p-8 animate-pulse text-muted-foreground font-mono tracking-widest uppercase text-xs">Loading Settings...</div>
+  }
+
   return (
     <div className="w-full h-full p-8 max-w-4xl mx-auto space-y-8 pb-32">
-      
+
+      {saved && (
+        <div className="fixed top-4 right-4 z-50 flex items-center gap-2 p-4 rounded-md border border-emerald-500/30 bg-emerald-500/5 text-emerald-600 text-sm">
+          <CheckCircle2 className="w-4 h-4" />
+          Settings saved successfully
+        </div>
+      )}
+
       <div className="bg-card rounded-xl border border-border/60 overflow-hidden">
         <div className="px-6 py-4 border-b border-border/40 bg-muted/20 flex items-center gap-2">
           <ShieldAlert className="w-4 h-4 text-primary" />
-          <h2 className="font-semibold">Access Control & Security</h2>
+          <h2 className="font-semibold">Access Control</h2>
         </div>
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label>Access Type</Label>
-            <Select defaultValue="pin">
+            <Select value={accessType} onValueChange={setAccessType}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="public">Public Link</SelectItem>
                 <SelectItem value="pin">PIN Protected</SelectItem>
-                <SelectItem value="private">Private (Invite Only)</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>4-Digit PIN</Label>
-            <Input defaultValue="1928" maxLength={4} className="font-mono tracking-widest" />
-          </div>
-          <div className="space-y-2">
-            <Label>Expiry Date</Label>
-            <Input type="date" defaultValue="2025-11-12" />
+            <Label>Gallery Name</Label>
+            <Input value={galleryName} onChange={(e) => setGalleryName(e.target.value)} />
           </div>
         </div>
       </div>
@@ -57,71 +103,15 @@ export function DeliverySettings() {
               <Label className="text-base">Allow Downloads</Label>
               <p className="text-sm text-muted-foreground">Clients can download assets locally.</p>
             </div>
-            <Select defaultValue="high">
-              <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="high">High Resolution (Original)</SelectItem>
-                <SelectItem value="web">Web Resolution (2048px)</SelectItem>
-                <SelectItem value="none">Disabled</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex items-center justify-between pt-4 border-t border-border/40">
-            <div className="space-y-0.5">
-              <Label className="text-base">Photo Selection Mode</Label>
-              <p className="text-sm text-muted-foreground">Clients can star photos for album printing.</p>
-            </div>
-            <Switch defaultChecked />
-          </div>
-
-          <div className="flex items-center justify-between pt-4 border-t border-border/40">
-            <div className="space-y-0.5">
-              <Label>Selection Limit</Label>
-              <p className="text-sm text-muted-foreground">Maximum photos clients can select.</p>
-            </div>
-            <Input type="number" defaultValue="100" className="w-[180px]" />
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-card rounded-xl border border-border/60 overflow-hidden">
-        <div className="px-6 py-4 border-b border-border/40 bg-muted/20 flex items-center gap-2">
-          <PenTool className="w-4 h-4 text-primary" />
-          <h2 className="font-semibold">Watermarking</h2>
-        </div>
-        <div className="p-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label className="text-base">Enable Watermark</Label>
-              <p className="text-sm text-muted-foreground">Apply watermark to web-resolution images.</p>
-            </div>
-            <Switch defaultChecked />
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border/40">
-            <div className="space-y-2">
-              <Label>Watermark Text</Label>
-              <Input defaultValue="StudioDesk Photography" />
-            </div>
-            <div className="space-y-2">
-              <Label>Position</Label>
-              <Select defaultValue="center">
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="center">Center</SelectItem>
-                  <SelectItem value="bottom-right">Bottom Right</SelectItem>
-                  <SelectItem value="tiled">Tiled Diagonal</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <Switch checked={allowDownload} onCheckedChange={setAllowDownload} />
           </div>
         </div>
       </div>
 
       <div className="flex justify-end gap-4">
-        <Button variant="outline">Discard Changes</Button>
-        <Button>Save Settings</Button>
+        <Button variant="outline" onClick={handleSave} disabled={isSaving}>
+          {isSaving ? "Saving..." : "Save Settings"}
+        </Button>
       </div>
 
     </div>

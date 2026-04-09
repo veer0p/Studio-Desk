@@ -6,7 +6,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CheckCircle2, AlertCircle } from "lucide-react"
+import { AlertCircle } from "lucide-react"
 
 // Real app would likely auto-save toggles or use identical RHF structure.
 // Building quick decoupled UI for toggles indicating auto-save functionality seamlessly.
@@ -38,8 +38,8 @@ export function NotificationSettings() {
     <div className="space-y-2">
       <SettingsSection title="Administrator Ping Destinations" description="Determine where to send critical backend alerts tracking operational bottlenecks seamlessly.">
          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl bg-card border border-border/60 p-6 rounded-xl shadow-sm relative">
-           <div className="absolute top-2 right-2 flex items-center gap-1.5 text-[10px] text-emerald-600 font-bold tracking-widest uppercase bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-             <CheckCircle2 className="w-3 h-3" /> Auto-saved
+           <div className="absolute top-2 right-2 flex items-center gap-1.5 text-[10px] text-muted-foreground font-bold tracking-widest uppercase px-2 py-0.5">
+             <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60" /> Auto-saved
            </div>
 
            <div className="space-y-2">

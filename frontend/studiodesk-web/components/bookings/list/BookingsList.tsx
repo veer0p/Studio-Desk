@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import useSWR, { useSWRConfig } from "swr"
-import { fetchBookingsList, updateBookingStage } from "@/lib/api"
+import { fetchBookingsList, BookingListResult, BookingSummary, BookingTeamMember, updateBookingStage } from "@/lib/api"
 import { useSearchParams, useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { EventTypeDot } from "@/components/bookings/shared/EventTypeDot"
@@ -18,6 +18,7 @@ import {
   getPaginationRowModel,
   useReactTable,
   SortingState,
+  ColumnDef,
 } from "@tanstack/react-table"
 
 import {
@@ -39,9 +40,11 @@ export default function BookingsList() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading } = useSWR(`/api/v1/bookings?${queryString}`, {
-    refreshInterval: 60000
-  })
+  const { data, isLoading, error } = useSWR<BookingListResult>(
+    `/api/v1/bookings?${queryString || "limit=50&sortBy=created_at&order=desc"}`,
+    fetchBookingsList,
+    { refreshInterval: 60000 }
+  )
   const { mutate: mutateGlobal } = useSWRConfig()
 
   const handleMarkConfirmed = async (id: string, e: React.MouseEvent) => {
@@ -57,7 +60,7 @@ export default function BookingsList() {
 
   const [sorting, setSorting] = useState<SortingState>([])
 
-  const columns = [
+  const columns: ColumnDef<BookingSummary>[] = [
     {
       accessorKey: "clientName",
       header: "Client",
@@ -119,7 +122,7 @@ export default function BookingsList() {
         const team = row.original.team || []
         return (
           <div className="flex -space-x-2">
-            {team.slice(0, 3).map((member: any, i: number) => (
+            {team.slice(0, 3).map((member: BookingTeamMember, i: number) => (
               <div key={i} className="w-5 h-5 rounded-sm bg-muted border border-background flex items-center justify-center text-[9px] font-mono tracking-widest uppercase overflow-hidden shrink-0">
                 {member.avatar ? (
                   <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
@@ -197,7 +200,7 @@ export default function BookingsList() {
     }
   ]
 
-  const table = useReactTable({
+  const table = useReactTable<BookingSummary>({
     data: data?.list || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -234,7 +237,7 @@ export default function BookingsList() {
     return (
       <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-8">
         <p className="text-muted-foreground">Failed to load bookings</p>
-        <button onClick={() => mutate()} className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90">
+        <button onClick={() => mutateGlobal(key => typeof key === 'string' && key.startsWith('/api/v1/bookings'))} className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90">
           Retry
         </button>
       </div>
@@ -278,7 +281,7 @@ export default function BookingsList() {
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] uppercase text-muted-foreground tracking-wider font-semibold">Team</span>
                   <div className="flex -space-x-2">
-                    {row.original.team?.length > 0 ? row.original.team.slice(0, 3).map((member: any, i: number) => (
+                    {row.original.team?.length > 0 ? row.original.team.slice(0, 3).map((member: BookingTeamMember, i: number) => (
                       <div key={i} className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center text-[10px] uppercase font-mono overflow-hidden shrink-0">
                         {member.avatar ? (
                           <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" />
@@ -347,10 +350,10 @@ export default function BookingsList() {
                     )}
                   </td>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <div className="flex items-center justify-between p-4 border-t border-border/40 mt-auto shrink-0 bg-background/50 backdrop-blur">

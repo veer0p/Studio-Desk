@@ -4,6 +4,7 @@ import { ShieldCheck, ChevronRight } from "lucide-react"
 import useSWR from "swr"
 import { fetchContractsList, ContractRecord } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
+import Link from "next/link"
 
 export function ContractList() {
   const { data, isLoading, error } = useSWR("/api/v1/contracts", fetchContractsList)
@@ -39,7 +40,7 @@ export function ContractList() {
   return (
     <div className="p-6 md:p-8 space-y-4">
       {contracts.map((contract: ContractRecord) => (
-        <div key={contract.id} className="group bg-background border border-border/60 p-4 rounded-md flex items-center justify-between hover:border-foreground/20 transition-all cursor-pointer">
+        <Link key={contract.id} href={`/contracts/${contract.id}`} className="group bg-background border border-border/60 p-4 rounded-md flex items-center justify-between hover:border-foreground/20 transition-all cursor-pointer">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-sm bg-muted flex items-center justify-center border border-border/40">
               <ShieldCheck className={`w-5 h-5 ${contract.status?.toLowerCase() === "signed" ? "text-emerald-500" : "text-muted-foreground"}`} />
@@ -69,7 +70,7 @@ export function ContractList() {
 
             <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   )

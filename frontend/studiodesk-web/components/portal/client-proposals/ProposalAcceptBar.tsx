@@ -23,8 +23,8 @@ export function ProposalAcceptBar({ studioSlug }: { studioSlug: string }) {
        <div className="container mx-auto max-w-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
          
          <p className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-           Have questions? 
-           <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="text-[#25D366] hover:underline flex items-center gap-1">
+           Have questions?
+           <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="text-emerald-600 hover:underline flex items-center gap-1">
              <MessageCircle className="w-3.5 h-3.5" /> WhatsApp Us
            </a>
          </p>

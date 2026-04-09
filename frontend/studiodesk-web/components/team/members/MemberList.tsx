@@ -14,10 +14,12 @@ export function MemberList() {
   const { data, isLoading } = useSWR("/api/v1/team", fetchTeamMembers)
 
   const members = data?.list || []
-  const filtered = members.filter(m => 
-    m.name.toLowerCase().includes(search.toLowerCase()) || 
-    m.role.toLowerCase().includes(search.toLowerCase())
-  )
+  const filtered = members.filter(m => {
+    const name = (m.name ?? "").toLowerCase()
+    const role = (m.role ?? "").toLowerCase()
+    const q = search.toLowerCase()
+    return name.includes(q) || role.includes(q)
+  })
 
   if (isLoading) {
     return (

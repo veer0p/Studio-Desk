@@ -46,6 +46,7 @@ export default function KanbanBoard() {
   const [isMobile, setIsMobile] = useState(false)
   const [activeId, setActiveId] = useState<string | null>(null)
   const [activeBooking, setActiveBooking] = useState<any | null>(null)
+  const [updatingId, setUpdatingId] = useState<string | null>(null)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -59,7 +60,9 @@ export default function KanbanBoard() {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 10,
+        distance: 16,
+        delay: 100,
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -84,54 +87,33 @@ export default function KanbanBoard() {
   const handleDragOver = (event: DragOverEvent) => {}
 
   const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event
     setActiveId(null)
     setActiveBooking(null)
 
-    const { active, over } = event
     if (!over) return
 
-    const activeStage = active.data.current?.booking?.stage || active.data.current?.sortable?.containerId
-    const overStage = over.data.current?.stage || over.data.current?.sortable?.containerId
+    const activeStage = active.data.current?.booking?.stage ?? active.data.current?.sortable?.containerId
+    const overStage = over.data.current?.stage ?? over.data.current?.sortable?.containerId
 
     if (!activeStage || !overStage || activeStage === overStage) return
 
     const bookingId = active.id as string
     const newStage = overStage as string
 
-    const previousBooking = (Array.isArray(data?.list)
-      ? data.list.find((b: any) => b.id === bookingId)
-      : null) as any | undefined
-
-    mutate(
-      (currentData: any) => {
-        if (!currentData) return currentData
-        const currentList = Array.isArray(currentData.list) ? [...currentData.list] : []
-        const index = currentList.findIndex((booking: any) => booking.id === bookingId)
-        if (index === -1) return currentData
-        const updated = { ...currentList[index], stage: newStage }
-        return { ...currentData, list: currentList.toSpliced(index, 1, updated) }
-      },
-      false
-    )
+    setUpdatingId(bookingId)
 
     try {
       await updateBookingStage(bookingId, newStage)
       toast.success(`Moved to ${newStage}`)
+      // Small delay to let drag overlay dismiss before revalidation
+      await new Promise((r) => setTimeout(r, 100))
       mutate()
-    } catch {
-      toast.error("Failed to update booking. Reverted.")
-      if (previousBooking) {
-        mutate(
-          (currentData: any) => {
-            if (!currentData) return currentData
-            const currentList = Array.isArray(currentData.list) ? [...currentData.list] : []
-            const index = currentList.findIndex((b: any) => b.id === bookingId)
-            if (index === -1) return { ...currentData, list: [...currentList, previousBooking] }
-            return { ...currentData, list: currentList.toSpliced(index, 1, previousBooking) }
-          },
-          true
-        )
-      }
+    } catch (err: any) {
+      const msg = err?.message || "Invalid transition — check allowed stages"
+      toast.error(msg)
+    } finally {
+      setUpdatingId(null)
     }
   }
 
@@ -207,6 +189,7 @@ export default function KanbanBoard() {
                 stage={stage}
                 bookings={stageBookings}
                 totalValue={totalValue}
+                updatingId={updatingId}
               />
             )
           })}

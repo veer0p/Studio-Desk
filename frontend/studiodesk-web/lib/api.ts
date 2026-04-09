@@ -392,13 +392,18 @@ type BackendDashboardToday = {
   has_shoots?: boolean;
   shoots?: Array<{
     id?: string | null;
-    client_name?: string | null;
+    title?: string | null;
     event_type?: string | null;
+    client_name?: string | null;
+    client_phone?: string | null;
+    client_whatsapp?: string | null;
+    venue_name?: string | null;
     call_time?: string | null;
     shoot_start_time?: string | null;
-    venue_name?: string | null;
+    shoot_end_time?: string | null;
     venue_address?: string | null;
-    assigned_team?: Array<{ name?: string | null }> | null;
+    venue_map_link?: string | null;
+    assigned_team?: Array<{ name?: string | null; avatar?: string | null; role?: string | null }> | null;
   }> | null;
 };
 
@@ -902,6 +907,10 @@ export async function fetchInvoicesList(url: string): Promise<InvoiceListResult>
   };
 }
 
+export async function fetchInvoiceDetail(id: string): Promise<InvoiceRecord & { lineItems?: Array<{ description: string; amount: number }>; payments?: Array<{ id: string; date: string; amount: number; method: string }> }> {
+  return await fetchApiData(`/api/v1/invoices/${id}`);
+}
+
 export async function fetchPaymentsList(url: string): Promise<PaymentListResult> {
   const payload = await fetchApiData<{ list: PaymentRecord[]; count: number }>(url);
   return {
@@ -987,7 +996,10 @@ export async function updateBookingStage(id: string, stage: string): Promise<Boo
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status }),
   });
-  if (!res.ok) throw new Error("Failed to update stage");
+  if (!res.ok) {
+    const body = await readJsonSafe<{ error?: string }>(res);
+    throw new Error(body?.error || `Failed to update stage to ${stage}`);
+  }
   const payload = await readJsonSafe<ApiEnvelope<BackendBookingRow>>(res);
   if (!payload?.data) throw new Error("Booking response missing data");
   return normalizeBooking(payload.data);
@@ -1247,6 +1259,56 @@ export async function checkScheduleConflicts(weekStr: string) {
   return res.json();
 }
 
+export async function fetchPackages(url: string = "/api/v1/packages"): Promise<any[]> {
+  return await fetchApiData(url);
+}
+
+export async function createPackage(data: any) {
+  const res = await fetch("/api/v1/packages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to create package");
+  return res.json();
+}
+
+export async function updatePackage(id: string, data: any) {
+  const res = await fetch(`/api/v1/packages/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to update package");
+  return res.json();
+}
+
+export async function deletePackage(id: string) {
+  const res = await fetch(`/api/v1/packages/${id}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("Failed to delete package");
+  return res.json();
+}
+
+export async function fetchIntegrationsStatus(): Promise<{ razorpay: { connected: boolean; keyId?: string }; whatsapp: { connected: boolean; phoneNumber?: string }; gcal: { connected: boolean; email?: string; syncBookings: boolean; syncTeam: boolean } }> {
+  return await fetchApiData("/api/v1/integrations/status");
+}
+
+export async function connectIntegration(provider: string, data: any) {
+  const res = await fetch(`/api/v1/integrations/${provider}/connect`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(`Failed to connect ${provider}`);
+  return res.json();
+}
+
+export async function disconnectIntegration(provider: string) {
+  const res = await fetch(`/api/v1/integrations/${provider}/disconnect`, { method: "POST" });
+  if (!res.ok) throw new Error(`Failed to disconnect ${provider}`);
+  return res.json();
+}
+
 export async function recordPayout(data: JsonObject) {
   const res = await fetch("/api/v1/payouts", {
     method: "POST",
@@ -1325,6 +1387,20 @@ export async function fetchProposalsList(url: string = "/api/v1/proposals"): Pro
     list: Array.isArray(payload) ? payload : [],
     count: Array.isArray(payload) ? payload.length : 0,
   };
+}
+
+export async function fetchProposalDetail(id: string): Promise<ProposalRecord & { description?: string; terms?: string; items?: Array<{ name: string; amount: number }> }> {
+  return await fetchApiData(`/api/v1/proposals/${id}`);
+}
+
+export async function fetchContractDetail(id: string): Promise<ContractRecord & { description?: string; terms?: string; clauses?: Array<{ title: string; content: string }> }> {
+  return await fetchApiData(`/api/v1/contracts/${id}`);
+}
+
+export type LeadRecord = BookingSummary;
+
+export async function fetchLeadDetail(id: string): Promise<BookingSummary> {
+  return await fetchApiData(`/api/v1/bookings/${id}`);
 }
 
 // --- Addons ---
@@ -1450,9 +1526,14 @@ export type ExpenseRecord = {
 };
 
 export async function fetchExpensesListTyped(url: string = "/api/v1/expenses"): Promise<{ list: ExpenseRecord[]; count: number; totalExp: number; totalGst: number }> {
-  const payload = await fetchApiData<ExpenseRecord[]>(url);
-  const list = Array.isArray(payload) ? payload : [];
-  const totalExp = list.reduce((sum, e) => sum + Number(e.amount ?? 0), 0);
-  const totalGst = list.reduce((sum, e) => sum + Number(e.gstInput ?? 0), 0);
-  return { list, count: list.length, totalExp, totalGst };
+  try {
+    const payload = await fetchApiData<ExpenseRecord[]>(url);
+    const list = Array.isArray(payload) ? payload : [];
+    const totalExp = list.reduce((sum, e) => sum + Number(e.amount ?? 0), 0);
+    const totalGst = list.reduce((sum, e) => sum + Number(e.gstInput ?? 0), 0);
+    return { list, count: list.length, totalExp, totalGst };
+  } catch {
+    // Endpoint may not exist yet — return empty data gracefully
+    return { list: [], count: 0, totalExp: 0, totalGst: 0 };
+  }
 }

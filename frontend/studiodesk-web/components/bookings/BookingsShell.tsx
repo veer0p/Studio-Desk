@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { LayoutGrid, List as ListIcon, Plus, Search, Filter } from "lucide-react"
 import { NewBookingDialog } from "@/components/bookings/shared/NewBookingDialog"
+import BookingCountBadge from "@/components/bookings/shared/BookingCountBadge"
 
-export default function BookingsShell({ children, totalCount }: { children: React.ReactNode; totalCount?: number }) {
+export default function BookingsShell({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentView = searchParams.get("view") || "kanban"
@@ -56,9 +57,7 @@ export default function BookingsShell({ children, totalCount }: { children: Reac
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-semibold tracking-tight">Bookings</h1>
-            <span className="text-xs font-medium px-2 py-0.5 bg-muted rounded-full text-muted-foreground hidden sm:inline-block">
-              47 bookings
-            </span>
+            <BookingCountBadge />
           </div>
 
           <NewBookingDialog>
@@ -91,6 +90,7 @@ export default function BookingsShell({ children, totalCount }: { children: Reac
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuItem onClick={() => router.push("/bookings?stage=Inquiry")}>Inquiry</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/bookings?stage=Proposal Sent")}>Proposal Sent</DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push("/bookings?stage=Confirmed")}>Confirmed</DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push("/bookings?stage=In Progress")}>In Progress</DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push("/bookings?stage=Delivered")}>Delivered</DropdownMenuItem>

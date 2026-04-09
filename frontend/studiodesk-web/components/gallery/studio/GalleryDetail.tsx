@@ -210,7 +210,7 @@ export function GalleryDetail({ galleryId }: { galleryId: string }) {
             </div>
 
             <div className="hidden lg:block w-80 shrink-0 h-full relative z-30">
-              <UploadPanel />
+              <UploadPanel galleryId={galleryId} />
             </div>
           </div>
         )}
@@ -219,7 +219,7 @@ export function GalleryDetail({ galleryId }: { galleryId: string }) {
 
         {currentTab === "selection" && <div className="p-8 text-muted-foreground">Client Selection approval — let clients pick their favorites.</div>}
 
-        {currentTab === "settings" && <div className="h-full overflow-y-auto custom-scrollbar bg-muted/5"><DeliverySettings /></div>}
+        {currentTab === "settings" && <div className="h-full overflow-y-auto custom-scrollbar bg-muted/5"><DeliverySettings galleryId={galleryId} /></div>}
       </div>
 
     </div>

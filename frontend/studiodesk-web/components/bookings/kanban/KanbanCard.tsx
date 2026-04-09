@@ -14,9 +14,10 @@ const eventColors: Record<string, string> = {
 
 interface KanbanCardProps {
   booking: any;
+  isUpdating?: boolean;
 }
 
-export function KanbanCard({ booking }: KanbanCardProps) {
+export function KanbanCard({ booking, isUpdating = false }: KanbanCardProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentView = searchParams.get("view") || "kanban"
@@ -65,8 +66,13 @@ export function KanbanCard({ booking }: KanbanCardProps) {
       {...attributes}
       {...listeners}
       onClick={() => router.push(`/bookings?view=${currentView}&id=${booking.id}`)}
-      className={`relative flex flex-col gap-2 p-3 bg-card border border-border/60 rounded-xl shadow-sm cursor-grab active:cursor-grabbing hover:ring-1 hover:ring-primary/30 transition-all ${isDragging ? "opacity-50" : ""}`}
+      className={`relative flex flex-col gap-2 p-3 bg-card border border-border/60 rounded-xl shadow-sm cursor-grab active:cursor-grabbing hover:ring-1 hover:ring-primary/30 transition-all ${isDragging ? "opacity-50" : ""} ${isUpdating ? "opacity-60 pointer-events-none" : ""}`}
     >
+      {isUpdating && (
+        <div className="absolute inset-0 flex items-center justify-center bg-card/80 rounded-xl z-10">
+          <div className="w-4 h-4 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
+        </div>
+      )}
       {/* Absolute Left Color Border */}
       <div className={`absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl ${eventColors[booking.eventType] || eventColors.Other}`} />
       

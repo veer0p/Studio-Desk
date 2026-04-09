@@ -169,7 +169,7 @@ export function ClientBookingDetail({ studioSlug, bookingId }: { studioSlug: str
           </div>
 
            {/* Gallery Banner */}
-          <div className="bg-gradient-to-br from-[hsl(var(--portal-primary))/10] to-transparent border border-[hsl(var(--portal-primary))/30] rounded-xl p-5 shadow-sm text-center">
+          <div className="bg-muted/10 border border-[hsl(var(--portal-primary))/30] rounded-xl p-5 shadow-sm text-center">
             <div className="w-12 h-12 bg-[hsl(var(--portal-primary))/20] rounded-full flex items-center justify-center mx-auto mb-3">
                <ImageIcon className="w-6 h-6 text-[hsl(var(--portal-primary))]" />
             </div>

@@ -14,7 +14,7 @@ export function UpcomingShoot({ studioSlug }: { studioSlug: string }) {
       <div className="w-full bg-[hsl(var(--portal-primary))/5] border border-[hsl(var(--portal-primary))/20] rounded-2xl p-6 text-center">
         <h3 className="text-lg font-semibold text-foreground tracking-tight">No upcoming shoots</h3>
         <p className="text-sm text-muted-foreground mt-1 mb-5">Contact us to book your next amazing event seamlessly.</p>
-        <Button className="bg-[#25d366] hover:bg-[#25d366]/90 text-white font-medium shadow-sm transition-all" asChild>
+        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm transition-all" asChild>
           <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer">
              <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp Studio
           </a>
@@ -31,7 +31,7 @@ export function UpcomingShoot({ studioSlug }: { studioSlug: string }) {
       </div>
       
       <div className="relative p-6 sm:p-8">
-        <div className="inline-flex items-center rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold mb-3 tracking-wide backdrop-blur-sm">
+        <div className="inline-flex items-center rounded-sm bg-white/20 px-2.5 py-0.5 text-xs font-semibold mb-3 tracking-wide backdrop-blur-sm">
           Your Next Shoot
         </div>
         
@@ -39,7 +39,7 @@ export function UpcomingShoot({ studioSlug }: { studioSlug: string }) {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm sm:text-base mb-8">
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+             <div className="w-8 h-8 rounded-sm bg-white/10 flex items-center justify-center shrink-0">
                <Calendar className="w-4 h-4 text-white" />
              </div>
              <div>
@@ -48,7 +48,7 @@ export function UpcomingShoot({ studioSlug }: { studioSlug: string }) {
              </div>
           </div>
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+             <div className="w-8 h-8 rounded-sm bg-white/10 flex items-center justify-center shrink-0">
                <Clock className="w-4 h-4 text-white" />
              </div>
              <div>
@@ -57,7 +57,7 @@ export function UpcomingShoot({ studioSlug }: { studioSlug: string }) {
              </div>
           </div>
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+             <div className="w-8 h-8 rounded-sm bg-white/10 flex items-center justify-center shrink-0">
                <MapPin className="w-4 h-4 text-white" />
              </div>
              <div className="truncate pr-4">
@@ -66,7 +66,7 @@ export function UpcomingShoot({ studioSlug }: { studioSlug: string }) {
              </div>
           </div>
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+             <div className="w-8 h-8 rounded-sm bg-white/10 flex items-center justify-center shrink-0">
                <User className="w-4 h-4 text-white" />
              </div>
              <div>
@@ -82,7 +82,7 @@ export function UpcomingShoot({ studioSlug }: { studioSlug: string }) {
                View Booking Details <ArrowRight className="w-4 h-4 ml-2" />
              </Link>
            </Button>
-           <Button className="w-full sm:w-auto bg-[#25d366]/20 hover:bg-[#25d366]/30 text-white border border-[#25d366]/50 transition-colors font-medium backdrop-blur-sm" asChild>
+           <Button className="w-full sm:w-auto bg-emerald-600/20 hover:bg-emerald-600/30 text-white border border-emerald-600/50 transition-colors font-medium backdrop-blur-sm" asChild>
              <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer">
                 <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp Studio
              </a>

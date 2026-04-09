@@ -45,20 +45,22 @@ const newBookingSchema = z.object({
   eventName: z.string().min(2, "Required"),
   eventType: z.string().min(1, "Required"),
   date: z.string().min(1, "Required"),
-  time: z.string().optional(),
-  venue: z.string().optional(),
-  city: z.string().optional(),
-  package: z.string().optional(),
-  amount: z.coerce.number().min(0).optional(),
-  stage: z.string().default("Inquiry"),
-  notes: z.string().optional(),
+  time: z.string(),
+  venue: z.string(),
+  city: z.string(),
+  package: z.string(),
+  amount: z.string(),
+  stage: z.string(),
+  notes: z.string(),
 })
+
+type NewBookingFormData = z.infer<typeof newBookingSchema>
 
 export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
   const [open, setOpen] = useState(false)
   const { mutate } = useSWRConfig()
 
-  const form = useForm<any>({
+  const form = useForm<NewBookingFormData>({
     resolver: zodResolver(newBookingSchema),
     defaultValues: {
       clientName: "",
@@ -70,15 +72,19 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
       venue: "",
       city: "",
       package: "",
-      amount: undefined,
+      amount: "",
       stage: "Inquiry",
       notes: "",
     },
   })
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: NewBookingFormData) => {
     try {
-      await createBooking(values)
+      const bookingData = {
+        ...values,
+        amount: values.amount ? parseFloat(values.amount) : undefined,
+      }
+      await createBooking(bookingData)
       toast.success("Booking created successfully")
       setOpen(false)
       form.reset()
@@ -273,22 +279,10 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
                     <FormLabel>Total Value (₹)</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
-                        min={0}
+                        type="text"
+                        inputMode="numeric"
                         placeholder="75000"
                         {...field}
-                        value={field.value ?? ""}
-                        onChange={(e) => {
-                          const val = e.target.value
-                          if (val === "") {
-                            field.onChange(undefined)
-                          } else {
-                            const num = Number(val)
-                            if (Number.isFinite(num)) {
-                              field.onChange(num)
-                            }
-                          }
-                        }}
                       />
                     </FormControl>
                     <FormMessage />

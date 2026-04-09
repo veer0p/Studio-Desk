@@ -4,6 +4,7 @@ import { IndianRupee, Clock, ChevronRight, FileText } from "lucide-react"
 import useSWR from "swr"
 import { fetchProposalsList, ProposalRecord } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
+import Link from "next/link"
 
 const formatAmount = (amount: number) => `Rs ${Number(amount ?? 0).toLocaleString("en-IN")}`
 
@@ -41,7 +42,7 @@ export function ProposalList() {
   return (
     <div className="p-6 md:p-8 space-y-4">
       {proposals.map((proposal: ProposalRecord) => (
-        <div key={proposal.id} className="group bg-background border border-border/60 p-4 rounded-md flex items-center justify-between hover:border-foreground/20 transition-all cursor-pointer">
+        <Link key={proposal.id} href={`/proposals/${proposal.id}`} className="group bg-background border border-border/60 p-4 rounded-md flex items-center justify-between hover:border-foreground/20 transition-all cursor-pointer">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-sm bg-muted flex items-center justify-center border border-border/40">
               <FileText className="w-5 h-5 text-muted-foreground" />
@@ -73,7 +74,7 @@ export function ProposalList() {
 
             <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   )

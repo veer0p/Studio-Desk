@@ -21,9 +21,7 @@ export default function DashboardPage() {
   return (
     <DashboardShell>
       <div className="flex flex-col gap-6">
-        <Suspense fallback={<Skeleton className="w-full h-10 rounded-md" />}>
-          <GreetingSection />
-        </Suspense>
+        <GreetingSection />
         <Suspense fallback={<Skeleton className="w-full h-[100px] rounded-md" />}>
           <TodayStrip />
         </Suspense>

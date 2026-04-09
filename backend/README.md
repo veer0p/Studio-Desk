@@ -49,4 +49,4 @@ npm run dev
 See [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md) for production deployment steps.
 
 ---
-Built with ❤️ for Indian Creators.
+

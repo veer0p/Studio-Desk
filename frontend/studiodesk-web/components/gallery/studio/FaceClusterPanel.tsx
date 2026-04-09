@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { FaceCluster } from "@/lib/api"
+import useSWR from "swr"
+import { FaceCluster, tagFace } from "@/lib/api"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search, Tag, User } from "lucide-react"
@@ -11,10 +12,23 @@ interface FaceClusterPanelProps {
   clusters: FaceCluster[]
 }
 
-export function FaceClusterPanel({ galleryId, clusters }: FaceClusterPanelProps) {
+export function FaceClusterPanel({ galleryId, clusters: initialClusters }: FaceClusterPanelProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [labels, setLabels] = useState<Record<string, string>>({})
+  const [editingValue, setEditingValue] = useState("")
+
+  const clusters = initialClusters ?? []
+
+  const handleTagSubmit = async (clusterId: string) => {
+    if (!editingValue.trim()) return
+    try {
+      await tagFace(galleryId, clusterId, { label: editingValue.trim() })
+      setEditingId(null)
+      setEditingValue("")
+    } catch (err) {
+      console.error("Failed to tag face:", err)
+    }
+  }
 
   if (!clusters?.length) {
     return (
@@ -54,7 +68,7 @@ export function FaceClusterPanel({ galleryId, clusters }: FaceClusterPanelProps)
       <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
         {filtered.map((cluster) => {
           const isEditing = editingId === cluster.id
-          const label = labels[cluster.id] ?? cluster.name ?? `Person ${cluster.id.slice(-4)}`
+          const label = cluster.name ?? `Person ${cluster.id.slice(-4)}`
 
           return (
             <div key={cluster.id} className="flex items-center gap-3 p-2 rounded-md bg-muted/20 border border-border/40">
@@ -69,26 +83,38 @@ export function FaceClusterPanel({ galleryId, clusters }: FaceClusterPanelProps)
               </div>
               <div className="flex-1 min-w-0">
                 {isEditing ? (
-                  <Input
-                    className="h-7 text-xs"
-                    value={labels[cluster.id] ?? cluster.name ?? ""}
-                    onChange={(e) => setLabels((prev) => ({ ...prev, [cluster.id]: e.target.value }))}
-                    onBlur={() => setEditingId(null)}
-                    onKeyDown={(e) => e.key === "Enter" && setEditingId(null)}
-                    autoFocus
-                  />
-                ) : (
-                  <span
-                    className="text-xs font-medium truncate cursor-pointer hover:text-primary"
-                    onClick={() => setEditingId(cluster.id)}
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      handleTagSubmit(cluster.id)
+                    }}
                   >
-                    {label}
-                  </span>
+                    <Input
+                      className="h-7 text-xs"
+                      value={editingValue}
+                      onChange={(e) => setEditingValue(e.target.value)}
+                      onBlur={() => setEditingId(null)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Escape") setEditingId(null)
+                      }}
+                      placeholder="Enter name..."
+                      autoFocus
+                    />
+                  </form>
+                ) : (
+                  <>
+                    <span className="text-xs font-medium truncate cursor-pointer hover:text-primary">
+                      {label}
+                    </span>
+                    <span className="text-[9px] text-muted-foreground ml-1">{cluster.photoCount} photos</span>
+                  </>
                 )}
-                <span className="text-[9px] text-muted-foreground">{cluster.photoCount} photos</span>
               </div>
               {!isEditing && (
-                <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => setEditingId(cluster.id)}>
+                <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => {
+                  setEditingId(cluster.id)
+                  setEditingValue(cluster.name ?? "")
+                }}>
                   <Tag className="w-3 h-3 text-muted-foreground" />
                 </Button>
               )}

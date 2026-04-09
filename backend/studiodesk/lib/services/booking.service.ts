@@ -189,7 +189,7 @@ export class BookingService {
     bookingRepo.logActivity(supabase, {
       studio_id: studioId,
       booking_id: bookingId,
-      event_type: 'status_updated',
+      event_type: 'status_changed',
       actor_id,
       actor_type: actor_id ? 'member' : 'system',
       metadata: { from: current.status, to: status }

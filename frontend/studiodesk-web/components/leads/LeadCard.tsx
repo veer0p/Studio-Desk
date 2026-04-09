@@ -2,10 +2,14 @@
 
 import { BookingSummary } from "@/lib/api"
 import { Calendar, MapPin, ChevronRight, MessageSquare } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export function LeadCard({ lead }: { lead: BookingSummary }) {
+  const router = useRouter()
+  
   return (
-    <div className="group bg-background border border-border/60 p-4 rounded-md shadow-sm hover:shadow-md hover:border-foreground/20 transition-all cursor-pointer">
+    <Link href={`/leads/${lead.id}`} className="group bg-background border border-border/60 p-4 rounded-md shadow-sm hover:shadow-md hover:border-foreground/20 transition-all cursor-pointer block">
       <div className="flex justify-between items-start mb-3">
         <div>
           <h4 className="text-sm font-bold tracking-tight group-hover:underline">{lead.clientName}</h4>
@@ -34,6 +38,6 @@ export function LeadCard({ lead }: { lead: BookingSummary }) {
             <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
         </div>
       </div>
-    </div>
+    </Link>
   )
 }

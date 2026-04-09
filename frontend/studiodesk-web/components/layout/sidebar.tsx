@@ -177,7 +177,7 @@ export function Sidebar() {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
-                            <Link href="/settings/profile" className="cursor-pointer">
+                            <Link href="/settings/owner" className="cursor-pointer">
                                 <User className="mr-2 h-4 w-4" />
                                 <span>My Profile</span>
                             </Link>
