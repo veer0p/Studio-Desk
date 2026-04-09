@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <div className="flex flex-1 flex-col overflow-hidden md:ml-16">
         <Header />
-        <main className="flex-1 overflow-y-auto p-4 pb-20 md:pb-4 md:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto p-4 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-4 md:p-6 lg:p-8">
           {children}
         </main>
         {/* Mobile Bottom Nav */}

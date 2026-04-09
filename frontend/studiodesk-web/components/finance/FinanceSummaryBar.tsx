@@ -1,6 +1,7 @@
 "use client"
 
 import useSWR from "swr"
+import { fetchFinanceSummary, FinanceSummary } from "@/lib/api"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ArrowDownRight, ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react"
@@ -13,88 +14,82 @@ const formatAmountCompact = (amt: number) => {
 }
 
 export function FinanceSummaryBar({ onFilter }: { onFilter: (key: string) => void }) {
-  const { data: summary, isLoading } = useSWR("/api/v1/finance/summary")
+  const { data: summary, isLoading, error } = useSWR("/api/v1/finance/summary", fetchFinanceSummary)
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-4 min-w-max animate-pulse">
+      <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-5 gap-3 animate-pulse">
         {[1, 2, 3, 4, 5].map((i) => (
-          <Skeleton key={i} className="w-[240px] h-[100px] rounded-md" />
+          <Skeleton key={i} className="h-[100px] w-full rounded-md" />
         ))}
       </div>
     )
   }
 
-  if (!summary) return null
+  if (!summary || error) return null
 
   const boxes = [
     {
       id: "revenue",
-      title: "This Month Revenue",
+      label: "Revenue Collected",
       value: formatAmountCompact(summary.revenue),
-      subValue: summary.revenueGrowth >= 0 ? `↑ ${summary.revenueGrowth}% vs last month` : `↓ ${Math.abs(summary.revenueGrowth)}% vs last month`,
-      subColor: summary.revenueGrowth >= 0 ? "text-emerald-500" : "text-red-500",
-      icon: summary.revenueGrowth >= 0 ? ArrowUpRight : ArrowDownRight,
-      onClick: undefined
+      subValue: `${summary.revenueGrowth >= 0 ? '↑' : '↓'} ${Math.abs(summary.revenueGrowth)}%`,
+      onClick: () => onFilter("revenue"),
     },
     {
       id: "outstanding",
-      title: "Outstanding",
+      label: "Outstanding",
       value: formatAmountCompact(summary.outstanding),
-      subValue: `across ${summary.outstandingCount || 0} invoices`,
-      valueColor: summary.outstanding > 0 ? "text-amber-500" : "text-emerald-500",
-      onClick: () => onFilter("unpaid")
+      subValue: `${summary.outstandingCount} pending`,
+      onClick: () => onFilter("outstanding"),
     },
     {
       id: "overdue",
-      title: "Overdue",
+      label: "Overdue",
       value: formatAmountCompact(summary.overdue),
-      subValue: `${summary.overdueCount || 0} invoices overdue`,
-      valueColor: summary.overdue > 0 ? "text-red-500" : "text-emerald-500",
-      onClick: () => onFilter("overdue")
+      subValue: `${summary.overdueCount} overdue`,
+      onClick: () => onFilter("overdue"),
     },
     {
       id: "expenses",
-      title: "This Month Expenses",
+      label: "Expenses",
       value: formatAmountCompact(summary.expenses),
-      subValue: `${summary.expensesCount || 0} transactions`,
-      onClick: undefined
+      subValue: `${summary.expensesCount} records`,
+      onClick: () => onFilter("expenses"),
     },
     {
       id: "net",
-      title: "Net (Rev - Exp)",
+      label: "Net Income",
       value: formatAmountCompact(summary.net),
-      subValue: "this month",
-      valueColor: summary.net >= 0 ? "text-emerald-500" : "text-red-500",
-      onClick: undefined
-    }
+      subValue: "This period",
+      onClick: () => onFilter("net"),
+    },
   ]
 
   return (
-    <div className="w-full overflow-x-auto pb-4 custom-scrollbar">
-      <div className="flex items-center gap-4 min-w-max">
-        {boxes.map((box) => (
-          <Card 
-            key={box.id} 
-            className={`w-[240px] shrink-0 border-border/60 rounded-md shadow-sm transition-colors ${box.onClick ? 'cursor-pointer hover:border-primary/40' : ''}`}
-            onClick={box.onClick}
-          >
-            <CardContent className="p-4 flex flex-col justify-center">
-              <span className="text-sm font-medium text-muted-foreground mb-1">
-                {box.title}
-              </span>
-              <span className={`text-2xl font-bold font-mono tracking-widest uppercase ${box.valueColor || "text-foreground"}`}>
-                {box.value}
-              </span>
-              <div className="flex items-center mt-1">
-                <span className={`text-xs font-medium ${box.subColor || "text-muted-foreground"}`}>
-                  {box.subValue}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-5 gap-3">
+      {boxes.map((box) => (
+        <Card
+          key={box.id}
+          className="cursor-pointer hover:border-primary/50 transition-colors border-border/60 shadow-sm"
+          onClick={box.onClick}
+        >
+          <CardContent className="p-4 flex flex-col justify-between h-[100px]">
+            <div className="flex justify-between items-start">
+              <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">{box.label}</span>
+              {box.subValue.includes('↑') ? (
+                <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600" />
+              ) : box.subValue.includes('↓') ? (
+                <ArrowDownRight className="w-3.5 h-3.5 text-red-500" />
+              ) : null}
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg font-mono font-bold tracking-tight text-foreground">{box.value}</span>
+              <span className="text-[10px] font-medium text-muted-foreground">{box.subValue}</span>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   )
 }

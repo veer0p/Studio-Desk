@@ -48,20 +48,23 @@ export function MemberDetail({ id }: { id: string }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2 mr-4 border-r border-border/40 pr-6">
             <span className="text-sm font-medium">Active</span>
             <Switch checked={m.isActive} />
           </div>
-          
+
           <EditMemberSheet member={m} />
-          <Button variant="outline" className="h-9"><Banknote className="w-4 h-4 mr-2" /> Record Payout</Button>
-          <Button className="h-9"><Calendar className="w-4 h-4 mr-2" /> Assign Shoot</Button>
+          <Button variant="outline" className="h-9 hidden sm:inline-flex"><Banknote className="w-4 h-4 mr-2" /> Record Payout</Button>
+          <Button className="h-9 hidden sm:inline-flex"><Calendar className="w-4 h-4 mr-2" /> Assign Shoot</Button>
+          {/* Mobile: icon-only buttons */}
+          <Button variant="outline" size="icon" className="h-9 w-9 sm:hidden"><Banknote className="w-4 h-4" /></Button>
+          <Button size="icon" className="h-9 w-9 sm:hidden"><Calendar className="w-4 h-4" /></Button>
         </div>
       </div>
 
       {/* KPI Ribbon */}
-      <div className="bg-muted/10 border-b border-border/40 px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="bg-muted/10 border-b border-border/40 px-4 sm:px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
         <div>
           <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-1">Total Shoots</p>
           <p className="text-xl font-semibold">{m.totalShoots}</p>

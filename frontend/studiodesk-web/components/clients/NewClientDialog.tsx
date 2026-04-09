@@ -93,11 +93,11 @@ export function NewClientDialog({ children }: { children: React.ReactNode }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[480px] sm:rounded-md">
+      <DialogContent className="sm:max-w-[480px] sm:rounded-md max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>New Client</DialogTitle>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4 overflow-y-auto custom-scrollbar max-h-[calc(90vh-8rem)]">
           <div className="space-y-2">
             <Label>Full Name *</Label>
             <Input {...form.register("fullName")} placeholder="Rohan Sharma" />
@@ -163,7 +163,7 @@ export function NewClientDialog({ children }: { children: React.ReactNode }) {
           {source === "Referral" && (
             <div className="space-y-2">
               <Label>Referred By</Label>
-              <Input {...form.register("referredBy")} placeholder="Search existing client name..." />
+              <Input {...form.register("referredBy")} placeholder="Enter referrer name..." />
               {/* In MVP we allow simple text instead of blocking on complex combobox */}
             </div>
           )}

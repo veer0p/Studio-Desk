@@ -3,21 +3,37 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { updateBookingNotes } from "@/lib/api"
 import { toast } from "sonner"
 import { Phone, Calendar as CalendarIcon, MapPin, Receipt, IndianRupee, Link as LinkIcon } from "lucide-react"
+import { whatsappUrl } from "@/lib/phone"
 
 export default function SlideOverTabs({ booking }: { booking: any }) {
   const [note, setNote] = useState(booking.notes || "")
   const [isSaving, setIsSaving] = useState(false)
+  const [hasUnsaved, setHasUnsaved] = useState(false)
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Quick auto-save simulation for notes
-  const handleNoteBlur = async () => {
-    if (note === booking.notes) return
+  // Sync local note state when booking prop changes (e.g., after revalidation)
+  useEffect(() => {
+    setNote(booking.notes || "")
+    setHasUnsaved(false)
+  }, [booking.notes, booking.id])
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current)
+    }
+  }, [])
+
+  const saveNotes = async (text: string) => {
+    if (text === booking.notes) return
     setIsSaving(true)
     try {
-      await updateBookingNotes(booking.id, note)
+      await updateBookingNotes(booking.id, text)
+      setHasUnsaved(false)
       toast.success("Note saved")
     } catch {
       toast.error("Failed to save note")
@@ -26,33 +42,49 @@ export default function SlideOverTabs({ booking }: { booking: any }) {
     }
   }
 
+  const handleNoteChange = (text: string) => {
+    setNote(text)
+    setHasUnsaved(true)
+    // Debounced auto-save on change (2s)
+    if (saveTimer.current) clearTimeout(saveTimer.current)
+    saveTimer.current = setTimeout(() => saveNotes(text), 2000)
+  }
+
+  const handleNoteBlur = () => {
+    if (saveTimer.current) clearTimeout(saveTimer.current)
+    if (hasUnsaved) saveNotes(note)
+  }
+
+  const payments = booking.payments || []
+  const timeline = booking.timeline
+
   return (
     <Tabs defaultValue="overview" className="w-full flex-1 flex flex-col h-full">
-      <div className="px-6 border-b border-border/40 shrink-0">
-        <TabsList className="w-full justify-start h-auto p-0 bg-transparent gap-6 rounded-none">
-          <TabsTrigger value="overview" className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent">
+      <div className="px-4 border-b border-border/40 shrink-0">
+        <TabsList className="w-full justify-start h-auto p-0 bg-transparent gap-2 rounded-none overflow-x-auto flex-nowrap">
+          <TabsTrigger value="overview" className="px-2 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent whitespace-nowrap">
             Overview
           </TabsTrigger>
-          <TabsTrigger value="timeline" className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent">
+          <TabsTrigger value="timeline" className="px-2 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent whitespace-nowrap">
             Timeline
           </TabsTrigger>
-          <TabsTrigger value="finance" className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent">
+          <TabsTrigger value="finance" className="px-2 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent whitespace-nowrap">
             Finance
           </TabsTrigger>
-          <TabsTrigger value="files" className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent">
+          <TabsTrigger value="files" className="px-2 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent whitespace-nowrap">
             Files
           </TabsTrigger>
-          <TabsTrigger value="notes" className="px-0 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent">
+          <TabsTrigger value="notes" className="px-2 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent whitespace-nowrap">
             Notes
           </TabsTrigger>
         </TabsList>
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
-        
+
         {/* OVERVIEW TAB */}
         <TabsContent value="overview" className="m-0 flex flex-col gap-8 data-[state=inactive]:hidden">
-          
+
           <section className="flex flex-col gap-3">
             <h3 className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">Event Details</h3>
             <div className="p-4 bg-muted/5 border border-border/60 rounded-md space-y-4">
@@ -81,13 +113,16 @@ export default function SlideOverTabs({ booking }: { booking: any }) {
                   <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground block mb-1">Phone</span>
                   <div className="font-mono tracking-widest text-sm text-foreground">{(booking.clientPhone || "No Phone")}</div>
                 </div>
-                {booking.clientPhone && (
-                  <Button variant="outline" size="sm" className="rounded-sm" asChild>
-                    <a href={`https://wa.me/${booking.clientPhone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer">
-                      WhatsApp
-                    </a>
-                  </Button>
-                )}
+                {(() => {
+                  const wa = whatsappUrl(booking.clientPhone)
+                  return wa ? (
+                    <Button variant="outline" size="sm" className="rounded-sm" asChild>
+                      <a href={wa} target="_blank" rel="noreferrer">
+                        WhatsApp
+                      </a>
+                    </Button>
+                  ) : null
+                })()}
               </div>
               <div>
                 <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground block mb-1">Email</span>
@@ -104,7 +139,7 @@ export default function SlideOverTabs({ booking }: { booking: any }) {
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-sm bg-muted flex items-center justify-center overflow-hidden shrink-0 border border-border/40 text-[10px] font-mono tracking-widest uppercase">
-                      {member.avatar ? <img src={member.avatar} className="object-cover w-full h-full" /> : <span>{member.name.charAt(0)}</span>}
+                      {member.avatar ? <img src={member.avatar} className="object-cover w-full h-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} /> : <span>{member.name?.charAt(0) || "U"}</span>}
                     </div>
                     <div>
                       <p className="text-sm font-medium">{member.name}</p>
@@ -123,39 +158,41 @@ export default function SlideOverTabs({ booking }: { booking: any }) {
 
         {/* TIMELINE TAB */}
         <TabsContent value="timeline" className="m-0 data-[state=inactive]:hidden text-sm">
-          <div className="relative pl-6 space-y-6">
-            <div className="absolute left-2.5 top-2 bottom-6 w-px bg-border/60" />
-            
-            {(booking.timeline || [
-              { status: 'done', label: 'Booking created', date: '21 Mar, 10:00 AM' },
-              { status: 'done', label: 'Proposal sent', date: '22 Mar, 11:30 AM' },
-              { status: 'upcoming', label: 'Contract sent', date: 'Pending' },
-            ]).map((point: any, i: number) => (
-              <div key={i} className={`relative flex flex-col gap-0.5 ${point.status === 'upcoming' ? 'opacity-50' : ''}`}>
-                <div className={`absolute -left-[26px] top-1.5 w-2 h-2 rounded-sm border ${point.status === 'done' ? 'bg-foreground border-foreground' : 'bg-background border-muted-foreground'}`} />
-                <div className="flex justify-between font-medium">
-                  <span className={`text-sm ${point.status === 'upcoming' ? 'text-muted-foreground' : 'text-foreground'}`}>{point.label}</span>
+          {timeline && timeline.length > 0 ? (
+            <div className="relative pl-6 space-y-6">
+              <div className="absolute left-2.5 top-2 bottom-6 w-px bg-border/60" />
+              {timeline.map((point: any, i: number) => (
+                <div key={i} className={`relative flex flex-col gap-0.5 ${point.status === 'upcoming' ? 'opacity-50' : ''}`}>
+                  <div className={`absolute -left-[26px] top-1.5 w-2 h-2 rounded-sm border ${point.status === 'done' ? 'bg-foreground border-foreground' : 'bg-background border-muted-foreground'}`} />
+                  <div className="flex justify-between font-medium">
+                    <span className={`text-sm ${point.status === 'upcoming' ? 'text-muted-foreground' : 'text-foreground'}`}>{point.label}</span>
+                  </div>
+                  <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">{point.date}</span>
                 </div>
-                <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">{point.date}</span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground">
+              <p className="font-medium text-foreground mb-1">No timeline activity yet</p>
+              <p className="text-sm">Booking milestones will appear here as they happen.</p>
+            </div>
+          )}
         </TabsContent>
 
         {/* FINANCE TAB */}
         <TabsContent value="finance" className="m-0 data-[state=inactive]:hidden space-y-6">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="p-3 bg-muted/5 border border-border/60 rounded-md flex flex-col justify-center">
               <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Package Value</span>
               <span className="font-mono text-sm uppercase tracking-widest mt-1">₹{booking.amount || 0}</span>
             </div>
             <div className="p-3 bg-muted/5 border border-border/60 rounded-md flex flex-col justify-center">
               <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Paid</span>
-              <span className="font-mono text-sm uppercase tracking-widest mt-1">₹{(booking.amount || 0) * 0.4}</span>
+              <span className="font-mono text-sm uppercase tracking-widest mt-1">₹{booking.amountPaid || 0}</span>
             </div>
             <div className="p-3 bg-muted/5 border border-border/60 rounded-md flex flex-col justify-center">
               <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Balance Due</span>
-              <span className="font-mono text-sm uppercase tracking-widest mt-1">₹{(booking.amount || 0) * 0.6}</span>
+              <span className="font-mono text-sm uppercase tracking-widest mt-1">₹{booking.balanceDue ?? ((booking.amount || 0) - (booking.amountPaid || 0))}</span>
             </div>
           </div>
 
@@ -166,20 +203,31 @@ export default function SlideOverTabs({ booking }: { booking: any }) {
                 + Add Payment
               </Button>
             </div>
-            <div className="border border-border/60 rounded-md overflow-hidden text-sm">
-              <div className="grid grid-cols-4 bg-muted/5 p-2 border-b border-border/60 text-[10px] font-mono tracking-widest uppercase text-muted-foreground">
-                <div>Date</div>
-                <div>Amount</div>
-                <div>Method</div>
-                <div className="text-right">Status</div>
+
+            {payments.length > 0 ? (
+              <div className="border border-border/60 rounded-md overflow-hidden text-sm">
+                <div className="grid grid-cols-4 bg-muted/5 p-2 border-b border-border/60 text-[10px] font-mono tracking-widest uppercase text-muted-foreground">
+                  <div>Date</div>
+                  <div>Amount</div>
+                  <div>Method</div>
+                  <div className="text-right">Status</div>
+                </div>
+                {payments.map((pay: any, i: number) => (
+                  <div key={pay.id || i} className="grid grid-cols-4 p-3 border-b border-border/40 last:border-0 hover:bg-muted/10 items-center">
+                    <div className="text-[11px] font-mono tracking-widest uppercase">{pay.date}</div>
+                    <div className="font-mono text-sm tracking-widest uppercase">₹{Number(pay.amount).toLocaleString("en-IN")}</div>
+                    <div className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">{pay.method}</div>
+                    <div className="text-right text-[11px] font-mono tracking-widest uppercase text-foreground">{pay.status || "Credited"}</div>
+                  </div>
+                ))}
               </div>
-              <div className="grid grid-cols-4 p-3 border-b border-border/40 last:border-0 hover:bg-muted/10 items-center">
-                <div className="text-[11px] font-mono tracking-widest uppercase">21 Mar 2026</div>
-                <div className="font-mono text-sm tracking-widest uppercase">₹50,000</div>
-                <div className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">UPI</div>
-                <div className="text-right text-[11px] font-mono tracking-widest uppercase text-foreground">Credited</div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground border border-border/60 rounded-md">
+                <Receipt className="w-8 h-8 mb-2 opacity-30" />
+                <p className="font-medium text-foreground mb-1">No payments recorded</p>
+                <p className="text-sm">Payments will appear here once received.</p>
               </div>
-            </div>
+            )}
           </div>
         </TabsContent>
 
@@ -215,15 +263,17 @@ export default function SlideOverTabs({ booking }: { booking: any }) {
 
         {/* NOTES TAB */}
         <TabsContent value="notes" className="m-0 data-[state=inactive]:hidden h-full flex flex-col space-y-2">
-          <Textarea 
-            className="flex-1 w-full resize-none border-border/60 bg-muted/5 text-sm p-4 h-[300px] rounded-md shadow-none focus-visible:ring-1 focus-visible:ring-foreground/50 transition-none"
-            placeholder="Add internal notes about this booking. Auto-saves on blur."
+          <Textarea
+            className="w-full resize-none border-border/60 bg-muted/5 text-sm p-4 min-h-[200px] rounded-md shadow-none focus-visible:ring-1 focus-visible:ring-foreground/50 transition-none"
+            placeholder="Add internal notes about this booking. Auto-saves after 2s of inactivity."
             value={note}
-            onChange={(e) => setNote(e.target.value)}
+            onChange={(e) => handleNoteChange(e.target.value)}
             onBlur={handleNoteBlur}
           />
           <div className="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase text-muted-foreground pt-1">
-            <span>{isSaving ? "Saving..." : "Last saved just now"}</span>
+            <span>
+              {isSaving ? "Saving..." : hasUnsaved ? "Unsaved changes" : "All changes saved"}
+            </span>
             <span>{note.length} characters</span>
           </div>
         </TabsContent>

@@ -10,6 +10,10 @@ const config: Config = {
     darkMode: 'class',
     theme: {
         extend: {
+            screens: {
+                'xs': '375px',
+                'tablet': '868px',
+            },
             colors: {
                 sidebar: 'rgb(var(--sidebar))',
                 'sidebar-foreground': 'rgb(var(--sidebar-foreground))',

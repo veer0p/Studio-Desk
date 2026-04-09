@@ -10,9 +10,9 @@ export function TodayShootsSkeleton() {
         </div>
         <h2 className="text-xs font-semibold tracking-wide uppercase text-muted-foreground">Today's Shoots</h2>
       </div>
-      <div className="flex overflow-x-auto gap-4 pb-4 [&::-webkit-scrollbar]:hidden">
+      <div className="flex overflow-x-auto gap-3 xs:gap-4 pb-4 [&::-webkit-scrollbar]:hidden">
         {[1, 2].map((i) => (
-          <div key={i} className="min-w-[280px] sm:min-w-[320px] rounded-xl border border-border/60 p-4 shrink-0 space-y-3 bg-card shadow-sm">
+          <div key={i} className="min-w-[calc(100vw-3rem)] xs:min-w-[280px] sm:min-w-[320px] rounded-xl border border-border/60 p-4 shrink-0 space-y-3 bg-card shadow-sm">
             <div className="flex justify-between">
               <Skeleton className="h-4 w-20 rounded-sm" />
               <Skeleton className="h-4 w-12 rounded-sm" />
@@ -78,11 +78,11 @@ export default async function TodayShootsSection() {
           <span>No shoots today</span>
         </div>
       ) : (
-        <div className="flex overflow-x-auto gap-4 pb-4 [&::-webkit-scrollbar]:hidden -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex overflow-x-auto gap-3 xs:gap-4 pb-4 [&::-webkit-scrollbar]:hidden -mx-4 px-4 sm:mx-0 sm:px-0">
           {shoots.map((shoot) => (
-            <div 
-              key={shoot.id} 
-              className="group relative flex flex-col min-w-[280px] sm:min-w-[320px] rounded-xl border border-border/60 bg-card p-4 shrink-0 shadow-sm hover:bg-muted/20 transition-colors cursor-pointer"
+            <div
+              key={shoot.id}
+              className="group relative flex flex-col min-w-[calc(100vw-3rem)] xs:min-w-[280px] sm:min-w-[320px] rounded-xl border border-border/60 bg-card p-4 shrink-0 shadow-sm hover:bg-muted/20 transition-colors cursor-pointer"
               style={{ borderLeft: `3px solid ${shoot.color}` }}
             >
               <div className="flex justify-between items-center mb-2">

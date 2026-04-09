@@ -34,16 +34,16 @@ export function UploadPanel() {
         <p className="text-xs text-muted-foreground mt-0.5">Drag & Drop chunks (50MB max)</p>
       </div>
 
-      <div 
+      <div
         onDragOver={(e) => { e.preventDefault(); setIsHovering(true) }}
         onDragLeave={() => setIsHovering(false)}
         onDrop={mockHandleDrop}
-        className={`m-4 p-8 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-center transition-colors ${isHovering ? 'border-primary bg-primary/5' : 'border-border/60 bg-muted/20'}`}
+        className={`m-3 sm:m-4 p-6 sm:p-8 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-center transition-colors ${isHovering ? 'border-primary bg-primary/5' : 'border-border/60 bg-muted/20'}`}
       >
         <UploadCloud className={`w-8 h-8 mb-3 ${isHovering ? 'text-primary' : 'text-muted-foreground'}`} strokeWidth={1.5} />
         <p className="text-[10px] font-mono font-bold tracking-widest uppercase text-foreground">Drop photos here</p>
         <p className="text-[9px] font-mono tracking-widest uppercase text-muted-foreground mt-1 mb-4">Accepts JPG, PNG, RAW</p>
-        <Button variant="outline" size="sm" className="h-8 rounded-sm font-mono text-[9px] tracking-widest uppercase">Browse Files</Button>
+        <Button variant="outline" size="sm" className="h-8 rounded-sm font-mono text-[9px] sm:text-[10px] tracking-widest uppercase">Browse Files</Button>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 pb-4">

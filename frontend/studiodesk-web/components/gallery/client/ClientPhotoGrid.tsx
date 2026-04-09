@@ -39,7 +39,7 @@ export function ClientPhotoGrid({ selectedPhotos, toggleSelection, allowDownload
 
   return (
     <>
-      <div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
+      <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
         {mockPhotos.map((photo, idx) => {
           const isSelected = selectedPhotos.has(photo.id)
           
@@ -93,26 +93,26 @@ export function ClientPhotoGrid({ selectedPhotos, toggleSelection, allowDownload
             </button>
           </div>
 
-          <button 
-            onClick={prevPhoto} 
+          <button
+            onClick={prevPhoto}
             disabled={lightboxIndex === 0}
-            className="absolute left-4 p-3 text-white/50 hover:text-white disabled:opacity-20 transition-colors z-50"
+            className="absolute left-2 sm:left-4 p-2 sm:p-3 text-white/50 hover:text-white disabled:opacity-20 transition-colors z-50"
           >
-            <ChevronLeft className="w-8 h-8" />
+            <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
           </button>
 
-          <img 
-            src={mockPhotos[lightboxIndex].url} 
+          <img
+            src={mockPhotos[lightboxIndex].url}
             className="max-h-[90vh] max-w-[90vw] object-contain select-none"
             alt=""
           />
 
-          <button 
-            onClick={nextPhoto} 
+          <button
+            onClick={nextPhoto}
             disabled={lightboxIndex === mockPhotos.length - 1}
-            className="absolute right-4 p-3 text-white/50 hover:text-white disabled:opacity-20 transition-colors z-50"
+            className="absolute right-2 sm:right-4 p-2 sm:p-3 text-white/50 hover:text-white disabled:opacity-20 transition-colors z-50"
           >
-            <ChevronRight className="w-8 h-8" />
+            <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
           </button>
 
           {/* Lightbox Actions */}

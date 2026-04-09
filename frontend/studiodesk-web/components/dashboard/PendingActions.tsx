@@ -21,8 +21,8 @@ const ActionIcon = ({ type }: { type: string }) => {
 }
 
 export default function PendingActions() {
-  const { data, isLoading } = useSWR("/api/v1/dashboard/actions", { 
-    refreshInterval: 30000 
+  const { data, isLoading } = useSWR("/api/v1/dashboard/overview", fetchDashboardOverview, {
+    refreshInterval: 30000
   })
 
   const actions = Array.isArray(data?.attention_items) ? data.attention_items : []
@@ -40,9 +40,9 @@ export default function PendingActions() {
           </div>
         ) : actions.length > 0 ? (
           <div className="flex flex-col">
-            {actions.map((action: any, index: number) => (
+            {actions.map((action: any) => (
               <div
-                key={`${action.type}-${index}`}
+                key={action.id ?? action.title ?? action.type}
                 className="flex items-center justify-between p-4 border-b border-border/40 last:border-0 hover:bg-muted/10 transition-colors"
               >
                 <div className="flex items-start gap-4">

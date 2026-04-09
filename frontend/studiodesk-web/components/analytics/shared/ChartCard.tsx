@@ -18,7 +18,7 @@ export function ChartCard({
 }: ChartCardProps) {
   
   return (
-    <div className="bg-card border border-border/60 rounded-md p-5 shadow-sm flex flex-col h-full w-full">
+    <div className="bg-card border border-border/60 rounded-md p-3 sm:p-5 shadow-sm flex flex-col h-full w-full">
       <div className="mb-6">
         <h3 className="text-[10px] font-mono font-bold tracking-widest uppercase text-foreground">{title}</h3>
         {subtitle && <p className="text-[11px] text-muted-foreground mt-0.5">{subtitle}</p>}

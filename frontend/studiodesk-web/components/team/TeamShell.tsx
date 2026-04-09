@@ -7,11 +7,16 @@ import { MemberList } from "@/components/team/members/MemberList"
 import { InviteMemberDialog } from "@/components/team/members/InviteMemberDialog"
 import { TeamSchedule } from "@/components/team/schedule/TeamSchedule"
 import { PayoutList } from "@/components/team/payouts/PayoutList"
+import useSWR from "swr"
+import { fetchTeamMembers } from "@/lib/api"
 
 export function TeamShell() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentTab = searchParams.get("tab") || "members"
+
+  const { data: teamData } = useSWR("/api/v1/team", fetchTeamMembers, { revalidateOnFocus: false })
+  const memberCount = teamData?.count ?? 0
 
   const setTab = (tab: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -27,14 +32,14 @@ export function TeamShell() {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-background overflow-hidden relative">
-      
+
       {/* Dynamic Master Header */}
       <div className="px-8 pt-8 pb-4 shrink-0 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-3xl font-bold tracking-tight">Team & HR</h1>
-              <span className="px-2.5 py-1 rounded-sm bg-muted border border-border/60 text-[10px] font-mono font-bold tracking-widest uppercase">8 Members</span>
+              <span className="px-2.5 py-1 rounded-sm bg-muted border border-border/60 text-[10px] font-mono font-bold tracking-widest uppercase">{memberCount} Members</span>
             </div>
             <p className="text-muted-foreground mt-1 text-sm">Organize availability, detect shoot conflicts, and map TDS validations actively.</p>
           </div>
@@ -55,8 +60,8 @@ export function TeamShell() {
               key={tab.id}
               onClick={() => setTab(tab.id)}
               className={`pb-3 pt-1 px-4 text-[10px] font-mono font-bold tracking-widest uppercase whitespace-nowrap transition-colors border-b-2
-                ${currentTab === tab.id 
-                  ? "border-primary text-foreground" 
+                ${currentTab === tab.id
+                  ? "border-primary text-foreground"
                   : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
             >

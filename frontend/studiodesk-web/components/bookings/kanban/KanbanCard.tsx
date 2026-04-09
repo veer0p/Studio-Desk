@@ -90,7 +90,7 @@ export function KanbanCard({ booking }: KanbanCardProps) {
             {booking.team?.slice(0, 3).map((member: any, i: number) => (
               <div key={i} className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center text-[10px] font-medium overflow-hidden shrink-0">
                 {member.avatar ? (
-                  <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                  <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
                 ) : (
                   member.name.charAt(0)
                 )}

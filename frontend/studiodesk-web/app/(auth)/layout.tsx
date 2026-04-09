@@ -32,7 +32,7 @@ export default function AuthLayout({
             </div>
 
             {/* Centered Auth Card */}
-            <div className="max-w-md w-full rounded-3xl border bg-card p-8 shadow-modal flex flex-col items-center">
+            <div className="max-w-md w-full rounded-3xl border bg-card p-4 sm:p-6 md:p-8 shadow-modal flex flex-col items-center">
                 {/* Top Header */}
                 <div className="flex flex-col items-center mb-8 gap-2">
                     <div className="h-12 w-12 rounded-xl bg-sidebar flex items-center justify-center mb-2">

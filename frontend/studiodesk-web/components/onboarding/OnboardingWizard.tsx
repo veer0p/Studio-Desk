@@ -69,7 +69,7 @@ export default function OnboardingWizard() {
 
   return (
     <div className="w-full max-w-5xl mx-auto">
-      <div className="glass-card w-full rounded-3xl p-8 md:p-12 relative overflow-hidden transition-all duration-500 shadow-2xl">
+      <div className="glass-card w-full rounded-3xl p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden transition-all duration-500 shadow-2xl">
         {/* Loading Overlay */}
         {isSubmitting && (
           <div className="absolute inset-0 z-50 bg-background/60 backdrop-blur-md flex flex-col items-center justify-center">
@@ -111,7 +111,7 @@ export default function OnboardingWizard() {
         </div>
 
         {/* Step Content */}
-        <div className="relative min-h-[400px]">
+        <div className="relative min-h-[300px] sm:min-h-[400px]">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={currentStep}

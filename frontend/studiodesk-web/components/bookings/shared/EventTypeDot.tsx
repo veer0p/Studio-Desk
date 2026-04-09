@@ -16,12 +16,15 @@ interface EventTypeDotProps {
 
 export function EventTypeDot({ type, className }: EventTypeDotProps) {
   return (
-    <div 
+    <div
+      role="img"
+      aria-label={type}
+      title={type}
       className={cn(
-        "w-2.5 h-2.5 rounded-full shrink-0", 
+        "w-2.5 h-2.5 rounded-full shrink-0",
         eventColors[type] || eventColors.Other,
         className
-      )} 
+      )}
     />
   )
 }

@@ -35,7 +35,7 @@ export function FinanceShell({ children }: { children: React.ReactNode }) {
     <div className="flex-1 flex flex-col h-full bg-background overflow-hidden">
       
       {/* Header Area */}
-      <div className="px-8 pt-8 pb-4 shrink-0 space-y-6">
+      <div className="px-4 md:px-8 pt-4 md:pt-8 pb-4 shrink-0 space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Finance</h1>
           <p className="text-muted-foreground mt-1">Manage billing, collect payments, and track studio expenses natively.</p>
@@ -61,7 +61,7 @@ export function FinanceShell({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Renders specific lists based on active tab below */}
-      <div className="flex-1 overflow-auto bg-muted/5 custom-scrollbar relative px-8 py-6">
+      <div className="flex-1 overflow-auto bg-muted/5 custom-scrollbar relative px-4 md:px-8 py-4 md:py-6">
         {children}
       </div>
 

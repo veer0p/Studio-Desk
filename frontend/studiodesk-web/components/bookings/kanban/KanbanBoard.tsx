@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useMemo } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import useSWR from "swr"
 import { fetchBookingsList, updateBookingStage } from "@/lib/api"
 import { toast } from "sonner"
@@ -22,6 +22,7 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable"
 
 import { KanbanColumn } from "./KanbanColumn"
 import { KanbanCard } from "./KanbanCard"
+import BookingsList from "@/components/bookings/list/BookingsList"
 
 const PIPELINE_STAGES = [
   "Inquiry",
@@ -31,20 +32,34 @@ const PIPELINE_STAGES = [
   "Delivered",
 ]
 
+const MOBILE_BREAKPOINT = 768
+
 export default function KanbanBoard() {
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading, mutate } = useSWR(`/api/v1/bookings?view=kanban&${queryString}`, {
-    dedupingInterval: 60000,
-  })
+  const { data, isLoading, error, mutate } = useSWR(
+    `/api/v1/bookings?view=kanban&${queryString}`,
+    fetchBookingsList,
+    { dedupingInterval: 60000 }
+  )
 
+  const [isMobile, setIsMobile] = useState(false)
   const [activeId, setActiveId] = useState<string | null>(null)
   const [activeBooking, setActiveBooking] = useState<any | null>(null)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    }
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5,
+        distance: 10,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -52,9 +67,6 @@ export default function KanbanBoard() {
     })
   )
 
-  // Use local state for smooth DnD, synced with SWR data
-  // But since SWR caches, we can manipulate the cache directly optimistically
-  // Fallback to empty mappings if loading
   const columns = useMemo(() => {
     const list = Array.isArray(data?.list) ? data.list : []
     return PIPELINE_STAGES.reduce((acc, stage) => {
@@ -69,10 +81,7 @@ export default function KanbanBoard() {
     setActiveBooking(active.data.current?.booking || null)
   }
 
-  const handleDragOver = (event: DragOverEvent) => {
-    // Optional: implement logic if cards can be reordered within the same column.
-    // For Kanban, simply dropping into a different column is our main focus.
-  }
+  const handleDragOver = (event: DragOverEvent) => {}
 
   const handleDragEnd = async (event: DragEndEvent) => {
     setActiveId(null)
@@ -87,41 +96,57 @@ export default function KanbanBoard() {
     if (!activeStage || !overStage || activeStage === overStage) return
 
     const bookingId = active.id as string
+    const newStage = overStage as string
 
-    // Optimistic Update
-    const previousData = data
+    const previousBooking = (Array.isArray(data?.list)
+      ? data.list.find((b: any) => b.id === bookingId)
+      : null) as any | undefined
+
     mutate(
       (currentData: any) => {
         if (!currentData) return currentData
         const currentList = Array.isArray(currentData.list) ? [...currentData.list] : []
-        
-        // Find booking
         const index = currentList.findIndex((booking: any) => booking.id === bookingId)
-        if (index === -1) {
-          return currentData
-        }
-
-        const bookingToMove = { ...currentList[index], stage: overStage }
-        currentList.splice(index, 1, bookingToMove)
-
-        return { ...currentData, list: currentList }
+        if (index === -1) return currentData
+        const updated = { ...currentList[index], stage: newStage }
+        return { ...currentData, list: currentList.toSpliced(index, 1, updated) }
       },
-      false // do not revalidate yet
+      false
     )
 
     try {
-      await updateBookingStage(bookingId, overStage as string)
-      toast.success(`Moved to ${overStage}`)
-      mutate() // Revalidate to sync with server
-    } catch (error) {
+      await updateBookingStage(bookingId, newStage)
+      toast.success(`Moved to ${newStage}`)
+      mutate()
+    } catch {
       toast.error("Failed to update booking. Reverted.")
-      mutate(previousData, true) // Rollback
+      if (previousBooking) {
+        mutate(
+          (currentData: any) => {
+            if (!currentData) return currentData
+            const currentList = Array.isArray(currentData.list) ? [...currentData.list] : []
+            const index = currentList.findIndex((b: any) => b.id === bookingId)
+            if (index === -1) return { ...currentData, list: [...currentList, previousBooking] }
+            return { ...currentData, list: currentList.toSpliced(index, 1, previousBooking) }
+          },
+          true
+        )
+      }
     }
   }
 
   if (isLoading) {
+    if (isMobile) {
+      return (
+        <div className="flex flex-col w-full h-full gap-3 p-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-20 rounded-xl bg-muted/20 animate-pulse" />
+          ))}
+        </div>
+      )
+    }
     return (
-      <div className="flex w-full h-full gap-4 p-4 overflow-x-auto custom-scrollbar">
+      <div className="hidden md:flex w-full h-full gap-4 p-4 overflow-x-auto custom-scrollbar">
         {PIPELINE_STAGES.map((i) => (
           <div key={i} className="min-w-[280px] w-[280px] h-full rounded-xl bg-muted/20 animate-pulse" />
         ))}
@@ -129,37 +154,72 @@ export default function KanbanBoard() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-8">
+        <p className="text-muted-foreground">Failed to load bookings</p>
+        <button
+          onClick={() => mutate()}
+          className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90"
+        >
+          Retry
+        </button>
+      </div>
+    )
+  }
+
+  const allEmpty = PIPELINE_STAGES.every((stage) => (columns[stage] || []).length === 0)
+
+  if (allEmpty) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-8 text-center">
+        <p className="text-lg font-medium text-foreground">No bookings yet</p>
+        <p className="text-sm text-muted-foreground max-w-sm">
+          Create your first booking to start tracking your pipeline.
+        </p>
+      </div>
+    )
+  }
+
   return (
-    <div className="flex w-full h-full gap-4 p-4 overflow-x-auto custom-scrollbar">
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        {PIPELINE_STAGES.map((stage) => {
-          const stageBookings = columns[stage] || []
-          const totalValue = stageBookings.reduce((sum: number, b: any) => sum + (b.amount || 0), 0)
+    <>
+      {/* Mobile view - list */}
+      <div className="md:hidden w-full h-full overflow-y-auto">
+        <BookingsList />
+      </div>
 
-          return (
-            <KanbanColumn
-              key={stage}
-              stage={stage}
-              bookings={stageBookings}
-              totalValue={totalValue}
-            />
-          )
-        })}
+      {/* Desktop view - kanban */}
+      <div className="hidden md:flex w-full h-full gap-4 p-4 overflow-x-auto custom-scrollbar">
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          {PIPELINE_STAGES.map((stage) => {
+            const stageBookings = columns[stage] || []
+            const totalValue = stageBookings.reduce((sum: number, b: any) => sum + (b.amount || 0), 0)
 
-        <DragOverlay>
-          {activeId && activeBooking ? (
-            <div className="opacity-90 scale-105 rotate-2 cursor-grabbing shadow-2xl">
-              <KanbanCard booking={activeBooking} />
-            </div>
-          ) : null}
-        </DragOverlay>
-      </DndContext>
-    </div>
+            return (
+              <KanbanColumn
+                key={stage}
+                stage={stage}
+                bookings={stageBookings}
+                totalValue={totalValue}
+              />
+            )
+          })}
+
+          <DragOverlay>
+            {activeId && activeBooking ? (
+              <div className="opacity-90 scale-105 rotate-2 cursor-grabbing shadow-2xl z-[100]">
+                <KanbanCard booking={activeBooking} />
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+      </div>
+    </>
   )
 }

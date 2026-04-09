@@ -895,133 +895,44 @@ export async function fetchFinanceSummary(url: string): Promise<FinanceSummary> 
 }
 
 export async function fetchInvoicesList(url: string): Promise<InvoiceListResult> {
-  // Stub for now following plan - will map to backend when verified
+  const payload = await fetchApiData<{ list: InvoiceRecord[]; count: number }>(url);
   return {
-    list: [
-      {
-        id: "INV-2026-001",
-        invoiceNumber: "INV-2026-001",
-        clientName: "Rohan & Priya",
-        clientCity: "Mumbai",
-        bookingName: "Wedding Coverage",
-        bookingId: "b-001",
-        issueDate: "12 Oct 2025",
-        dueDate: "27 Oct 2025",
-        amount: 240000,
-        paidAmount: 100000,
-        balance: 140000,
-        status: "Partial",
-        daysToDue: 5
-      },
-      {
-        id: "INV-2026-002",
-        invoiceNumber: "INV-2026-002",
-        clientName: "Neha Sharma",
-        clientCity: "Delhi",
-        bookingName: "Pre-wedding Shoot",
-        bookingId: "b-002",
-        issueDate: "15 Oct 2025",
-        dueDate: "16 Oct 2025",
-        amount: 45000,
-        paidAmount: 0,
-        balance: 45000,
-        status: "Overdue",
-        daysToDue: -2
-      }
-    ],
-    count: 2
+    list: Array.isArray(payload.list) ? payload.list : [],
+    count: Number(payload.count ?? 0),
   };
 }
 
 export async function fetchPaymentsList(url: string): Promise<PaymentListResult> {
+  const payload = await fetchApiData<{ list: PaymentRecord[]; count: number }>(url);
   return {
-    list: [
-      {
-        id: "pay-1",
-        date: "12 Oct 2025",
-        clientName: "Rohan & Priya",
-        bookingName: "Wedding Coverage",
-        invoiceRef: "INV-2026-001",
-        amount: 100000,
-        method: "Bank Transfer",
-        reference: "IMPS1234901",
-        recordedBy: "Ankit (Admin)"
-      }
-    ],
-    count: 1
+    list: Array.isArray(payload.list) ? payload.list : [],
+    count: Number(payload.count ?? 0),
   };
 }
 
-export async function fetchExpensesList(url: string) {
+export async function fetchExpensesList(url: string): Promise<{ list: Array<Record<string, unknown>>; count: number }> {
+  const payload = await fetchApiData<{ list: Array<Record<string, unknown>>; count: number }>(url);
   return {
-    list: [],
-    count: 0
+    list: Array.isArray(payload.list) ? payload.list : [],
+    count: Number(payload.count ?? 0),
   };
 }
 
 // Gallery fetchers
 export async function fetchGalleriesList(url: string): Promise<GallerySummary[]> {
-  // Stub for now following plan
-  return [
-    {
-      id: "gal-1",
-      name: "Wedding Highlights",
-      clientName: "Rohan & Priya",
-      slug: "rohan-priya-wedding",
-      eventType: "Wedding",
-      shootDate: "12 Oct 2025",
-      status: "Selection Pending",
-      photoCount: 450,
-      videoCount: 2,
-      sizeGb: 12.4,
-      selectedCount: 45,
-      selectionQuota: 100,
-      uploadProgress: 100,
-      accessType: "PIN Protected",
-      expiryDate: "12 Nov 2025",
-      coverUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop"
-    },
-    {
-      id: "gal-2",
-      name: "Engagement Shoot",
-      clientName: "Neha Sharma",
-      slug: "neha-sharma-engagement",
-      eventType: "Pre-Wedding",
-      shootDate: "15 Oct 2025",
-      status: "Uploading",
-      photoCount: 120,
-      videoCount: 0,
-      sizeGb: 3.2,
-      selectedCount: 0,
-      selectionQuota: 20,
-      uploadProgress: 45,
-      accessType: "PIN Protected",
-      coverUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop"
-    }
-  ];
+  const payload = await fetchApiData<GallerySummary[]>(url);
+  return Array.isArray(payload) ? payload : [];
 }
 
 export async function fetchGalleryDetail(url: string): Promise<GalleryDetail> {
-  // Extract ID from URL for real implementation
+  const payload = await fetchApiData<GalleryDetail>(url);
+  if (!payload) {
+    return { id: "", name: "", clientName: "", slug: "", eventType: "", shootDate: "", status: "", photoCount: 0, videoCount: 0, sizeGb: 0, selectedCount: 0, selectionQuota: 0, uploadProgress: 0, accessType: "", coverUrl: null, photos: [], faceClusters: [] } as GalleryDetail;
+  }
   return {
-    id: "gal-1",
-    name: "Wedding Highlights",
-    clientName: "Rohan & Priya",
-    slug: "rohan-priya-wedding",
-    eventType: "Wedding",
-    shootDate: "12 Oct 2025",
-    status: "Selection Pending",
-    photoCount: 450,
-    videoCount: 2,
-    sizeGb: 12.4,
-    selectedCount: 45,
-    selectionQuota: 100,
-    uploadProgress: 100,
-    accessType: "PIN Protected",
-    expiryDate: "12 Nov 2025",
-    coverUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-    photos: [],
-    faceClusters: []
+    ...payload,
+    photos: Array.isArray(payload.photos) ? payload.photos : [],
+    faceClusters: Array.isArray(payload.faceClusters) ? payload.faceClusters : [],
   };
 }
 
@@ -1317,82 +1228,200 @@ export async function recordPayout(data: JsonObject) {
 
 // Team API
 export async function fetchTeamMembers(url: string = "/api/v1/team"): Promise<TeamListResult> {
-  // Stub for now following plan
+  const payload = await fetchApiData<TeamMember[]>(url);
   return {
-    list: [
-      {
-        id: "T-1",
-        name: "Ankit Sharma",
-        role: "Lead Photographer",
-        email: "ankit@studiodesk.com",
-        phone: "+91 98765 43210",
-        whatsapp: "+91 98765 43210",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ankit",
-        status: "active",
-        joinedAt: "12 Jan 2024",
-        skills: ["Wedding", "Portrait"],
-        totalProjects: 124
-      },
-      {
-        id: "T-2",
-        name: "Riya Kapoor",
-        role: "Editor",
-        email: "riya@studiodesk.com",
-        phone: "+91 98765 43211",
-        whatsapp: null,
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Riya",
-        status: "active",
-        joinedAt: "15 Mar 2024",
-        skills: ["Premiere Pro", "After Effects"],
-        totalProjects: 86
-      }
-    ],
-    count: 2
+    list: Array.isArray(payload) ? payload : [],
+    count: Array.isArray(payload) ? payload.length : 0,
   };
 }
 
 // Analytics API
 export async function fetchAnalyticsOverview(url: string = "/api/v1/analytics/overview"): Promise<AnalyticsOverview> {
-  // Stub for now following plan
-  return {
-    metrics: [
-      { label: "Total Revenue", value: "₹24.5L", change: 12, trend: "up" },
-      { label: "Bookings", value: 156, change: 8, trend: "up" },
-      { label: "Average Order", value: "₹45K", change: -2, trend: "down" },
-      { label: "Conversion", value: "18%", change: 5, trend: "up" }
-    ],
-    revenue: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-      datasets: [{ label: "Revenue", data: [450000, 520000, 480000, 610000, 590000, 720000] }]
-    },
-    bookings: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-      datasets: [{ label: "Bookings", data: [22, 28, 24, 31, 30, 38] }]
-    },
-    clients: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-      datasets: [{ label: "New Clients", data: [12, 18, 14, 21, 19, 25] }]
-    }
-  };
+  return await fetchApiData<AnalyticsOverview>(url);
 }
 
 // Settings API
 export async function fetchStudioProfile(url: string = "/api/v1/studio/profile"): Promise<StudioProfile> {
-  // Stub for now following plan
+  return await fetchApiData<StudioProfile>(url);
+}
+
+// ============================================================
+// Additional API fetchers added during integration audit
+// ============================================================
+
+// --- Contracts ---
+export type ContractRecord = {
+  id: string;
+  clientName: string;
+  date: string;
+  type: string;
+  status: string;
+  amount?: number;
+  packageName?: string;
+};
+
+export type ContractListResult = {
+  list: ContractRecord[];
+  count: number;
+};
+
+export async function fetchContractsList(url: string = "/api/v1/contracts"): Promise<ContractListResult> {
+  const payload = await fetchApiData<ContractRecord[]>(url);
   return {
-    id: "S-1",
-    name: "StudioDesk Defaults",
-    tagline: "Capturing your best moments with artisan precision",
-    logo: null,
-    city: "Mumbai",
-    state: "Maharashtra",
-    address: "Bandra West, Mumbai, 400050",
-    email: "contact@studiodesk.com",
-    phone: "+91 99999 88888",
-    socials: {
-      instagram: "studiodesk",
-      facebook: "studiodesk"
-    },
-    isVerified: true
+    list: Array.isArray(payload) ? payload : [],
+    count: Array.isArray(payload) ? payload.length : 0,
   };
+}
+
+// --- Proposals ---
+export type ProposalRecord = {
+  id: string;
+  clientName: string;
+  date: string;
+  amount: number;
+  status: string;
+  packageName?: string;
+};
+
+export type ProposalListResult = {
+  list: ProposalRecord[];
+  count: number;
+};
+
+export async function fetchProposalsList(url: string = "/api/v1/proposals"): Promise<ProposalListResult> {
+  const payload = await fetchApiData<ProposalRecord[]>(url);
+  return {
+    list: Array.isArray(payload) ? payload : [],
+    count: Array.isArray(payload) ? payload.length : 0,
+  };
+}
+
+// --- Addons ---
+export type AddonRecord = {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  description: string;
+  active: boolean;
+};
+
+export type AddonListResult = {
+  list: AddonRecord[];
+  count: number;
+};
+
+export async function fetchAddonsList(url: string = "/api/v1/addons"): Promise<AddonListResult> {
+  const payload = await fetchApiData<AddonRecord[]>(url);
+  return {
+    list: Array.isArray(payload) ? payload : [],
+    count: Array.isArray(payload) ? payload.length : 0,
+  };
+}
+
+// --- Team Schedule ---
+export type ScheduleAssignment = {
+  memberId: string;
+  memberName: string;
+  date: string;
+  bookingId: string;
+  bookingTitle: string;
+  eventType: string;
+};
+
+export async function fetchTeamSchedule(url: string = "/api/v1/team/schedule"): Promise<ScheduleAssignment[]> {
+  const payload = await fetchApiData<ScheduleAssignment[]>(url);
+  return Array.isArray(payload) ? payload : [];
+}
+
+// --- Team Payouts ---
+export type PayoutRecord = {
+  id: string;
+  memberId: string;
+  memberName: string;
+  amount: number;
+  date: string;
+  status: string;
+  bookingRef?: string;
+};
+
+export type PayoutListResult = {
+  list: PayoutRecord[];
+  count: number;
+  totalPaid: number;
+  totalPending: number;
+};
+
+export async function fetchPayoutsList(url: string = "/api/v1/payouts"): Promise<PayoutListResult> {
+  const payload = await fetchApiData<{ list: PayoutRecord[]; totalPaid: number; totalPending: number }>(url);
+  return {
+    list: Array.isArray(payload?.list) ? payload.list : [],
+    count: Array.isArray(payload?.list) ? payload.list.length : 0,
+    totalPaid: Number(payload?.totalPaid ?? 0),
+    totalPending: Number(payload?.totalPending ?? 0),
+  };
+}
+
+// --- Client Portal APIs ---
+export type ClientPortalAction = {
+  id: string;
+  type: string;
+  title: string;
+  description: string;
+  link: string;
+  color: string;
+  dueDate?: string;
+};
+
+export async function fetchClientActions(url: string): Promise<ClientPortalAction[]> {
+  const payload = await fetchApiData<ClientPortalAction[]>(url);
+  return Array.isArray(payload) ? payload : [];
+}
+
+export type ClientPortalBooking = {
+  id: string;
+  title: string;
+  date: string;
+  venue: string;
+  status: string;
+  packageName: string;
+  amount: number;
+};
+
+export async function fetchClientBookings(url: string): Promise<ClientPortalBooking[]> {
+  const payload = await fetchApiData<ClientPortalBooking[]>(url);
+  return Array.isArray(payload) ? payload : [];
+}
+
+export type ClientPortalInvoice = {
+  id: string;
+  title: string;
+  date: string;
+  amount: number;
+  status: string;
+};
+
+export async function fetchClientInvoices(url: string): Promise<ClientPortalInvoice[]> {
+  const payload = await fetchApiData<ClientPortalInvoice[]>(url);
+  return Array.isArray(payload) ? payload : [];
+}
+
+// --- Expenses (normalized fetcher) ---
+export type ExpenseRecord = {
+  id: string;
+  date: string;
+  description: string;
+  category: string;
+  vendor: string;
+  amount: number;
+  gstInput: number;
+  hasReceipt: boolean;
+};
+
+export async function fetchExpensesListTyped(url: string = "/api/v1/expenses"): Promise<{ list: ExpenseRecord[]; count: number; totalExp: number; totalGst: number }> {
+  const payload = await fetchApiData<ExpenseRecord[]>(url);
+  const list = Array.isArray(payload) ? payload : [];
+  const totalExp = list.reduce((sum, e) => sum + Number(e.amount ?? 0), 0);
+  const totalGst = list.reduce((sum, e) => sum + Number(e.gstInput ?? 0), 0);
+  return { list, count: list.length, totalExp, totalGst };
 }

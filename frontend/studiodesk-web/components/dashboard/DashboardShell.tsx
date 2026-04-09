@@ -13,7 +13,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   }, [router])
 
   return (
-    <div className="w-full h-full p-4 md:p-8 max-w-[1600px] mx-auto">
+    <div className="w-full h-full p-4 sm:p-6 md:p-8 max-w-[1600px] mx-auto">
       {children}
     </div>
   )

@@ -45,8 +45,8 @@ const formatINR = (value: number) => {
 export function RevenueAnalytics() {
   const searchParams = useSearchParams()
   const period = searchParams.get("period") || "this_month"
-  
-  const { data, isLoading } = useSWR(`/api/v1/analytics/revenue?period=${period}`, {
+
+  const { data, isLoading, error } = useSWR(`/api/v1/analytics/revenue?period=${period}`, {
     refreshInterval: 300000 // 5 mins
   })
 
@@ -65,18 +65,27 @@ export function RevenueAnalytics() {
     )
   }
 
-  // Fallback to mock data if API is not yet available/populated
-  const displayData = data || {
-    timeData,
-    eventData,
-    paymentData,
-    metrics: {
-      totalRevenue: "₹18.3L",
-      netRevenue: "₹14.2L",
-      outstanding: "₹1.2L",
-      avgValue: "₹65.4K"
-    }
+  if (error) {
+    return (
+      <div className="p-8 flex flex-col items-center justify-center text-center text-muted-foreground">
+        <p className="font-medium text-foreground mb-1">Failed to load revenue data</p>
+        <p className="text-sm">{error.message || "Please try again later."}</p>
+      </div>
+    )
   }
+
+  // Use API data; if unavailable, show empty state instead of fake data
+  if (!data) {
+    return (
+      <div className="p-8 flex flex-col items-center justify-center text-center text-muted-foreground">
+        <IndianRupee className="w-12 h-12 mb-4 opacity-30" />
+        <p className="font-medium text-foreground mb-1">No revenue data available</p>
+        <p className="text-sm">Revenue analytics will appear once bookings and payments are recorded.</p>
+      </div>
+    )
+  }
+
+  const displayData = data
   
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
@@ -168,16 +177,20 @@ export function RevenueAnalytics() {
                  </tr>
                </thead>
                <tbody className="divide-y divide-border/40">
-                 {displayData.timeData.map((row: any) => (
+                 {displayData.timeData.map((row: any) => {
+                    const bookingCount = row.bookings ?? 0
+                    const avgValue = bookingCount > 0 ? Math.round(row.rev / bookingCount) : 0
+                    return (
                    <tr key={row.name} className="hover:bg-muted/10 transition-colors">
                      <td className="px-4 py-3 font-mono text-[11px] font-bold">{row.name}</td>
                      <td className="px-4 py-3 text-right font-mono text-[11px] text-foreground">{row.rev.toLocaleString("en-IN")}</td>
                      <td className="px-4 py-3 text-right font-mono text-[11px] text-muted-foreground">{row.exp.toLocaleString("en-IN")}</td>
                      <td className="px-4 py-3 text-right font-mono text-[11px] font-bold">{(row.rev - row.exp).toLocaleString("en-IN")}</td>
-                     <td className="px-4 py-3 text-right text-[11px] text-muted-foreground font-mono">12</td>
-                     <td className="px-4 py-3 text-right font-mono text-[11px] text-muted-foreground">{Math.round((row.rev)/12).toLocaleString("en-IN")}</td>
+                     <td className="px-4 py-3 text-right text-[11px] text-muted-foreground font-mono">{bookingCount || "—"}</td>
+                     <td className="px-4 py-3 text-right font-mono text-[11px] text-muted-foreground">{avgValue ? avgValue.toLocaleString("en-IN") : "—"}</td>
                    </tr>
-                 ))}
+                    )
+                 })}
                </tbody>
              </table>
            </div>

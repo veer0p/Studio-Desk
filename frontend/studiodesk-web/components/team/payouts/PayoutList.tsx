@@ -1,114 +1,110 @@
 "use client"
 
-import { Download, Filter, Search, ChevronDown, CheckCircle2 } from "lucide-react"
+import useSWR from "swr"
+import { fetchPayoutsList, PayoutRecord } from "@/lib/api"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { CreatePayoutDialog } from "./CreatePayoutDialog"
-import { RoleBadge } from "@/components/team/shared/RoleBadge"
+import { Wallet, Download } from "lucide-react"
 
-const mockPayouts = [
-  {
-    id: "po-001", memberPath: "Vikram Singh", role: "Videographer", date: "24 Mar 2026",
-    gross: 45000, tds: 4500, net: 40500, method: "UPI", ref: "vikram@okicici", shoots: 3,
-    initials: "VS", colorHash: "#3b82f6"
-  },
-  {
-    id: "po-002", memberPath: "Karan Desai", role: "Drone Operator", date: "15 Mar 2026",
-    gross: 12000, tds: 120, net: 11880, method: "Bank Transfer", ref: "HDFC IMPS xyz987", shoots: 1,
-    initials: "KD", colorHash: "#f59e0b"
-  }
-]
+const formatINR = (amt: number) => {
+  if (amt >= 100000) return `Rs ${(amt / 100000).toFixed(1)}L`
+  if (amt >= 1000) return `Rs ${(amt / 1000).toFixed(0)}K`
+  return `Rs ${amt}`
+}
 
 export function PayoutList() {
-  const formatINR = (val: number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val)
+  const { data, isLoading, error } = useSWR("/api/v1/payouts", fetchPayoutsList)
+  const payouts = data?.list || []
+  const totalPaid = data?.totalPaid ?? 0
+  const totalPending = data?.totalPending ?? 0
+
+  if (isLoading) {
+    return (
+      <div className="p-8">
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-24 w-full" />
+        </div>
+        {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-12 w-full mb-3" />)}
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 text-center text-muted-foreground">
+        <p className="font-medium text-foreground mb-1">Failed to load payouts</p>
+        <p className="text-sm">{error.message || "Please try again later."}</p>
+      </div>
+    )
+  }
 
   return (
-    <div className="p-6 md:p-8 h-full flex flex-col w-full max-w-[1600px] mx-auto overflow-hidden">
-      
-      {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 shrink-0">
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight">Payout Ledger</h2>
-          <p className="text-sm text-muted-foreground mt-1">Review finalized TDS deductions and net transfers natively.</p>
+    <div className="p-8 space-y-6">
+      {/* Summary Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-card border border-border/60 rounded-md p-4">
+          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Total Paid (Q1)</span>
+          <div className="text-xl font-mono font-bold tracking-widest mt-1">{formatINR(totalPaid)}</div>
         </div>
-
-        <div className="flex items-center gap-3 w-full sm:w-auto overflow-x-auto custom-scrollbar pb-1 sm:pb-0">
-          <Button variant="outline" className="bg-background shrink-0"><Filter className="w-4 h-4 mr-2" /> Quarter 1</Button>
-          <Button variant="outline" className="bg-background shrink-0"><Download className="w-4 h-4 mr-2" /> Export CSV</Button>
-          <CreatePayoutDialog />
+        <div className="bg-card border border-border/60 rounded-md p-4">
+          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Pending Payouts</span>
+          <div className="text-xl font-mono font-bold tracking-widest mt-1">{formatINR(totalPending)}</div>
         </div>
-      </div>
-
-      {/* Analytics Strip */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 shrink-0">
-        <div className="bg-card border border-border/60 p-5 rounded-xl shadow-sm">
-          <p className="text-xs text-muted-foreground uppercase font-semibold tracking-widest mb-1">Total Paid (Q1)</p>
-          <p className="text-2xl font-bold">{formatINR(340000)}</p>
-        </div>
-        <div className="bg-amber-500/10 border border-amber-500/20 p-5 rounded-xl shadow-sm">
-          <p className="text-xs text-amber-700 uppercase font-semibold tracking-widest mb-1">Pending Fees</p>
-          <p className="text-2xl font-bold text-amber-600">{formatINR(65500)}</p>
-        </div>
-        <div className="bg-card border border-border/60 p-5 rounded-xl shadow-sm">
-          <p className="text-xs text-muted-foreground uppercase font-semibold tracking-widest mb-1">TDS Withheld</p>
-          <p className="text-2xl font-bold">{formatINR(32000)}</p>
-        </div>
-        <div className="bg-card border border-border/60 p-5 rounded-xl shadow-sm">
-          <p className="text-xs text-muted-foreground uppercase font-semibold tracking-widest mb-1">Active Staff</p>
-          <p className="text-2xl font-bold">14</p>
+        <div className="bg-card border border-border/60 rounded-md p-4">
+          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Records</span>
+          <div className="text-xl font-mono font-bold tracking-widest mt-1">{payouts.length}</div>
         </div>
       </div>
 
-      {/* Ledger Table */}
-      <div className="flex-1 bg-card border border-border/60 rounded-xl overflow-auto shadow-sm min-h-0 relative">
-        <table className="w-full text-sm text-left whitespace-nowrap">
-          <thead className="text-xs text-muted-foreground uppercase bg-muted/30 sticky top-0 z-10 font-semibold tracking-wider">
-            <tr>
-              <th className="px-6 py-4 rounded-tl-xl border-b border-border/40">Date</th>
-              <th className="px-6 py-4 border-b border-border/40">Contractor</th>
-              <th className="px-6 py-4 border-b border-border/40 text-right">Gross Add</th>
-              <th className="px-6 py-4 border-b border-border/40 text-right">TDS (194C)</th>
-              <th className="px-6 py-4 border-b border-border/40 text-right">Net Value</th>
-              <th className="px-6 py-4 border-b border-border/40">Method</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mockPayouts.map((row) => (
-              <tr key={row.id} className="border-b border-border/40 hover:bg-muted/10 transition-colors last:border-0 group">
-                <td className="px-6 py-4 font-medium">{row.date}</td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                     <div className="w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[9px]" style={{ backgroundColor: row.colorHash }}>
-                      {row.initials}
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">{row.memberPath}</p>
-                      <RoleBadge role={row.role} className="mt-1" />
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-right tabular-nums">{formatINR(row.gross)}</td>
-                <td className="px-6 py-4 text-right tabular-nums font-mono text-amber-600">- {formatINR(row.tds)}</td>
-                <td className="px-6 py-4 text-right font-bold tracking-tight text-emerald-600">{formatINR(row.net)}</td>
-                <td className="px-6 py-4 text-xs">
-                  <span className="flex items-center gap-1.5 font-medium text-muted-foreground">
-                    {row.method === "UPI" && <CheckCircle2 className="w-3.5 h-3.5 text-primary" />}
-                    {row.method}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground/60 block mt-0.5 max-w-[120px] truncate">{row.ref}</span>
-                </td>
+      {/* Payout Table */}
+      <div className="bg-card border border-border/60 rounded-md overflow-hidden">
+        <div className="flex items-center justify-between p-4 border-b border-border/40">
+          <h3 className="text-sm font-semibold">Payout Registry</h3>
+          <Button variant="outline" size="sm" className="h-8 text-[10px] font-mono tracking-widest uppercase">
+            <Download className="w-3 h-3 mr-2" /> CSV
+          </Button>
+        </div>
+
+        {payouts.length === 0 ? (
+          <div className="p-12 flex flex-col items-center justify-center text-center text-muted-foreground">
+            <Wallet className="w-10 h-10 mb-3 opacity-30" />
+            <p className="font-medium text-foreground mb-1">No payouts recorded</p>
+            <p className="text-sm">Payouts to team members will appear here.</p>
+          </div>
+        ) : (
+          <table className="w-full text-sm text-left">
+            <thead className="bg-muted/50 text-[10px] font-mono tracking-widest uppercase text-muted-foreground">
+              <tr>
+                <th className="px-4 py-3 font-medium">Date</th>
+                <th className="px-4 py-3 font-medium">Member</th>
+                <th className="px-4 py-3 font-medium">Booking Ref</th>
+                <th className="px-4 py-3 font-medium text-right">Amount</th>
+                <th className="px-4 py-3 font-medium text-center">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        
-        {/* Footnotes */}
-        <div className="sticky bottom-0 bg-card p-4 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground font-medium z-10 shadow-[0_-10px_10px_-10px_rgba(0,0,0,0.05)]">
-          <span>Showing latest 50 records. TDS calculated securely minimizing floating overlaps.</span>
-          <span className="flex items-center gap-2 font-bold tracking-wider uppercase">Page 1 of 4 <ChevronDown className="w-3 h-3 cursor-pointer" /></span>
-        </div>
+            </thead>
+            <tbody className="divide-y divide-border/40">
+              {payouts.map((p: PayoutRecord) => (
+                <tr key={p.id} className="hover:bg-muted/10 transition-colors">
+                  <td className="px-4 py-3 font-mono text-[11px] text-muted-foreground">{p.date}</td>
+                  <td className="px-4 py-3 font-medium">{p.memberName}</td>
+                  <td className="px-4 py-3 text-[11px] text-muted-foreground">{p.bookingRef || "—"}</td>
+                  <td className="px-4 py-3 text-right font-mono text-[11px] font-semibold">{formatINR(p.amount)}</td>
+                  <td className="px-4 py-3 text-center">
+                    <span className={`text-[9px] font-mono tracking-widest uppercase px-2 py-0.5 rounded-sm border ${
+                      p.status?.toLowerCase() === "paid"
+                        ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                        : "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                    }`}>
+                      {p.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
-
     </div>
   )
 }

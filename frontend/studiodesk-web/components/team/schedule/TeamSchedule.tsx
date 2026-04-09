@@ -1,126 +1,138 @@
 "use client"
 
-import { useState } from "react"
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Filter, Layers } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { ScheduleConflicts } from "./ScheduleConflicts"
+import useSWR from "swr"
+import { fetchTeamSchedule, fetchTeamMembers, ScheduleAssignment, TeamMember } from "@/lib/api"
+import { Skeleton } from "@/components/ui/skeleton"
+import { AlertTriangle, Calendar } from "lucide-react"
 
-const mockTeam = [
-  { id: "m1", name: "Rahul Sharma", role: "Owner" },
-  { id: "m2", name: "Vikram Singh", role: "Videographer" },
-  { id: "m3", name: "Ananya Patel", role: "Editor" },
-  { id: "m4", name: "Karan Desai", role: "Drone Operator" }
-]
+const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
-const weekDays = ["Mon, 23", "Tue, 24", "Wed, 25", "Thu, 26", "Fri, 27", "Sat, 28", "Sun, 29"]
+function getWeekDates() {
+  const now = new Date()
+  const dayOfWeek = now.getDay()
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
+  const monday = new Date(now)
+  monday.setDate(now.getDate() + mondayOffset)
+
+  return Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date(monday)
+    d.setDate(monday.getDate() + i)
+    return {
+      date: d,
+      label: DAYS_OF_WEEK[i],
+      num: d.getDate(),
+      month: d.getMonth(),
+      year: d.getFullYear(),
+    }
+  })
+}
 
 export function TeamSchedule() {
-  const [view, setView] = useState<"week"|"month">("week")
-  
+  const weekDates = getWeekDates()
+  const weekStart = weekDates[0]?.date.toISOString().split("T")[0] ?? ""
+
+  const { data: schedule, isLoading: scheduleLoading } = useSWR(
+    weekStart ? `/api/v1/team/schedule?week=${weekStart}` : null,
+    fetchTeamSchedule
+  )
+  const { data: teamData } = useSWR("/api/v1/team", fetchTeamMembers, { revalidateOnFocus: false })
+
+  const team = teamData?.list || []
+  const assignments = schedule || []
+
+  if (scheduleLoading) {
+    return (
+      <div className="p-8">
+        <Skeleton className="h-10 w-48 mb-6" />
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-12 w-full mb-3" />
+        ))}
+      </div>
+    )
+  }
+
+  if (!assignments.length) {
+    return (
+      <div className="p-8 flex flex-col items-center justify-center text-center text-muted-foreground">
+        <Calendar className="w-12 h-12 mb-4 opacity-30" />
+        <p className="font-medium text-foreground mb-1">No schedule conflicts this week</p>
+        <p className="text-sm">Team assignments will appear here when bookings are scheduled.</p>
+      </div>
+    )
+  }
+
+  // Detect double-bookings: same member assigned to multiple events on same day
+  const dayMemberMap = new Map<string, string[]>()
+  assignments.forEach((a) => {
+    const key = `${a.date}-${a.memberId}`
+    if (!dayMemberMap.has(key)) dayMemberMap.set(key, [])
+    dayMemberMap.get(key)!.push(a.bookingTitle)
+  })
+
+  const conflicts = Array.from(dayMemberMap.entries())
+    .filter(([, bookings]) => bookings.length > 1)
+    .map(([key, bookings]) => ({
+      key,
+      memberId: key.split("-").slice(1).join("-"),
+      bookings,
+    }))
+
   return (
-    <div className="p-6 md:p-8 h-full flex flex-col w-full max-w-[1600px] mx-auto overflow-hidden">
-      
-      {/* Toolbar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 shrink-0">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" className="h-9 w-9 bg-background"><ChevronLeft className="w-4 h-4" /></Button>
-          <div className="px-4 py-1.5 bg-background border border-border/60 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm min-w-[200px] justify-center">
-            <CalendarIcon className="w-4 h-4 text-muted-foreground" />
-            Week of 23–29 Mar, 2026
-          </div>
-          <Button variant="outline" size="icon" className="h-9 w-9 bg-background"><ChevronRight className="w-4 h-4" /></Button>
-          <Button variant="secondary" className="ml-2 h-9">Today</Button>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="flex items-center p-1 bg-muted/60 rounded-lg border border-border/40">
-            <button
-              onClick={() => setView("week")}
-              className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${view === 'week' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              Week
-            </button>
-            <button
-              onClick={() => setView("month")}
-              className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${view === 'month' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              Month
-            </button>
-          </div>
-          <Button variant="outline" className="h-9 bg-background ml-2"><Filter className="w-4 h-4 mr-2" /> Filter Team</Button>
-          <Button variant="outline" className="h-9 bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100 hover:text-amber-700"><Layers className="w-4 h-4 mr-2" /> Check Conflicts</Button>
-        </div>
+    <div className="p-8 space-y-6">
+      <div className="flex items-center gap-2 mb-4">
+        <h3 className="text-lg font-semibold">This Week&apos;s Schedule</h3>
+        {conflicts.length > 0 && (
+          <span className="flex items-center gap-1 text-amber-600 text-xs font-semibold">
+            <AlertTriangle className="w-3 h-3" />
+            {conflicts.length} conflict{conflicts.length > 1 ? "s" : ""}
+          </span>
+        )}
       </div>
 
-      <div className="shrink-0">
-        <ScheduleConflicts />
-      </div>
-
-      {/* Week Grid */}
-      {view === "week" && (
-        <div className="flex-1 min-h-0 bg-card border border-border/60 rounded-xl shadow-sm flex flex-col overflow-hidden">
-          
-          <div className="grid grid-cols-[160px_repeat(7,1fr)] lg:grid-cols-[220px_repeat(7,1fr)] border-b border-border/60 shrink-0 bg-muted/20">
-            <div className="p-4 border-r border-border/60 font-semibold text-sm text-muted-foreground flex items-center">Team Member</div>
-            {weekDays.map(d => (
-              <div key={d} className={`p-4 font-semibold text-sm text-center flex flex-col lg:flex-row items-center justify-center gap-1 ${d.includes("Sat") || d.includes("Sun") ? 'text-primary' : 'text-foreground'}`}>
-                {d.split(", ")[0]} <span className="text-muted-foreground font-normal ml-1">{d.split(", ")[1]}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex-1 overflow-auto custom-scrollbar">
-            {mockTeam.map((member, i) => (
-              <div key={member.id} className="grid grid-cols-[160px_repeat(7,1fr)] lg:grid-cols-[220px_repeat(7,1fr)] border-b border-border/40 group relative">
-                
-                {/* Member Frozen Column */}
-                <div className="p-4 border-r border-border/60 bg-muted/5 flex flex-col justify-center sticky left-0 z-10">
-                  <span className="font-semibold text-sm truncate">{member.name}</span>
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest truncate">{member.role}</span>
-                </div>
-
-                {/* Day Cells */}
-                {weekDays.map((d, dIdx) => {
-                  // MOCK ASSIGNMENTS LOGIC
-                  const isConflict = i === 1 && dIdx === 1 // Vikram on Tuesday
-                  const hasShoot = (i === 0 && dIdx === 4) || (i === 1 && dIdx === 1) || (i === 2 && dIdx === 5)
-                  const hasDoubleShoot = (i === 1 && dIdx === 1)
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left border border-border/40 rounded-md">
+          <thead className="bg-muted/50">
+            <tr>
+              <th className="px-4 py-3 font-medium text-muted-foreground text-[10px] uppercase tracking-widest">Member</th>
+              {weekDates.map((d) => (
+                <th key={d.label} className="px-4 py-3 font-medium text-muted-foreground text-[10px] uppercase tracking-widest text-center">
+                  {d.label} {d.num}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border/40">
+            {team.map((member: TeamMember) => (
+              <tr key={member.id} className="hover:bg-muted/10 transition-colors">
+                <td className="px-4 py-3 font-medium">{member.name}</td>
+                {weekDates.map((d) => {
+                  const dateStr = `${d.year}-${String(d.month + 1).padStart(2, "0")}-${String(d.num).padStart(2, "0")}`
+                  const dayAssignments = assignments.filter(
+                    (a: ScheduleAssignment) => a.memberId === member.id && a.date === dateStr
+                  )
+                  const hasConflict = dayAssignments.length > 1
 
                   return (
-                    <div key={dIdx} className={`p-2 border-r border-border/20 last:border-r-0 min-h-[100px] transition-colors relative ${isConflict ? 'bg-amber-50/50' : 'hover:bg-muted/10'}`}>
-                      {hasShoot && (
-                        <div className="w-full flex justify-center mt-2 group/chip cursor-pointer">
-                          <div className={`w-[90%] py-1.5 px-2 rounded-md border text-xs font-semibold truncate ${
-                            isConflict ? 'bg-white border-amber-300 text-amber-800 shadow-sm' : 'bg-primary/10 border-primary/20 text-primary'
-                          }`}>
-                            Wedding: Rahul...
-                            <span className="block text-[9px] font-normal mt-0.5 opacity-80">9:00 AM</span>
-                          </div>
+                    <td key={d.label} className="px-4 py-3 text-center">
+                      {dayAssignments.length === 0 ? (
+                        <span className="text-muted-foreground opacity-30">—</span>
+                      ) : (
+                        <div className={`space-y-1 ${hasConflict ? "text-amber-600" : "text-foreground"}`}>
+                          {dayAssignments.map((a: ScheduleAssignment) => (
+                            <div key={a.bookingId} className="text-[10px] font-mono tracking-wider truncate" title={a.bookingTitle}>
+                              {a.eventType}
+                            </div>
+                          ))}
                         </div>
                       )}
-                      {hasDoubleShoot && (
-                         <div className="w-full flex justify-center mt-1 cursor-pointer">
-                          <div className={`w-[90%] py-1.5 px-2 rounded-md border text-xs font-semibold truncate bg-white border-amber-300 text-amber-800 shadow-sm`}>
-                            Corporate: M...
-                            <span className="block text-[9px] font-normal mt-0.5 opacity-80">2:00 PM</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    </td>
                   )
                 })}
-              </div>
+              </tr>
             ))}
-          </div>
-        </div>
-      )}
-
-      {view === "month" && (
-        <div className="flex-1 min-h-[400px] flex items-center justify-center bg-card rounded-xl border border-border/60 shadow-sm text-muted-foreground">
-          Monthly aggregation matrix mapping offline.
-        </div>
-      )}
-
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

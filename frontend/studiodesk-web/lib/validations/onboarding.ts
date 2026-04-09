@@ -31,11 +31,27 @@ export const step3Schema = z.object({
   members: z.array(teamMemberSchema).max(10, "Maximum 10 members allowed in this step")
 });
 
+const optionalNumber = z.preprocess(
+  (val) => {
+    if (val === "" || val === undefined || val === null) return undefined
+    const n = Number(val)
+    return Number.isFinite(n) ? n : undefined
+  },
+  z.number().optional()
+) as z.ZodType<number | undefined>
+
 export const packageSchema = z.object({
   name: z.string().min(1, "Package Name is required"),
   eventType: z.enum(["Wedding", "Engagement", "Corporate", "Birthday", "Product Shoot", "Other"], { message: "Event Type is required" }),
-  duration: z.coerce.number().optional().or(z.nan().transform(() => undefined)),
-  price: z.coerce.number().min(0, "Price must be zero or positive").or(z.nan().transform(() => undefined)),
+  duration: optionalNumber,
+  price: z.preprocess(
+    (val) => {
+      if (val === "" || val === undefined || val === null) return undefined
+      const n = Number(val)
+      return Number.isFinite(n) && n >= 0 ? n : undefined
+    },
+    z.number().optional()
+  ) as z.ZodType<number | undefined>,
   inclusions: z.string().max(200, "Inclusions must be at most 200 characters").optional().or(z.literal(""))
 });
 

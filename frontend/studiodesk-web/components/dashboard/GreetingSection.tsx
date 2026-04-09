@@ -11,13 +11,13 @@ export function GreetingSkeleton() {
   )
 }
 
-export default async function GreetingSection() {
+export default async function GreetingSection({ userName }: { userName?: string }) {
   // Simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 500))
 
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
-  
+
   const dateStr = new Intl.DateTimeFormat('en-IN', {
     weekday: 'long',
     day: 'numeric',
@@ -28,7 +28,7 @@ export default async function GreetingSection() {
   return (
     <div className="flex items-center justify-between gap-4 w-full">
       <div className="flex items-center gap-4">
-        <h1 className="text-xl font-semibold tracking-tight">{greeting}, Arjun</h1>
+        <h1 className="text-xl font-semibold tracking-tight">{greeting}, {userName || "User"}</h1>
         <span className="hidden md:block w-px h-5 bg-border/50"></span>
         <p className="hidden md:block font-mono text-muted-foreground text-xs mt-0.5">{dateStr}</p>
       </div>

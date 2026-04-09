@@ -15,11 +15,15 @@ interface StatusBadgeProps {
 }
 
 export function BookingStatusBadge({ stage, className }: StatusBadgeProps) {
+  const style = stageStyles[stage]
+  if (!style) {
+    console.warn(`[BookingStatusBadge] Unknown stage: "${stage}". Falling back to neutral style.`)
+  }
   return (
     <span
       className={cn(
         "inline-flex items-center rounded-sm px-1.5 py-0.5 text-[9px] font-mono tracking-widest uppercase border",
-        stageStyles[stage] || stageStyles["Inquiry"],
+        style || "bg-muted/20 text-muted-foreground border-border/30",
         className
       )}
     >

@@ -16,15 +16,22 @@ export default function MobileBookingDetail({ id }: { id: string }) {
   const { data: booking, isLoading } = useSWR(`/api/v1/bookings/${id}`, fetchBookingDetail, { dedupingInterval: 60000 })
 
   useEffect(() => {
-    // If on large screens, automatically route to the slideover experience
+    let resizeTimer: ReturnType<typeof setTimeout>
     const checkLayout = () => {
       if (window.innerWidth >= 1024) {
         router.replace(`/bookings?id=${id}`)
       }
     }
     checkLayout()
-    window.addEventListener("resize", checkLayout)
-    return () => window.removeEventListener("resize", checkLayout)
+    const handleResize = () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(checkLayout, 200)
+    }
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("resize", handleResize)
+      clearTimeout(resizeTimer)
+    }
   }, [id, router])
 
   if (isLoading) {

@@ -246,7 +246,24 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
                   <FormItem>
                     <FormLabel>Total Value (₹)</FormLabel>
                     <FormControl>
-                      <Input type="number" min={0} placeholder="75000" {...field} value={(field.value as any) ?? ""} />
+                      <Input
+                        type="number"
+                        min={0}
+                        placeholder="75000"
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          if (val === "") {
+                            field.onChange(undefined)
+                          } else {
+                            const num = Number(val)
+                            if (Number.isFinite(num)) {
+                              field.onChange(num)
+                            }
+                          }
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

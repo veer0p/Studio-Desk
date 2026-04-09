@@ -46,11 +46,11 @@ export function InvoiceList() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="relative">
+            <div className="relative flex-1 min-w-0">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <Input 
-                placeholder="Search invoice #, client..." 
-                className="pl-9 w-[200px] lg:w-[260px] bg-background border-border/60"
+              <Input
+                placeholder="Search invoice #, client..."
+                className="pl-9 w-full bg-background border-border/60"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />

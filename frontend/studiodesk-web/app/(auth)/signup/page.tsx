@@ -66,17 +66,14 @@ export default function SignupPage() {
 
     const strength = getStrength(password)
     const strengthLabels = ["", "Weak", "Fair", "Good", "Strong"]
-    const strengthColors = ["bg-muted", "bg-danger", "bg-warning", "bg-warning", "bg-success"]
+    const strengthColors = ["bg-muted", "bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-emerald-500"]
 
     async function onSubmit(values: SignupFormValues) {
-        console.log('[Signup] Form submitted with:', values)
         setError(null)
         try {
             const result = await signUp(values.email, values.password, values.fullName, values.studioName, values.studioSlug)
-            console.log('[Signup] Success!', result)
             router.push("/onboarding")
         } catch (err: unknown) {
-            console.error('[Signup] Error caught in component:', err)
             if (err instanceof Error && 'status' in err && (err as Error & { status: number }).status === 409) {
                 setError("An account with this email already exists")
             } else {

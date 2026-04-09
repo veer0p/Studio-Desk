@@ -39,17 +39,17 @@ export default function BookingsList() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading } = useSWR(`/api/v1/bookings?${queryString}`, { 
-    refreshInterval: 60000 
+  const { data, isLoading, error, mutate } = useSWR(`/api/v1/bookings?${queryString}`, fetchBookingsList, {
+    refreshInterval: 60000
   })
-  const { mutate } = useSWRConfig()
+  const { mutate: mutateGlobal } = useSWRConfig()
 
   const handleMarkConfirmed = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation()
     try {
       await updateBookingStage(id, "Confirmed")
       toast.success("Booking marked as Confirmed")
-      mutate(key => typeof key === 'string' && key.startsWith('/api/v1/bookings'))
+      mutateGlobal(key => typeof key === 'string' && key.startsWith('/api/v1/bookings'))
     } catch {
       toast.error("Failed to update booking status")
     }
@@ -114,6 +114,7 @@ export default function BookingsList() {
     {
       accessorKey: "team",
       header: "Team",
+      meta: { responsive: "hidden lg:table-cell" },
       cell: ({ row }: any) => {
         const team = row.original.team || []
         return (
@@ -121,7 +122,7 @@ export default function BookingsList() {
             {team.slice(0, 3).map((member: any, i: number) => (
               <div key={i} className="w-5 h-5 rounded-sm bg-muted border border-background flex items-center justify-center text-[9px] font-mono tracking-widest uppercase overflow-hidden shrink-0">
                 {member.avatar ? (
-                  <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                  <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
                 ) : (
                   member.name?.charAt(0) || "U"
                 )}
@@ -154,7 +155,8 @@ export default function BookingsList() {
     },
     {
       accessorKey: "balanceDue",
-      header: () => <div className="text-right">Balance Due</div>,
+      header: () => <div className="text-right hidden lg:block">Balance Due</div>,
+      meta: { responsive: "hidden lg:table-cell" },
       cell: ({ row }: any) => {
         const bal = row.original.balanceDue || 0
         return (
@@ -180,21 +182,12 @@ export default function BookingsList() {
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openDetail(row.original.id as string) }}>
                   View details
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                  Edit booking
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                  Send proposal
-                </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => handleMarkConfirmed(row.original.id as string, e)}>
                   Mark confirmed
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                <DropdownMenuItem className="text-muted-foreground" onClick={(e) => e.stopPropagation()}>
                   Add payment
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-muted-foreground" disabled onClick={(e) => e.stopPropagation()}>
-                  Delete booking
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -221,9 +214,7 @@ export default function BookingsList() {
     },
   })
 
-  // Desktop slideover vs Mobile route
   const openDetail = (id: string) => {
-    // We update URL params
     const params = new URLSearchParams(searchParams.toString())
     params.set("id", id)
     router.push(`/bookings?${params.toString()}`, { scroll: false })
@@ -239,49 +230,78 @@ export default function BookingsList() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-8">
+        <p className="text-muted-foreground">Failed to load bookings</p>
+        <button onClick={() => mutate()} className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90">
+          Retry
+        </button>
+      </div>
+    )
+  }
+
+  const totalBookings = data?.count ?? data?.list?.length ?? 0
+
   return (
     <div className="w-full flex flex-col bg-card h-full">
       <div className="flex-1 overflow-auto custom-scrollbar relative">
-        <table className="w-full text-sm text-left">
-          <thead className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0 z-10 hidden sm:table-header-group">
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th key={header.id} className="px-4 py-3 font-medium whitespace-nowrap">
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </th>
+        {table.getRowModel().rows.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+            <p className="text-lg font-medium text-foreground">No bookings found</p>
+            <p className="text-sm text-muted-foreground mt-1">Try adjusting your search or filters.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0 z-10 hidden sm:table-header-group">
+                {table.getHeaderGroups().map(headerGroup => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map(header => {
+                      const colDef = header.column.columnDef as any
+                      const responsiveClass = colDef.meta?.responsive || ""
+                      return (
+                        <th key={header.id} className={`px-4 py-3 font-medium whitespace-nowrap ${responsiveClass}`}>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </th>
+                      )
+                    })}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map(row => (
-              <tr 
-                key={row.id} 
-                className="border-b border-border/40 hover:bg-muted/40 transition-colors cursor-pointer block sm:table-row"
-                onClick={() => openDetail(row.original.id as string)}
-              >
-                {row.getVisibleCells().map((cell, i) => (
-                  <td key={cell.id} className={`px-4 py-3 align-middle ${i !== 0 ? 'hidden sm:table-cell' : 'block w-full'}`}>
-                    {/* On mobile, we only show the first cell or a custom condensed view, for now we hide others on tiny screens but Shadcn table is generally horizontal scroll */}
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
-                  </td>
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map(row => (
+                  <tr
+                    key={row.id}
+                    className="border-b border-border/40 hover:bg-muted/40 transition-colors cursor-pointer"
+                    onClick={() => openDetail(row.original.id as string)}
+                  >
+                    {row.getVisibleCells().map(cell => {
+                      const colDef = cell.column.columnDef as any
+                      const responsiveClass = colDef.meta?.responsive || ""
+                      return (
+                        <td key={cell.id} className={`px-4 py-3 align-middle whitespace-nowrap ${responsiveClass}`}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      )
+                    })}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       <div className="flex items-center justify-between p-4 border-t border-border/40 mt-auto shrink-0 bg-background/50 backdrop-blur">
-        <div className="text-xs text-muted-foreground hidden sm:block">
-          Showing {table.getRowModel().rows.length} of {data?.list?.length || 0} bookings
+        <div className="text-xs text-muted-foreground">
+          Showing {table.getRowModel().rows.length} of {totalBookings} bookings
         </div>
         <div className="flex items-center gap-2">
           <Button

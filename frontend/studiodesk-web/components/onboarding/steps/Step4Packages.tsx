@@ -2,7 +2,8 @@
 
 import { useForm, useFieldArray } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { step4Schema, Step4Data } from "@/lib/validations/onboarding"
+import { step4Schema } from "@/lib/validations/onboarding"
+import type { Step4Data } from "@/lib/validations/onboarding"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -23,13 +24,13 @@ interface Step4Props {
 }
 
 export default function Step4Packages({ initialData, onNext, onBack, onSkip }: Step4Props) {
-  const form = useForm<Step4Data>({
+  const form = useForm({
     resolver: zodResolver(step4Schema),
-    defaultValues: initialData || {
+    defaultValues: initialData as Step4Data || {
       packages: [
         { name: "Standard Wedding", eventType: "Wedding", duration: 8, price: 50000, inclusions: "Photos, 1 Cinematic Video, Drone" }
       ],
-    },
+    } satisfies Step4Data,
   })
 
   const { fields, append, remove } = useFieldArray({
@@ -38,7 +39,7 @@ export default function Step4Packages({ initialData, onNext, onBack, onSkip }: S
   })
 
   const onSubmit = (data: Step4Data) => {
-    onNext(data)
+    onNext(data as Step4Data)
   }
 
   return (

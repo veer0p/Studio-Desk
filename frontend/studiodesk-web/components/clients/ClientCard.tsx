@@ -1,6 +1,7 @@
 import { ClientAvatar } from "@/components/clients/shared/ClientAvatar"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import { whatsappUrl } from "@/lib/phone"
 
 const formatAmount = (amt: number) => {
   if (!amt) return "₹0"
@@ -35,34 +36,47 @@ export default function ClientCard({ client }: { client: any }) {
 
       <div className="border-t border-border/40" />
 
-      <div className="grid grid-cols-3 divide-x divide-border/40 p-4 shrink-0 text-center">
+      <div className="grid grid-cols-3 divide-x divide-border/40 p-3 sm:p-4 shrink-0 text-center">
         <div className="flex flex-col">
-          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Bookings</span>
-          <span className="text-[11px] font-mono tracking-widest uppercase text-foreground">{client.bookingsCount || 0}</span>
+          <span className="text-[9px] sm:text-[10px] font-mono tracking-wider sm:tracking-widest uppercase text-muted-foreground mb-1">Bookings</span>
+          <span className="text-[10px] sm:text-[11px] font-mono tracking-wider uppercase text-foreground">{client.bookingsCount || 0}</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Total Spend</span>
-          <span className="text-[11px] font-mono tracking-widest uppercase text-foreground">{formatAmount(client.totalSpend)}</span>
+          <span className="text-[9px] sm:text-[10px] font-mono tracking-wider sm:tracking-widest uppercase text-muted-foreground mb-1">Spend</span>
+          <span className="text-[10px] sm:text-[11px] font-mono tracking-wider uppercase text-foreground">{formatAmount(client.totalSpend)}</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mb-1">Last Seen</span>
-          <span className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">{client.lastBookingDate || "Never"}</span>
+          <span className="text-[9px] sm:text-[10px] font-mono tracking-wider sm:tracking-widest uppercase text-muted-foreground mb-1">Last Seen</span>
+          <span className="text-[10px] sm:text-[11px] font-mono tracking-wider uppercase text-muted-foreground">{client.lastBookingDate || "Never"}</span>
         </div>
       </div>
 
       <div className="border-t border-border/40" />
 
       <div className="grid grid-cols-2 p-2 gap-2 bg-muted/5 border-t border-border/40">
-        <Button 
-          variant="ghost" 
-          className="text-muted-foreground hover:text-foreground text-[11px] font-mono uppercase tracking-widest"
-          asChild
-        >
-          <a href={`https://wa.me/${client.phone?.replace(/\D/g, "") || ""}`} target="_blank" rel="noreferrer">
-            WhatsApp
-          </a>
-        </Button>
-        <Button 
+        {(() => {
+          const wa = whatsappUrl(client.phone)
+          return wa ? (
+            <Button
+              variant="ghost"
+              className="text-muted-foreground hover:text-foreground text-[10px] sm:text-[11px] font-mono uppercase tracking-wider sm:tracking-widest px-2 sm:px-4"
+              asChild
+            >
+              <a href={wa} target="_blank" rel="noreferrer">
+                WhatsApp
+              </a>
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              className="text-muted-foreground/40 text-[10px] sm:text-[11px] font-mono uppercase tracking-wider sm:tracking-widest cursor-default"
+              disabled
+            >
+              No WhatsApp
+            </Button>
+          )
+        })()}
+        <Button
           variant="ghost" 
           className="text-foreground text-[11px] font-mono uppercase tracking-widest"
           onClick={() => router.push(`/clients/${client.id}`)}

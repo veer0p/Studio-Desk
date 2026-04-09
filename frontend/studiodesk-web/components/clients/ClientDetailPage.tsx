@@ -15,6 +15,7 @@ import { ClientFinance } from "./tabs/ClientFinance"
 import { ClientCommunication } from "./tabs/ClientCommunication"
 import { ClientDocuments } from "./tabs/ClientDocuments"
 import { ChevronLeft, MessageCircle, MoreHorizontal, Plus } from "lucide-react"
+import { whatsappUrl } from "@/lib/phone"
 
 import {
   DropdownMenu,
@@ -36,7 +37,7 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
   const searchParams = useSearchParams()
   const currentTab = searchParams.get("tab") || "overview"
 
-  const { data: client, isLoading } = useSWR(`/api/v1/clients/${clientId}`, fetchClientDetail, { dedupingInterval: 10000 })
+  const { data: client, isLoading, error } = useSWR(`/api/v1/clients/${clientId}`, fetchClientDetail, { dedupingInterval: 10000 })
 
   const setTab = (tab: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -53,10 +54,22 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
     )
   }
 
+  if (error) {
+    const isNotFound = error?.status === 404
+    return (
+      <div className="p-8 flex items-center justify-center flex-col gap-4">
+        <p className="text-muted-foreground">
+          {isNotFound ? "Client not found." : "Failed to load client details."}
+        </p>
+        <Button onClick={() => router.push("/clients")}>Back to clients</Button>
+      </div>
+    )
+  }
+
   if (!client) {
     return (
-      <div className="p-8 flex items-center justify-center flex-col">
-        <p className="text-muted-foreground mb-4">Client not found.</p>
+      <div className="p-8 flex items-center justify-center flex-col gap-4">
+        <p className="text-muted-foreground">No client data available.</p>
         <Button onClick={() => router.push("/clients")}>Back to clients</Button>
       </div>
     )
@@ -71,7 +84,7 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
   ]
 
   const whatsappPhone = client.whatsapp || client.phone || ""
-  const whatsappLink = `https://wa.me/${whatsappPhone.replace(/\D/g, "")}`
+  const whatsappLink = whatsappUrl(whatsappPhone)
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
@@ -95,13 +108,15 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
             <h1 className="text-2xl font-bold tracking-tight mb-1">{client.name}</h1>
             <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mb-3">
               {client.city && <span>{client.city}</span>}
-              {client.city && <span className="text-border px-1">•</span>}
-              <a href={`tel:${client.phone}`} className="hover:text-primary transition-colors">{client.phone}</a>
+              {client.city && <span className="text-muted-foreground/40 px-1">•</span>}
+              {client.phone && (
+                <a href={`tel:${client.phone}`} className="hover:text-primary transition-colors">{client.phone}</a>
+              )}
+              {client.email && client.phone && (
+                <span className="text-muted-foreground/40 px-1">•</span>
+              )}
               {client.email && (
-                <>
-                  <span className="text-border px-1">•</span>
-                  <a href={`mailto:${client.email}`} className="hover:text-primary transition-colors">{client.email}</a>
-                </>
+                <a href={`mailto:${client.email}`} className="hover:text-primary transition-colors">{client.email}</a>
               )}
             </div>
             <div className="flex items-center gap-1.5 flex-wrap">
@@ -114,14 +129,21 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Action Row */}
-          <Button variant="outline" className="text-[11px] font-mono tracking-widest uppercase h-9 rounded-sm" asChild>
-            <a href={whatsappLink} target="_blank" rel="noreferrer">
+          {whatsappLink ? (
+            <Button variant="outline" className="text-[11px] font-mono tracking-widest uppercase h-9 rounded-sm" asChild>
+              <a href={whatsappLink} target="_blank" rel="noreferrer">
+                <MessageCircle className="w-3.5 h-3.5 mr-2" />
+                WhatsApp
+              </a>
+            </Button>
+          ) : (
+            <Button variant="outline" className="text-[11px] font-mono tracking-widest uppercase h-9 rounded-sm text-muted-foreground/40 cursor-default" disabled>
               <MessageCircle className="w-3.5 h-3.5 mr-2" />
-              WhatsApp
-            </a>
-          </Button>
+              No WhatsApp
+            </Button>
+          )}
 
           <EditClientSheet client={client}>
             <Button variant="ghost" className="text-[11px] font-mono tracking-widest uppercase h-9 rounded-sm">Edit</Button>
@@ -173,15 +195,15 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
       </div>
 
       {/* Tabs Layout */}
-      <div className="px-6 mt-6 border-b border-border/40 shrink-0">
-        <div className="flex sm:space-x-4 overflow-x-auto custom-scrollbar">
+      <div className="px-6 mt-6 border-b border-border/40 shrink-0 relative">
+        <div className="flex sm:space-x-4 overflow-x-auto custom-scrollbar snap-x snap-mandatory">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setTab(tab.id)}
-              className={`pb-3 pt-1 px-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2
-                ${currentTab === tab.id 
-                  ? "border-primary text-foreground" 
+              className={`pb-3 pt-1 px-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 snap-start
+                ${currentTab === tab.id
+                  ? "border-primary text-foreground"
                   : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
             >
@@ -189,6 +211,8 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
             </button>
           ))}
         </div>
+        {/* Right fade indicator for overflow */}
+        <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent pointer-events-none hidden sm:block" />
       </div>
 
       {/* Tab Render Container */}

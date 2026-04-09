@@ -5,6 +5,7 @@ import BookingPipeline from "@/components/dashboard/BookingPipeline"
 import PendingActions from "@/components/dashboard/PendingActions"
 import UpcomingEvents from "@/components/dashboard/UpcomingEvents"
 import RecentActivity from "@/components/dashboard/RecentActivity"
+import GreetingSection from "@/components/dashboard/GreetingSection"
 
 export const dynamic = "force-dynamic"
 
@@ -20,6 +21,9 @@ export default function DashboardPage() {
   return (
     <DashboardShell>
       <div className="flex flex-col gap-6">
+        <Suspense fallback={<Skeleton className="w-full h-10 rounded-md" />}>
+          <GreetingSection />
+        </Suspense>
         <Suspense fallback={<Skeleton className="w-full h-[100px] rounded-md" />}>
           <TodayStrip />
         </Suspense>

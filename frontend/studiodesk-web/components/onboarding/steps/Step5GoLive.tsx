@@ -25,7 +25,7 @@ export default function Step5GoLive({ formData, onBack, isSubmitting, setIsSubmi
   const handleGoLive = async () => {
     setIsSubmitting(true)
     try {
-      if (formData.step1) await submitStudioProfile(formData.step1, formData.step2?.phone)
+      if (formData.step1) await submitStudioProfile(formData.step1)
       if (formData.step2) await submitOwnerProfile(formData.step2)
       if (formData.step3 && formData.step3.members.length > 0) await submitTeamMembers(formData.step3)
       if (formData.step4 && formData.step4.packages.length > 0) await submitPackages(formData.step4)
@@ -74,7 +74,7 @@ export default function Step5GoLive({ formData, onBack, isSubmitting, setIsSubmi
             <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-blue-500/80 mb-1.5">Studio Details</p>
             <h4 className="text-2xl font-black text-foreground tracking-tight leading-none mb-2">{formData.step1?.name || "My Studio"}</h4>
             <p className="text-sm text-muted-foreground font-medium">
-              {formData.step1?.type} • {formData.step1?.city}
+              {formData.step1?.specialty} • {formData.step1?.city}
             </p>
           </div>
         </motion.div>

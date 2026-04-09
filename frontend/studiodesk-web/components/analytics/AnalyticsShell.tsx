@@ -2,6 +2,11 @@
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { PeriodSelector } from "./PeriodSelector"
+import { RevenueAnalytics } from "./tabs/RevenueAnalytics"
+import { BookingAnalytics } from "./tabs/BookingAnalytics"
+import { ClientAnalytics } from "./tabs/ClientAnalytics"
+import { TeamAnalytics } from "./tabs/TeamAnalytics"
+import { GalleryAnalytics } from "./tabs/GalleryAnalytics"
 import { Button } from "@/components/ui/button"
 import { Download, IndianRupee, Calendar, Users, Camera, Image as ImageIcon } from "lucide-react"
 
@@ -9,7 +14,7 @@ export function AnalyticsShell() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
-  
+
   const currentTab = searchParams.get("tab") || "revenue"
 
   const setTab = (tab: string) => {
@@ -28,14 +33,14 @@ export function AnalyticsShell() {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-background overflow-hidden">
-      
+
       {/* Header */}
       <div className="shrink-0 border-b border-border/40 bg-card px-6 py-4 md:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl md:text-2xl font-bold tracking-tight">Analytics & Reports</h1>
-          <p className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground mt-1 px-2 py-1 bg-muted border border-border/60 rounded-sm inline-block">FY 2025-26 India Basis</p>
+          <p className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground mt-1 px-2 py-1 bg-muted border border-border/60 rounded-sm inline-block">Performance Insights</p>
         </div>
-        
+
         <div className="flex items-center gap-3">
           <PeriodSelector />
           <Button variant="ghost" className="hidden lg:flex text-primary hover:text-primary"><Download className="w-4 h-4 mr-2" /> Export CSV</Button>
@@ -43,15 +48,15 @@ export function AnalyticsShell() {
       </div>
 
       {/* Tabs Nav */}
-      <div className="shrink-0 px-6 md:px-8 border-b border-border/40 bg-card overflow-x-auto custom-scrollbar">
-        <div className="flex items-center gap-6">
+      <div className="shrink-0 px-6 md:px-8 border-b border-border/40 bg-card overflow-x-auto custom-scrollbar [&::-webkit-scrollbar]:hidden scrollbar-width-none">
+        <div className="flex items-center gap-4 md:gap-6 min-w-max">
           {tabs.map(t => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`group flex items-center gap-2 py-3.5 border-b-2 transition-colors whitespace-nowrap text-[10px] font-mono font-bold tracking-widest uppercase
-                ${currentTab === t.id 
-                  ? 'border-primary text-foreground' 
+                ${currentTab === t.id
+                  ? 'border-primary text-foreground'
                   : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
                 }`}
             >
@@ -62,16 +67,14 @@ export function AnalyticsShell() {
         </div>
       </div>
 
-      {/* Content Engine Mounting Bounds */}
+      {/* Content Engine */}
       <div className="flex-1 overflow-auto custom-scrollbar bg-muted/5 p-4 md:p-6 lg:p-8">
         <div className="max-w-[1600px] mx-auto pb-24">
-          
-          {currentTab === "revenue" && <div className="p-12 text-center text-muted-foreground">RevenueAnalytics Module mounting...</div>}
-          {currentTab === "bookings" && <div className="p-12 text-center text-muted-foreground">BookingAnalytics Module mounting...</div>}
-          {currentTab === "clients" && <div className="p-12 text-center text-muted-foreground">ClientAnalytics Module mounting...</div>}
-          {currentTab === "team" && <div className="p-12 text-center text-muted-foreground">TeamAnalytics Module mounting...</div>}
-          {currentTab === "gallery" && <div className="p-12 text-center text-muted-foreground">GalleryAnalytics Module mounting...</div>}
-
+          {currentTab === "revenue" && <RevenueAnalytics />}
+          {currentTab === "bookings" && <BookingAnalytics />}
+          {currentTab === "clients" && <ClientAnalytics />}
+          {currentTab === "team" && <TeamAnalytics />}
+          {currentTab === "gallery" && <GalleryAnalytics />}
         </div>
       </div>
     </div>

@@ -23,32 +23,25 @@ function relativeTime(value?: string | null) {
 }
 
 export default function RecentActivity() {
-  const { data, isLoading } = useSWR("/api/v1/bookings?pageSize=20", fetchBookingsList, {
+  const { data, isLoading } = useSWR("/api/v1/bookings?sortBy=updatedAt&order=desc&pageSize=6", fetchBookingsList, {
     dedupingInterval: 60000,
   })
 
   const activities = Array.isArray(data?.list)
-    ? [...data.list]
-        .sort(
-          (a: any, b: any) =>
-            new Date(String(b.updatedAt ?? b.createdAt ?? 0)).getTime() -
-            new Date(String(a.updatedAt ?? a.createdAt ?? 0)).getTime()
-        )
-        .slice(0, 6)
-        .map((booking: any) => {
-          const createdAt = new Date(String(booking.createdAt ?? 0)).getTime()
-          const updatedAt = new Date(String(booking.updatedAt ?? booking.createdAt ?? 0)).getTime()
-          const isFreshCreate = Math.abs(updatedAt - createdAt) < 60000
+    ? data.list.map((booking: any) => {
+        const createdAt = new Date(String(booking.createdAt ?? 0)).getTime()
+        const updatedAt = new Date(String(booking.updatedAt ?? booking.createdAt ?? 0)).getTime()
+        const isFreshCreate = Math.abs(updatedAt - createdAt) < 60000
 
-          return {
-            id: booking.id,
-            icon: isFreshCreate ? CalendarPlus : RefreshCcw,
-            iconClass: isFreshCreate ? "text-foreground" : "text-muted-foreground",
-            text: booking.clientName,
-            suffix: isFreshCreate ? `was added for ${booking.date}` : `is now in ${booking.stage}`,
-            timeAgo: relativeTime(booking.updatedAt ?? booking.createdAt),
-          }
-        })
+        return {
+          id: booking.id,
+          icon: isFreshCreate ? CalendarPlus : RefreshCcw,
+          iconClass: isFreshCreate ? "text-foreground" : "text-muted-foreground",
+          text: booking.clientName,
+          suffix: isFreshCreate ? `was added for ${booking.date}` : `is now in ${booking.stage}`,
+          timeAgo: relativeTime(booking.updatedAt ?? booking.createdAt),
+        }
+      })
     : []
 
   return (

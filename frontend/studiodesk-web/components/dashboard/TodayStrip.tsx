@@ -43,27 +43,27 @@ export default function TodayStrip() {
 
       {/* Content */}
       {isLoading ? (
-        <div className="flex gap-4 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden">
-          <Skeleton className="min-w-[260px] h-[120px] rounded-md" />
-          <Skeleton className="min-w-[260px] h-[120px] rounded-md" />
+        <div className="flex gap-3 xs:gap-4 overflow-x-auto pb-3 xs:pb-4 [&::-webkit-scrollbar]:hidden">
+          <Skeleton className="min-w-[calc(100vw-3rem)] xs:min-w-[260px] h-[120px] rounded-md" />
+          <Skeleton className="min-w-[calc(100vw-3rem)] xs:min-w-[260px] h-[120px] rounded-md" />
         </div>
       ) : shoots.length > 0 ? (
-        <div className="flex gap-4 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-3 xs:gap-4 overflow-x-auto pb-3 xs:pb-4 [&::-webkit-scrollbar]:hidden">
           {shoots.map((shoot) => (
-            <Link 
-              href={`/bookings/${shoot.id}`} 
+            <Link
+              href={`/bookings/${shoot.id}`}
               key={shoot.id}
-              className="group min-w-[260px] flex bg-card border border-border/60 hover:border-foreground/20 transition-colors rounded-md overflow-hidden shadow-none cursor-pointer relative"
+              className="group min-w-[calc(100vw-3rem)] xs:min-w-[260px] flex bg-card border border-border/60 hover:border-foreground/20 transition-colors rounded-md overflow-hidden shadow-none cursor-pointer relative"
             >
               <div className="p-4 flex flex-col flex-1 gap-3">
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex items-center gap-2">
                     <div className={`w-1.5 h-1.5 rounded-sm ${eventColors[shoot.eventType] || eventColors.Other}`} />
-                    <span className="font-medium text-sm line-clamp-1">{shoot.clientName}</span>
+                    <span className="font-medium text-sm line-clamp-1" title={shoot.clientName}>{shoot.clientName}</span>
                   </div>
                   <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider whitespace-nowrap pt-0.5">{shoot.time}</span>
                 </div>
-                <div className="text-xs text-muted-foreground line-clamp-1 font-mono uppercase tracking-widest">
+                <div className="text-xs text-muted-foreground line-clamp-1 font-mono uppercase tracking-widest" title={shoot.venue}>
                   {shoot.venue}
                 </div>
                 <div className="flex justify-between items-center mt-auto pt-2 border-t border-border/20">

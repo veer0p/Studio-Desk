@@ -42,8 +42,8 @@ export default function ClientsGrid() {
   }
 
   return (
-    <div className="w-full flex-1 overflow-auto custom-scrollbar p-6 bg-muted/10 h-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-8">
+    <div className="w-full flex-1 overflow-auto custom-scrollbar p-4 sm:p-6 bg-muted/10 h-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pb-8">
         {clients.map((client: any) => (
           <ClientCard key={client.id} client={client} />
         ))}

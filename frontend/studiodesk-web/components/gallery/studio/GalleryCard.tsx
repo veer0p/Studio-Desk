@@ -33,7 +33,7 @@ export function GalleryCard({ gallery }: { gallery: any }) {
       className="group relative flex flex-col bg-card rounded-md border border-border/60 overflow-hidden shadow-sm hover:border-primary/40 transition-all cursor-pointer"
     >
       {/* Cover Image */}
-      <div className="relative h-48 w-full bg-muted/30 overflow-hidden">
+      <div className="relative w-full bg-muted/30 overflow-hidden aspect-[4/3] sm:h-48">
         {gallery.coverUrl ? (
           <img src={gallery.coverUrl} alt={gallery.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
@@ -57,12 +57,12 @@ export function GalleryCard({ gallery }: { gallery: any }) {
 
       {/* Body */}
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="font-semibold text-foreground truncate">{gallery.clientName}</h3>
-        <p className="text-sm text-muted-foreground truncate">{gallery.name}</p>
+        <h3 className="font-semibold text-foreground truncate" title={gallery.clientName}>{gallery.clientName}</h3>
+        <p className="text-sm text-muted-foreground truncate" title={gallery.name}>{gallery.name}</p>
         <p className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mt-1 mb-4">{gallery.shootDate}</p>
 
         {/* Stats Row */}
-        <div className="flex items-center gap-4 text-[11px] font-mono tracking-widest uppercase text-muted-foreground border-t border-border/40 pt-4 mb-4">
+        <div className="flex items-center gap-2 sm:gap-4 text-[10px] sm:text-[11px] font-mono tracking-wider sm:tracking-widest uppercase text-muted-foreground border-t border-border/40 pt-3 sm:pt-4 mb-3 sm:mb-4 flex-wrap">
           <div className="flex items-center gap-1"><ImageIcon className="w-3.5 h-3.5" /> {gallery.photoCount}</div>
           <div className="flex items-center gap-1"><Video className="w-3.5 h-3.5" /> {gallery.videoCount}</div>
           <div className="ml-auto">{gallery.sizeGb} GB</div>

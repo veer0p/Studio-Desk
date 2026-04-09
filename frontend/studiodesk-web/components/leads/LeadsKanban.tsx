@@ -12,11 +12,42 @@ const STAGES = [
 
 export function LeadsKanban({ labs = [] }: { labs: BookingSummary[] }) {
   return (
-    <div className="h-full w-full overflow-x-auto custom-scrollbar p-6">
-      <div className="flex gap-6 h-full min-w-max pb-4">
+    <div className="h-full w-full overflow-x-auto custom-scrollbar p-4 sm:p-6">
+      {/* Mobile: vertical stacked list */}
+      <div className="md:hidden flex flex-col gap-6 h-full pb-4">
         {STAGES.map((stage) => {
           const stageLeads = labs.filter(l => l.stage === stage.id || (stage.id === "Inquiry" && (l.stage === "Inquiry" || !l.stage)))
-          
+
+          return (
+            <div key={stage.id} className="flex flex-col h-auto">
+              <div className="flex items-center justify-between mb-3 px-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-[11px] font-mono font-bold tracking-widest uppercase text-foreground">{stage.label}</h3>
+                  <span className="text-[9px] font-mono bg-muted/40 px-1.5 py-0.5 rounded-sm text-muted-foreground">{stageLeads.length}</span>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {stageLeads.map((lead) => (
+                  <LeadCard key={lead.id} lead={lead} />
+                ))}
+
+                {stageLeads.length === 0 && (
+                  <div className="border border-dashed border-border/40 rounded-md p-6 text-center">
+                    <p className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">No leads here</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Desktop: horizontal kanban */}
+      <div className="hidden md:flex gap-6 h-full min-w-max pb-4">
+        {STAGES.map((stage) => {
+          const stageLeads = labs.filter(l => l.stage === stage.id || (stage.id === "Inquiry" && (l.stage === "Inquiry" || !l.stage)))
+
           return (
             <div key={stage.id} className="w-72 flex flex-col h-full">
               <div className="flex items-center justify-between mb-4 px-1">
@@ -31,7 +62,7 @@ export function LeadsKanban({ labs = [] }: { labs: BookingSummary[] }) {
                 {stageLeads.map((lead) => (
                   <LeadCard key={lead.id} lead={lead} />
                 ))}
-                
+
                 {stageLeads.length === 0 && (
                   <div className="border border-dashed border-border/40 rounded-md p-6 text-center">
                     <p className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">No leads here</p>
