@@ -4,7 +4,7 @@ import useSWR from "swr"
 import { fetchFinanceSummary, FinanceSummary } from "@/lib/api"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ArrowDownRight, ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react"
+import { ArrowDownRight, ArrowUpRight, TrendingUp, TrendingDown, Check } from "lucide-react"
 
 const formatAmountCompact = (amt: number) => {
   if (amt === undefined || amt === null) return "₹0"
@@ -13,7 +13,7 @@ const formatAmountCompact = (amt: number) => {
   return `₹${amt}`
 }
 
-export function FinanceSummaryBar({ onFilter }: { onFilter: (key: string) => void }) {
+export function FinanceSummaryBar({ onFilter, activeFilter }: { onFilter: (key: string) => void; activeFilter?: string }) {
   const { data: summary, isLoading, error } = useSWR("/api/v1/finance/summary", fetchFinanceSummary)
 
   if (isLoading) {
@@ -68,28 +68,40 @@ export function FinanceSummaryBar({ onFilter }: { onFilter: (key: string) => voi
 
   return (
     <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-5 gap-3">
-      {boxes.map((box) => (
-        <Card
-          key={box.id}
-          className="cursor-pointer hover:border-primary/50 transition-colors border-border/60 shadow-sm"
-          onClick={box.onClick}
-        >
-          <CardContent className="p-4 flex flex-col justify-between h-[100px]">
-            <div className="flex justify-between items-start">
-              <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">{box.label}</span>
-              {box.subValue.includes('↑') ? (
-                <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600" />
-              ) : box.subValue.includes('↓') ? (
-                <ArrowDownRight className="w-3.5 h-3.5 text-red-500" />
-              ) : null}
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-mono font-bold tracking-tight text-foreground">{box.value}</span>
-              <span className="text-[10px] font-medium text-muted-foreground">{box.subValue}</span>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+      {boxes.map((box) => {
+        const isActive = activeFilter === box.id
+        return (
+          <Card
+            key={box.id}
+            className={`cursor-pointer transition-colors border-border/60 shadow-sm ${
+              isActive
+                ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                : "hover:border-primary/50"
+            }`}
+            onClick={box.onClick}
+          >
+            <CardContent className="p-4 flex flex-col justify-between h-[100px]">
+              <div className="flex justify-between items-start">
+                <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground">{box.label}</span>
+                <div className="flex items-center gap-1">
+                  {isActive && (
+                    <Check className="w-3.5 h-3.5 text-primary" />
+                  )}
+                  {!isActive && box.subValue.includes('↑') ? (
+                    <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : !isActive && box.subValue.includes('↓') ? (
+                    <ArrowDownRight className="w-3.5 h-3.5 text-red-500" />
+                  ) : null}
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg font-mono font-bold tracking-tight text-foreground">{box.value}</span>
+                <span className="text-[10px] font-medium text-muted-foreground">{box.subValue}</span>
+              </div>
+            </CardContent>
+          </Card>
+        )
+      })}
     </div>
   )
 }

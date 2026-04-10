@@ -64,6 +64,7 @@ export type BookingSummary = {
   city: string | null;
   stage: string;
   amount: number;
+  amountPaid: number;
   balanceDue: number;
   notes: string;
   packageInfo: { name: string } | null;
@@ -338,6 +339,7 @@ type BackendBookingRow = {
   city?: string | null;
   status?: string | null;
   total_amount?: MoneyLike;
+  amount_paid?: MoneyLike;
   amount_pending?: MoneyLike;
   notes?: string | null;
   package_name?: string | null;
@@ -523,6 +525,7 @@ function normalizeBooking(row: BackendBookingRow): BookingSummary {
     city: row.venue_city ?? row.city ?? null,
     stage: titleCaseStatus(row.status),
     amount: toNumber(row.total_amount),
+    amountPaid: toNumber(row.amount_paid ?? (toNumber(row.total_amount) - toNumber(row.amount_pending))),
     balanceDue: toNumber(row.amount_pending),
     notes: row.notes ?? "",
     packageInfo: row.package_name ? { name: row.package_name } : null,
@@ -946,36 +949,60 @@ export async function fetchGalleryDetail(url: string): Promise<GalleryDetail> {
 }
 
 // Bookings Mutations
-export async function createBooking(data: JsonObject): Promise<BookingSummary> {
+export async function createBooking(data: {
+  clientName: string;
+  phone: string;
+  eventName: string;
+  eventType: string;
+  date: string;
+  time?: string;
+  venue?: string;
+  city?: string;
+  package?: string;
+  amount?: string;
+  notes?: string;
+}): Promise<BookingSummary> {
   // First, create the client using the form's clientName string
   const clientPayload = {
-    full_name: data.clientName as string,
-    phone: String(data.phone ?? "").replace(/\D/g, "").slice(0, 10),
-    city: data.city as string || undefined,
+    full_name: data.clientName,
+    phone: data.phone.replace(/\D/g, "").slice(0, 10),
+    city: data.city || undefined,
   };
   const newClient = await createClient(clientPayload);
 
   // Map frontend event types to backend enums
-  let backendEventType = "other";
-  switch (data.eventType) {
-    case "Wedding": backendEventType = "wedding"; break;
-    case "Engagement": backendEventType = "engagement"; break;
-    case "Corporate": backendEventType = "corporate"; break;
-    case "Birthday": backendEventType = "birthday"; break;
-    case "Product Shoot": backendEventType = "product"; break;
-    default: backendEventType = "other"; break;
+  const eventTypeMap: Record<string, string> = {
+    "Wedding": "wedding",
+    "Engagement": "engagement",
+    "Corporate": "corporate",
+    "Birthday": "birthday",
+    "Product Shoot": "product",
+  };
+  const backendEventType = eventTypeMap[data.eventType] || "other";
+
+  // Parse amount safely
+  const parsedAmount = data.amount ? parseFloat(data.amount) : 0;
+
+  // Build event_date with time if provided
+  let eventDateIso: string | null = null;
+  if (data.date) {
+    if (data.time) {
+      eventDateIso = new Date(`${data.date}T${data.time}:00`).toISOString();
+    } else {
+      eventDateIso = new Date(`${data.date}T00:00:00`).toISOString();
+    }
   }
 
-  // Then structure the actual Booking database payload
+  // Structure the actual Booking database payload
   const bookingPayload = {
     client_id: newClient.id,
-    title: String(data.eventName),
+    title: data.eventName,
     event_type: backendEventType,
-    event_date: data.date ? new Date(data.date as string).toISOString() : null,
-    total_amount: Number(data.amount) || 0,
-    venue_name: (data.venue as string) || null,
-    venue_city: (data.city as string) || null,
-    notes: (data.notes as string) || null,
+    event_date: eventDateIso,
+    total_amount: parsedAmount,
+    venue_name: data.venue || null,
+    venue_city: data.city || null,
+    notes: data.notes || null,
   };
 
   const res = await fetch("/api/v1/bookings", {
@@ -983,7 +1010,12 @@ export async function createBooking(data: JsonObject): Promise<BookingSummary> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bookingPayload),
   });
-  if (!res.ok) throw new Error("Failed to create booking");
+  
+  if (!res.ok) {
+    const errorBody = await readJsonSafe<{ error?: string }>(res);
+    throw new Error(errorBody?.error || "Failed to create booking");
+  }
+  
   const payload = await readJsonSafe<ApiEnvelope<BackendBookingRow>>(res);
   if (!payload?.data) throw new Error("Booking response missing data");
   return normalizeBooking(payload.data);
@@ -1411,6 +1443,7 @@ export type AddonRecord = {
   price: number;
   description: string;
   active: boolean;
+  unit?: "flat" | "per_hour" | "per_day";
 };
 
 export type AddonListResult = {
@@ -1450,6 +1483,7 @@ export type PayoutRecord = {
   date: string;
   status: string;
   bookingRef?: string;
+  method?: string;
 };
 
 export type PayoutListResult = {
@@ -1513,6 +1547,20 @@ export async function fetchClientInvoices(url: string): Promise<ClientPortalInvo
   return Array.isArray(payload) ? payload : [];
 }
 
+export type ClientPortalGallery = {
+  id: string;
+  name: string;
+  slug: string;
+  status: string;
+  photo_count: number;
+  cover_url: string | null;
+};
+
+export async function fetchClientGalleries(url: string): Promise<ClientPortalGallery[]> {
+  const payload = await fetchApiData<{ data?: ClientPortalGallery[] }>(url);
+  return Array.isArray(payload?.data) ? payload.data : [];
+}
+
 // --- Expenses (normalized fetcher) ---
 export type ExpenseRecord = {
   id: string;
@@ -1536,4 +1584,75 @@ export async function fetchExpensesListTyped(url: string = "/api/v1/expenses"): 
     // Endpoint may not exist yet — return empty data gracefully
     return { list: [], count: 0, totalExp: 0, totalGst: 0 };
   }
+}
+
+export async function createContract(data: { booking_id: string; template_id?: string; custom_content?: string; notes?: string }) {
+  const res = await fetch("/api/v1/contracts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to create contract");
+  return res.json();
+}
+
+export async function createProposal(data: {
+  booking_id: string;
+  client_id: string;
+  gst_type: "none" | "cgst_sgst" | "igst";
+  valid_until?: string;
+  notes?: string | null;
+  line_items: { description: string; quantity: number; rate: number; tax?: number }[];
+}) {
+  const res = await fetch("/api/v1/proposals", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to create proposal");
+  return res.json();
+}
+
+export async function createAddon(data: { name: string; description?: string; price: number; unit: "flat" | "per_hour" | "per_day" }) {
+  const res = await fetch("/api/v1/addons", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to create addon");
+  return res.json();
+}
+
+export async function updateAddon(id: string, data: Partial<{ name: string; description?: string; price: number; unit: "flat" | "per_hour" | "per_day" }>) {
+  const res = await fetch(`/api/v1/addons/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to update addon");
+  return res.json();
+}
+
+export async function deleteAddon(id: string) {
+  const res = await fetch(`/api/v1/addons/${id}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("Failed to delete addon");
+  return res.json();
+}
+
+// --- Analytics CSV Export ---
+export async function fetchAnalyticsRevenue(period: string): Promise<{
+  chart_data: Array<{ month: string; collected: number; pending: number; overdue: number; booking_count: number }>;
+  growth_pct: number;
+}> {
+  const monthsMap: Record<string, number> = {
+    this_month: 1,
+    last_month: 1,
+    this_quarter: 3,
+    last_quarter: 3,
+    this_fy: 12,
+    last_fy: 12,
+    last_12: 12,
+  };
+  const months = monthsMap[period] || 6;
+  return await fetchApiData(`/api/v1/analytics/revenue?months=${months}`);
 }

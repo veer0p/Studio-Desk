@@ -41,7 +41,7 @@ export function FinanceShell({ children }: { children: React.ReactNode }) {
           <p className="text-muted-foreground mt-1">Manage billing, collect payments, and track studio expenses natively.</p>
         </div>
 
-        <FinanceSummaryBar onFilter={handleKPIFilter} />
+        <FinanceSummaryBar onFilter={handleKPIFilter} activeFilter={searchParams.get("status") || undefined} />
 
         <div className="flex sm:space-x-4 overflow-x-auto border-b border-border/40 custom-scrollbar">
           {tabs.map((tab) => (

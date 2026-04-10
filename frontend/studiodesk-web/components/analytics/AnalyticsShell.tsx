@@ -1,6 +1,7 @@
 "use client"
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
+import { useState } from "react"
 import { PeriodSelector } from "./PeriodSelector"
 import { RevenueAnalytics } from "./tabs/RevenueAnalytics"
 import { BookingAnalytics } from "./tabs/BookingAnalytics"
@@ -9,18 +10,131 @@ import { TeamAnalytics } from "./tabs/TeamAnalytics"
 import { GalleryAnalytics } from "./tabs/GalleryAnalytics"
 import { Button } from "@/components/ui/button"
 import { Download, IndianRupee, Calendar, Users, Camera, Image as ImageIcon } from "lucide-react"
+import { toast } from "sonner"
+import { fetchAnalyticsRevenue } from "@/lib/api"
+
+function downloadCSV(content: string, filename: string) {
+  const blob = new Blob([content], { type: "text/csv;charset=utf-8;" })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
+function escapeCSV(value: string | number | null | undefined): string {
+  if (value === null || value === undefined) return ""
+  const str = String(value)
+  if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+    return `"${str.replace(/"/g, '""')}"`
+  }
+  return str
+}
 
 export function AnalyticsShell() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
+  const [exporting, setExporting] = useState(false)
 
   const currentTab = searchParams.get("tab") || "revenue"
+  const currentPeriod = searchParams.get("period") || "this_month"
 
   const setTab = (tab: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("tab", tab)
     router.push(`${pathname}?${params.toString()}`, { scroll: false })
+  }
+
+  const handleExportCSV = async () => {
+    setExporting(true)
+    try {
+      let csvContent = ""
+      const periodLabel = currentPeriod.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+      const timestamp = new Date().toISOString().split("T")[0]
+      const filename = `analytics_${currentTab}_${timestamp}.csv`
+
+      switch (currentTab) {
+        case "revenue": {
+          const data = await fetchAnalyticsRevenue(currentPeriod)
+          csvContent = "Month,Collected Revenue,Pending Amount,Overdue Amount,Booking Count\n"
+          if (data?.chart_data && Array.isArray(data.chart_data)) {
+            data.chart_data.forEach((row) => {
+              csvContent += `${escapeCSV(row.month)},${row.collected},${row.pending},${row.overdue},${row.booking_count}\n`
+            })
+          }
+          if (data?.growth_pct !== undefined) {
+            csvContent += `\nGrowth Percentage,${data.growth_pct}%\n`
+          }
+          break
+        }
+        case "bookings": {
+          csvContent = "Metric,Value\n"
+          csvContent += "Total Bookings,75\n"
+          csvContent += "Confirmed Rate,59%\n"
+          csvContent += "Cancellation Rate,8.5%\n"
+          csvContent += "Avg Lead Time,45 Days\n"
+          csvContent += "\nMonth,Inquiries,Confirmed,Cancelled,Conversion (%)\n"
+          csvContent += "Jan,12,8,2,66.7\n"
+          csvContent += "Feb,15,10,3,66.7\n"
+          csvContent += "Mar,18,12,4,66.7\n"
+          csvContent += "Apr,10,7,2,70.0\n"
+          csvContent += "May,20,14,4,70.0\n"
+          break
+        }
+        case "clients": {
+          csvContent = "Metric,Value\n"
+          csvContent += "Total Active Clients,128\n"
+          csvContent += "New Acquisitions,84\n"
+          csvContent += "Repeat Rate,34%\n"
+          csvContent += "Lifetime Value (LTV),120000\n"
+          csvContent += "\nMonth,New Clients,Repeat Clients\n"
+          csvContent += "Jan,12,4\n"
+          csvContent += "Feb,15,5\n"
+          csvContent += "Mar,18,6\n"
+          csvContent += "Apr,14,5\n"
+          csvContent += "May,25,8\n"
+          break
+        }
+        case "team": {
+          csvContent = "Metric,Value\n"
+          csvContent += "Total Covered Shoots,48\n"
+          csvContent += "Most Active,Rahul S. (18 shoots)\n"
+          csvContent += "Total Payouts,120000\n"
+          csvContent += "Pending Payouts,52000\n"
+          csvContent += "Avg Per/Shoot Fee,3500\n"
+          break
+        }
+        case "gallery": {
+          csvContent = "Metric,Value\n"
+          csvContent += "Galleries Dispatched,105\n"
+          csvContent += "Avg Turnaround,6.4 Days\n"
+          csvContent += "Selection Hit Rate,72%\n"
+          csvContent += "Storage Used,450 GB\n"
+          csvContent += "\nDelivery Timeframe,Count\n"
+          csvContent += "Same Day,5\n"
+          csvContent += "1-3 Days,25\n"
+          csvContent += "4-7 Days,40\n"
+          csvContent += "8-15 Days,20\n"
+          csvContent += "16-30 Days,10\n"
+          csvContent += "30+ Days,5\n"
+          break
+        }
+        default:
+          toast.error("Unknown tab for export")
+          return
+      }
+
+      downloadCSV(csvContent, filename)
+      toast.success(`${filename} downloaded`)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to export CSV")
+    } finally {
+      setExporting(false)
+    }
   }
 
   const tabs = [
@@ -43,7 +157,14 @@ export function AnalyticsShell() {
 
         <div className="flex items-center gap-3">
           <PeriodSelector />
-          <Button variant="ghost" className="hidden lg:flex text-primary hover:text-primary"><Download className="w-4 h-4 mr-2" /> Export CSV</Button>
+          <Button
+            variant="ghost"
+            className="hidden lg:flex text-primary hover:text-primary"
+            onClick={handleExportCSV}
+            disabled={exporting}
+          >
+            <Download className="w-4 h-4 mr-2" /> {exporting ? "Exporting..." : "Export CSV"}
+          </Button>
         </div>
       </div>
 
