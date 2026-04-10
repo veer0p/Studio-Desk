@@ -22,8 +22,8 @@ export const updateIntegrationsSchema = z.object({
   whatsapp_api_key: z.string().min(10).max(500).optional(),
   whatsapp_phone: phoneSchema.optional(),
   razorpay_account_id: z.string().min(5).max(100).optional(),
-  immich_user_id: z.string().min(5).max(200).optional(),
-  immich_api_key: z.string().min(10).max(500).optional(),
+  // immich_user_id: z.string().min(5).max(200).optional(), // TODO: add to studios table
+  // immich_api_key: z.string().min(10).max(500).optional(), // TODO: add to studios table
 }).strict().refine((obj) => Object.keys(obj).length > 0, {
   message: 'At least one field required',
 })

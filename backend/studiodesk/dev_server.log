@@ -1,0 +1,846 @@
+  ▲ Next.js 14.2.16
+  - Local:        http://localhost:3001
+  - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 1828ms
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 2.9s (199 modules)
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+ ✓ Compiled in 92ms (199 modules)
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+ ○ Compiling /api/v1/ping ...
+ ✓ Compiled /api/v1/ping in 530ms (54 modules)
+ GET /api/v1/ping 200 in 652ms
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+ ○ Compiling /api/v1/inquiry ...
+ ✓ Compiled /api/v1/inquiry in 699ms (182 modules)
+ POST /api/v1/inquiry 400 in 791ms
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+ ✓ Compiled /api/v1/auth/login in 234ms (201 modules)
+[AuthService] Initiating login for: atodariyaveer1331@gmail.com
+[AuthService] Login attempt finished. Error: Invalid login credentials
+Failed to log error to Supabase: {
+  code: 'PGRST204',
+  details: null,
+  hint: null,
+  message: "Could not find the 'message' column of 'error_logs' in the schema cache"
+}
+Original error: AuthApiError: Invalid login credentials undefined
+ POST /api/v1/auth/login 401 in 2261ms
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+ ✓ Compiled /api/v1/auth/signup in 108ms (212 modules)
+[AuthService] Initiating signup for: qa.test.2026@example.com
+ POST /api/v1/auth/signup 400 in 173ms
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+ ⨯ uncaughtException: Error: aborted
+    at abortIncoming (node:_http_server:845:17)
+    at socketOnClose (node:_http_server:839:3)
+    at Socket.emit (node:events:520:35)
+    at TCP.<anonymous> (node:net:346:12) {
+  code: 'ECONNRESET'
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+Auth error in middleware:  [AuthSessionMissingError: Auth session missing!] {
+  __isAuthError: true,
+  name: 'AuthSessionMissingError',
+  status: 400,
+  code: undefined
+}
+[?25h

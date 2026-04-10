@@ -63,21 +63,18 @@ export class BookingService {
       }
     }
 
-    const bookingData: BookingInsert = {
+    const bookingData = {
       ...validated,
       studio_id: studioId,
-      // @ts-expect-error: residual strict constraint
-      status: 'booked', // Default status when created manually via CRUD
+      status: 'new_lead' as string,
       gst_type: gstType,
-      cgst_rate: gstType === 'cgst_sgst' ? 9 : 0,
-      sgst_rate: gstType === 'cgst_sgst' ? 9 : 0,
-      igst_rate: gstType === 'igst' ? 18 : 0,
       cgst_amount: gst.cgst,
       sgst_amount: gst.sgst,
       igst_amount: gst.igst,
+      subtotal: validated.total_amount - gst.total,
       total_amount: validated.total_amount,
+      advance_amount: validated.advance_amount ?? 0,
       amount_paid: 0,
-      amount_pending: validated.total_amount,
       package_snapshot: packageSnapshot as any,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
@@ -126,7 +123,8 @@ export class BookingService {
         cgst_amount: gst.cgst,
         sgst_amount: gst.sgst,
         igst_amount: gst.igst,
-        amount_pending: validated.total_amount - (current.amount_paid || 0)
+        subtotal: validated.total_amount - gst.total
+        // amount_pending is GENERATED - don't set it
       }
     }
 

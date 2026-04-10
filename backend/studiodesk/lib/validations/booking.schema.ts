@@ -16,12 +16,31 @@ export const createBookingSchema = z.object({
   venue_state: z.string().max(50).optional().nullable(),
   venue_city: z.string().max(50).optional().nullable(),
   venue_pincode: z.string().max(10).optional().nullable(),
-  total_amount: z.number().min(0).default(0),
-  advance_amount: z.number().min(0).default(0),
+  total_amount: z.number().min(0),
+  advance_amount: z.number().min(0),
   notes: z.string().max(2000).optional().nullable()
 })
 
-export const updateBookingSchema = createBookingSchema.partial()
+// For updates: make all fields optional WITHOUT defaults
+export const updateBookingSchema = z.object({
+  title: z.string().min(3).max(100).optional(),
+  client_id: z.string().uuid().optional(),
+  lead_id: z.string().uuid().optional().nullable(),
+  event_type: z.enum(eventTypes).optional(),
+  event_date: z.string().datetime().nullable().optional(),
+  event_end_date: z.string().datetime().nullable().optional(),
+  package_id: z.string().uuid().optional().nullable(),
+  venue_name: z.string().max(100).optional().nullable(),
+  venue_address: z.string().max(500).optional().nullable(),
+  venue_state: z.string().max(50).optional().nullable(),
+  venue_city: z.string().max(50).optional().nullable(),
+  venue_pincode: z.string().max(10).optional().nullable(),
+  total_amount: z.number().min(0).optional(),
+  advance_amount: z.number().min(0).optional(),
+  notes: z.string().max(2000).optional().nullable()
+}).refine((obj) => obj && Object.keys(obj).length > 0, {
+  message: 'At least one field must be provided'
+})
 
 export const updateStatusSchema = z.object({
   status: z.enum(bookingStatuses)

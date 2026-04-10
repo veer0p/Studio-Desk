@@ -190,7 +190,7 @@ async function getIntegrationStatus(supabase: Db, studioId: string): Promise<Int
   const config = (await settingsRepo.getIntegrationConfig(supabase, studioId)) as Record<string, unknown>
   const storageUsed = toNumber(config.storage_used_gb)
   const storageLimit = toNumber(config.storage_limit_gb)
-  
+
   return {
     whatsapp: {
       is_connected: Boolean(config.whatsapp_api_key),
@@ -203,9 +203,10 @@ async function getIntegrationStatus(supabase: Db, studioId: string): Promise<Int
       account_id: config.razorpay_account_id != null ? String(config.razorpay_account_id) : null,
     },
     immich: {
-      is_connected: Boolean(config.immich_api_key),
-      user_id: config.immich_user_id != null ? String(config.immich_user_id) : null,
-      api_key_masked: maskImmichKey(config.immich_api_key as string | null | undefined),
+      // TODO: Add immich_user_id and immich_api_key columns to studios table
+      is_connected: false,
+      user_id: null,
+      api_key_masked: null,
       storage: {
         used_gb: storageUsed,
         limit_gb: storageLimit,
@@ -274,8 +275,7 @@ async function updateIntegrations(supabase: Db, studioId: string, data: UpdateIn
     whatsapp_api_key: data.whatsapp_api_key ? encrypt(data.whatsapp_api_key) : undefined,
     whatsapp_phone: data.whatsapp_phone,
     razorpay_account_id: data.razorpay_account_id,
-    immich_user_id: data.immich_user_id,
-    immich_api_key: data.immich_api_key ? encrypt(data.immich_api_key) : undefined,
+    // immich fields commented out until columns are added to studios table
   })
   return getIntegrationStatus(supabase, studioId)
 }

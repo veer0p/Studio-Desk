@@ -11,8 +11,11 @@ const envSchema = z.object({
   RAZORPAY_KEY_SECRET: z.string().min(1),
   RAZORPAY_WEBHOOK_SECRET: z.string().min(1),
 
-  // Communication
-  RESEND_API_KEY: z.string().min(1),
+  // Communication (either RESEND_API_KEY or SMTP credentials required)
+  RESEND_API_KEY: z.string().min(1).optional(),
+  SMTP_USER: z.string().email().optional(),
+  SMTP_PASS: z.string().min(1).optional(),
+  SMTP_FROM_NAME: z.string().optional(),
   WHATSAPP_API_KEY: z.string().min(1),
   WHATSAPP_API_BASE_URL: z.string().url().default('https://api.interakt.ai'),
 

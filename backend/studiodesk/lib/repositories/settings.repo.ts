@@ -16,7 +16,7 @@ const SETTINGS_COLUMNS = `
 
 const INTEGRATION_COLUMNS = `
   whatsapp_api_provider, whatsapp_api_key, whatsapp_phone,
-  razorpay_account_id, immich_user_id, immich_api_key,
+  razorpay_account_id,
   storage_used_gb, storage_limit_gb
 `
 
