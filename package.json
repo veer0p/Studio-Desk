@@ -2,7 +2,9 @@
   "name": "studio-desk",
   "private": true,
   "scripts": {
-    "dev": "concurrently -n backend,frontend -c blue,magenta \"npm run dev --prefix backend/studiodesk\" \"npm run dev --prefix frontend/studiodesk-web\""
+    "dev": "concurrently -n backend,frontend -c blue,magenta \"npm run dev --prefix backend/studiodesk\" \"npm run dev --prefix frontend/studiodesk-web\"",
+    "build": "npm run build --prefix backend/studiodesk && npm run build --prefix frontend/studiodesk-web",
+    "start": "concurrently -n backend,frontend -c blue,magenta \"npm run start --prefix backend/studiodesk\" \"npm run start --prefix frontend/studiodesk-web\""
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

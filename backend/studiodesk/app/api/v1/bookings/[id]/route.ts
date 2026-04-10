@@ -9,7 +9,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{  id: stri
   const params = await props.params;
   try {
     const { user, member, supabase } = await requireAuth(req)
-    const booking = await BookingService.getBooking(supabase, (await props.params).id, member.studio_id)
+    const booking = await BookingService.getBooking(supabase, params.id, member.studio_id)
     return Response.ok(booking)
   } catch (err: unknown) {
     if (err instanceof ServiceError) return Response.error(err.message, err.code, err.status)
@@ -23,7 +23,7 @@ export async function PATCH(req: NextRequest, props: { params: Promise<{  id: st
   try {
     const { user, member, supabase } = await requireAuth(req)
     const body = await req.json()
-    const updated = await BookingService.updateBooking(supabase, (await props.params).id, member.studio_id, body, user.id)
+    const updated = await BookingService.updateBooking(supabase, params.id, member.studio_id, body, user.id)
     return Response.ok(updated)
   } catch (err: unknown) {
     if (err instanceof ServiceError) return Response.error(err.message, err.code, err.status)
@@ -42,7 +42,7 @@ export async function DELETE(req: NextRequest, props: { params: Promise<{  id: s
     // Prompt says "DELETE /api/v1/bookings/:id -> soft delete booking"
     // I'll use requireOwner for safety if not specified
     const { user, member, supabase } = await requireOwner(req)
-    await BookingService.deleteBooking(supabase, (await props.params).id, member.studio_id, user.id)
+    await BookingService.deleteBooking(supabase, params.id, member.studio_id, user.id)
     return Response.ok({ success: true })
   } catch (err: unknown) {
     if (err instanceof ServiceError) return Response.error(err.message, err.code, err.status)

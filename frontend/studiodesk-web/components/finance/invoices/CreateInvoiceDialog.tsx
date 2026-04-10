@@ -24,6 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Plus, Trash2 } from "lucide-react"
+import { createInvoice } from "@/lib/api"
+import { toast } from "sonner"
+import { useSWRConfig } from "swr"
 
 const invoiceSchema = z.object({
   clientId: z.string().min(1, "Client is required"),
@@ -47,6 +50,7 @@ const formatINR = (amt: number) => new Intl.NumberFormat("en-IN", { style: "curr
 
 export function CreateInvoiceDialog({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
+  const { mutate } = useSWRConfig()
 
   const form = useForm<z.infer<typeof invoiceSchema>>({
     resolver: zodResolver(invoiceSchema),
@@ -74,15 +78,25 @@ export function CreateInvoiceDialog({ children }: { children: React.ReactNode })
   const gstTypeWatch = form.watch("gstType")
 
   const subtotal = itemsWatch.reduce((acc, curr) => acc + (curr.qty * curr.rate), 0)
-  
+
   // Calculate total tax iteratively per line item
   const totalTax = itemsWatch.reduce((acc, curr) => acc + ((curr.qty * curr.rate * curr.gstRate) / 100), 0)
   const total = subtotal + totalTax
 
-  const onSubmit = (data: any, status: string) => {
-    console.log("Submit invoice", data, status)
-    // Send to API depending on 'draft' or 'sent'
-    setOpen(false)
+  const onSubmit = async (data: z.infer<typeof invoiceSchema>, status: string) => {
+    try {
+      await createInvoice({
+        ...data,
+        status
+      })
+      toast.success("Invoice created successfully")
+      setOpen(false)
+      form.reset()
+      // invalidate SWR invoice queries
+      mutate((key) => typeof key === 'string' && key.startsWith('/api/v1/invoices'))
+    } catch (error) {
+      toast.error("Failed to create invoice")
+    }
   }
 
   return (
@@ -95,7 +109,7 @@ export function CreateInvoiceDialog({ children }: { children: React.ReactNode })
           <DialogTitle className="text-xl">Create New Invoice</DialogTitle>
         </DialogHeader>
 
-        <form className="space-y-8 py-4">
+        <form onSubmit={form.handleSubmit((d) => onSubmit(d, "draft"))} className="space-y-8 py-4">
           
           {/* Step 1: Basic Info */}
           <section className="space-y-4">
@@ -267,7 +281,7 @@ export function CreateInvoiceDialog({ children }: { children: React.ReactNode })
 
         <DialogFooter className="border-t border-border/40 pt-4 mt-4">
           <Button variant="ghost" type="button" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="outline" type="button" onClick={form.handleSubmit((d) => onSubmit(d, "draft"))}>Save as Draft</Button>
+          <Button type="submit" variant="outline">Save as Draft</Button>
           <Button type="button" onClick={form.handleSubmit((d) => onSubmit(d, "sent"))}>Create & Send</Button>
         </DialogFooter>
       </DialogContent>

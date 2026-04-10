@@ -24,6 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { createTeamMember } from "@/lib/api"
+import { toast } from "sonner"
+import { useSWRConfig } from "swr"
 
 const roles = ["Admin", "Photographer", "Videographer", "Editor", "Drone Operator", "Assistant", "Freelancer"]
 
@@ -46,6 +49,7 @@ const memberSchema = z.object({
 
 export function InviteMemberDialog({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
+  const { mutate } = useSWRConfig()
 
   const form = useForm<z.infer<typeof memberSchema>>({
     resolver: zodResolver(memberSchema) as any,
@@ -58,9 +62,20 @@ export function InviteMemberDialog({ children }: { children: React.ReactNode }) 
   // Watch access for email rendering validation constraints
   const watchAccess = form.watch("appAccess")
 
-  const onSubmit = (data: any) => {
-    console.log("Inviting member:", data)
-    setOpen(false)
+  const onSubmit = async (data: z.infer<typeof memberSchema>) => {
+    try {
+      await createTeamMember({
+        ...data,
+        email: data.appAccess ? data.email : undefined
+      })
+      toast.success("Team member invited successfully")
+      setOpen(false)
+      form.reset()
+      // invalidate SWR team queries
+      mutate((key) => typeof key === 'string' && key.startsWith('/api/v1/team'))
+    } catch (error) {
+      toast.error("Failed to invite team member")
+    }
   }
 
   return (

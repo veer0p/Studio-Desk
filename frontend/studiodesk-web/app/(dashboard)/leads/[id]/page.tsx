@@ -5,13 +5,25 @@ import { fetchLeadDetail, BookingSummary } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ArrowLeft, User, Phone, Mail, Calendar, MapPin, IndianRupee } from "lucide-react"
 import Link from "next/link"
+import { useState, useEffect } from "react"
 
 export default function LeadDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  return <LeadDetailContent params={params} />
-}
+  const [id, setId] = useState<string | null>(null)
 
-async function LeadDetailContent({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
+  useEffect(() => {
+    params.then(p => setId(p.id))
+  }, [params])
+
+  if (!id) {
+    return (
+      <div className="p-6 md:p-8 space-y-6">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-40 w-full" />
+        <Skeleton className="h-60 w-full" />
+      </div>
+    )
+  }
+
   return <LeadDetailView id={id} />
 }
 

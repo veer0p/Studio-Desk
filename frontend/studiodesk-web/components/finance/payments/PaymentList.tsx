@@ -22,7 +22,14 @@ export function PaymentList() {
   const router = useRouter()
   const { data: response, isLoading } = useSWR("/api/v1/payments", fetchPaymentsList)
   const [searchQuery, setSearchQuery] = useState("")
-  const payments = response?.list || []
+  const allPayments = response?.list || []
+
+  // Apply search filtering
+  const payments = allPayments.filter(pay =>
+    pay.clientName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    pay.reference?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    pay.invoiceRef?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   const totalPayments = payments.reduce((acc, curr) => acc + curr.amount, 0)
 

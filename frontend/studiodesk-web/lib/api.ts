@@ -868,9 +868,11 @@ export async function completeOnboardingFlag() {
 
 export async function fetchBookingsList(url: string): Promise<BookingListResult> {
   const payload = await fetchApiData<BackendBookingListPayload>(url);
+  // Backend returns { data: [...], count: N } after fetchApiData unwraps the envelope
+  const bookings = Array.isArray(payload?.data) ? payload.data : [];
   return {
-    list: Array.isArray(payload.data) ? payload.data.map(normalizeBooking) : [],
-    count: Number(payload.count ?? 0),
+    list: bookings.map(normalizeBooking),
+    count: Number(payload?.count ?? bookings.length),
   };
 }
 
@@ -903,10 +905,11 @@ export async function fetchFinanceSummary(url: string): Promise<FinanceSummary> 
 }
 
 export async function fetchInvoicesList(url: string): Promise<InvoiceListResult> {
-  const payload = await fetchApiData<{ list: InvoiceRecord[]; count: number }>(url);
+  // Backend returns paginated: { data: [...], meta: { count, page, pageSize, totalPages } }
+  const payload = await fetchPaginatedApiData<InvoiceRecord>(url);
   return {
-    list: Array.isArray(payload.list) ? payload.list : [],
-    count: Number(payload.count ?? 0),
+    list: payload.data,
+    count: payload.meta.count ?? payload.data.length,
   };
 }
 
@@ -915,25 +918,24 @@ export async function fetchInvoiceDetail(id: string): Promise<InvoiceRecord & { 
 }
 
 export async function fetchPaymentsList(url: string): Promise<PaymentListResult> {
-  const payload = await fetchApiData<{ list: PaymentRecord[]; count: number }>(url);
+  // Backend returns paginated: { data: [...], meta: { count, page, pageSize, totalPages } }
+  const payload = await fetchPaginatedApiData<PaymentRecord>(url);
   return {
-    list: Array.isArray(payload.list) ? payload.list : [],
-    count: Number(payload.count ?? 0),
+    list: payload.data,
+    count: payload.meta.count ?? payload.data.length,
   };
 }
 
 export async function fetchExpensesList(url: string): Promise<{ list: Array<Record<string, unknown>>; count: number }> {
-  const payload = await fetchApiData<{ list: Array<Record<string, unknown>>; count: number }>(url);
-  return {
-    list: Array.isArray(payload.list) ? payload.list : [],
-    count: Number(payload.count ?? 0),
-  };
+  // No backend endpoint exists yet - returns empty
+  return { list: [], count: 0 };
 }
 
 // Gallery fetchers
 export async function fetchGalleriesList(url: string): Promise<GallerySummary[]> {
-  const payload = await fetchApiData<GallerySummary[]>(url);
-  return Array.isArray(payload) ? payload : [];
+  // Backend returns paginated: { data: [...], meta: { count, page, pageSize, totalPages } }
+  const payload = await fetchPaginatedApiData<GallerySummary>(url);
+  return payload.data;
 }
 
 export async function fetchGalleryDetail(url: string): Promise<GalleryDetail> {
@@ -1391,10 +1393,11 @@ export type ContractListResult = {
 };
 
 export async function fetchContractsList(url: string = "/api/v1/contracts"): Promise<ContractListResult> {
-  const payload = await fetchApiData<ContractRecord[]>(url);
+  // Backend returns paginated: { data: [...], meta: { count, page, pageSize, totalPages } }
+  const payload = await fetchPaginatedApiData<ContractRecord>(url);
   return {
-    list: Array.isArray(payload) ? payload : [],
-    count: Array.isArray(payload) ? payload.length : 0,
+    list: payload.data,
+    count: payload.meta.count ?? payload.data.length,
   };
 }
 
@@ -1414,10 +1417,12 @@ export type ProposalListResult = {
 };
 
 export async function fetchProposalsList(url: string = "/api/v1/proposals"): Promise<ProposalListResult> {
-  const payload = await fetchApiData<ProposalRecord[]>(url);
+  // Backend returns custom: { data: { items: [...], total: N }, error: null }
+  const envelope = await fetchApiEnvelope<{ items: ProposalRecord[]; total: number }>(url);
+  const items = envelope?.data?.items ?? [];
   return {
-    list: Array.isArray(payload) ? payload : [],
-    count: Array.isArray(payload) ? payload.length : 0,
+    list: items,
+    count: envelope?.data?.total ?? items.length,
   };
 }
 
@@ -1656,3 +1661,74 @@ export async function fetchAnalyticsRevenue(period: string): Promise<{
   const months = monthsMap[period] || 6;
   return await fetchApiData(`/api/v1/analytics/revenue?months=${months}`);
 }
+
+export async function fetchAnalyticsBookings(period: string): Promise<{
+  total_bookings: number;
+  confirmed_rate: number;
+  cancellation_rate: number;
+  avg_lead_time: number;
+  chart_data: Array<{ month: string; inquiries: number; confirmed: number; cancelled: number; conversion: number }>;
+}> {
+  const monthsMap: Record<string, number> = {
+    this_month: 1,
+    last_month: 1,
+    this_quarter: 3,
+    last_quarter: 3,
+    this_fy: 12,
+    last_fy: 12,
+    last_12: 12,
+  };
+  const months = monthsMap[period] || 6;
+  return await fetchApiData(`/api/v1/analytics/bookings?months=${months}`);
+}
+
+export async function fetchAnalyticsPerformance(period: string): Promise<{
+  total_clients: number;
+  new_acquisitions: number;
+  repeat_rate: number;
+  lifetime_value: number;
+  galleries_dispatched: number;
+  avg_turnaround_days: number;
+  selection_hit_rate: number;
+  storage_used_gb: number;
+  team_covered_shoots: number;
+  total_payouts: number;
+  pending_payouts: number;
+  avg_per_shoot_fee: number;
+}> {
+  const monthsMap: Record<string, number> = {
+    this_month: 1,
+    last_month: 1,
+    this_quarter: 3,
+    last_quarter: 3,
+    this_fy: 12,
+    last_fy: 12,
+    last_12: 12,
+  };
+  const months = monthsMap[period] || 6;
+  return await fetchApiData(`/api/v1/analytics/performance?months=${months}`);
+}
+
+
+// --- Billing ---
+export type BillingInfo = {
+  plan_tier: string;
+  subscription_status: string;
+  trial_ends_at: string | null;
+  storage_used_gb: number;
+  storage_limit_gb: number;
+  plan_name: string;
+  price_monthly: number;
+  price_annual: number;
+  max_team_members: number;
+  features: string[];
+  current_member_count: number;
+};
+
+export async function fetchBillingInfo(url: string = "/api/v1/settings/billing"): Promise<BillingInfo> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Failed to fetch billing info");
+  const json = await res.json();
+  return json.data ?? json;
+}
+

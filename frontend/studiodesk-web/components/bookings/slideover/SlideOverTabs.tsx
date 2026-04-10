@@ -1,6 +1,7 @@
 "use client"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import type { BookingSummary } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useState, useEffect, useRef } from "react"
@@ -9,7 +10,7 @@ import { toast } from "sonner"
 import { Phone, Calendar as CalendarIcon, MapPin, Receipt, IndianRupee, Link as LinkIcon } from "lucide-react"
 import { whatsappUrl } from "@/lib/phone"
 
-export default function SlideOverTabs({ booking }: { booking: any }) {
+export default function SlideOverTabs({ booking }: { booking: BookingSummary }) {
   const [note, setNote] = useState(booking.notes || "")
   const [isSaving, setIsSaving] = useState(false)
   const [hasUnsaved, setHasUnsaved] = useState(false)
@@ -55,8 +56,7 @@ export default function SlideOverTabs({ booking }: { booking: any }) {
     if (hasUnsaved) saveNotes(note)
   }
 
-  const payments = booking.payments || []
-  const timeline = booking.timeline
+  const timeline = (booking as any).timeline as Array<{ label: string; date: string; status: string }> | undefined
 
   return (
     <Tabs defaultValue="overview" className="w-full flex-1 flex flex-col h-full">
@@ -204,30 +204,11 @@ export default function SlideOverTabs({ booking }: { booking: any }) {
               </Button>
             </div>
 
-            {payments.length > 0 ? (
-              <div className="border border-border/60 rounded-md overflow-hidden text-sm">
-                <div className="grid grid-cols-4 bg-muted/5 p-2 border-b border-border/60 text-[10px] font-mono tracking-widest uppercase text-muted-foreground">
-                  <div>Date</div>
-                  <div>Amount</div>
-                  <div>Method</div>
-                  <div className="text-right">Status</div>
-                </div>
-                {payments.map((pay: any, i: number) => (
-                  <div key={pay.id || i} className="grid grid-cols-4 p-3 border-b border-border/40 last:border-0 hover:bg-muted/10 items-center">
-                    <div className="text-[11px] font-mono tracking-widest uppercase">{pay.date}</div>
-                    <div className="font-mono text-sm tracking-widest uppercase">₹{Number(pay.amount).toLocaleString("en-IN")}</div>
-                    <div className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">{pay.method}</div>
-                    <div className="text-right text-[11px] font-mono tracking-widest uppercase text-foreground">{pay.status || "Credited"}</div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground border border-border/60 rounded-md">
-                <Receipt className="w-8 h-8 mb-2 opacity-30" />
-                <p className="font-medium text-foreground mb-1">No payments recorded</p>
-                <p className="text-sm">Payments will appear here once received.</p>
-              </div>
-            )}
+            <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground border border-border/60 rounded-md">
+              <Receipt className="w-8 h-8 mb-2 opacity-30" />
+              <p className="font-medium text-foreground mb-1">No payments recorded</p>
+              <p className="text-sm">Payments will appear here once received.</p>
+            </div>
           </div>
         </TabsContent>
 

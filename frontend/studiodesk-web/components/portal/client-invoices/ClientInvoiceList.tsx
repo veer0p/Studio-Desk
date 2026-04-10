@@ -1,16 +1,18 @@
 "use client"
 
 import Link from "next/link"
-import useSWR from "swr"
+import { usePortalAuth } from "@/lib/portal-auth"
 import { fetchClientInvoices, ClientPortalInvoice } from "@/lib/api"
 import { Calendar, Download, AlertCircle, CheckCircle2 } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
+import useSWR from "swr"
 
 const formatINR = (amount: number) => `₹${Number(amount ?? 0).toLocaleString("en-IN")}`
 
 export function ClientInvoiceList({ studioSlug }: { studioSlug: string }) {
+  const { user } = usePortalAuth()
   const { data: invoices, isLoading, error } = useSWR(
-    `/api/v1/portal/${studioSlug}/invoices`,
+    user?.token ? `/api/v1/portal/${user.token}/invoices` : null,
     fetchClientInvoices
   )
 

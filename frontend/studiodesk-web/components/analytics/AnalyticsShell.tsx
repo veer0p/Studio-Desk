@@ -11,7 +11,7 @@ import { GalleryAnalytics } from "./tabs/GalleryAnalytics"
 import { Button } from "@/components/ui/button"
 import { Download, IndianRupee, Calendar, Users, Camera, Image as ImageIcon } from "lucide-react"
 import { toast } from "sonner"
-import { fetchAnalyticsRevenue } from "@/lib/api"
+import { fetchAnalyticsRevenue, fetchAnalyticsBookings, fetchAnalyticsPerformance } from "@/lib/api"
 
 function downloadCSV(content: string, filename: string) {
   const blob = new Blob([content], { type: "text/csv;charset=utf-8;" })
@@ -72,55 +72,45 @@ export function AnalyticsShell() {
           break
         }
         case "bookings": {
+          const data = await fetchAnalyticsBookings(currentPeriod)
           csvContent = "Metric,Value\n"
-          csvContent += "Total Bookings,75\n"
-          csvContent += "Confirmed Rate,59%\n"
-          csvContent += "Cancellation Rate,8.5%\n"
-          csvContent += "Avg Lead Time,45 Days\n"
-          csvContent += "\nMonth,Inquiries,Confirmed,Cancelled,Conversion (%)\n"
-          csvContent += "Jan,12,8,2,66.7\n"
-          csvContent += "Feb,15,10,3,66.7\n"
-          csvContent += "Mar,18,12,4,66.7\n"
-          csvContent += "Apr,10,7,2,70.0\n"
-          csvContent += "May,20,14,4,70.0\n"
+          csvContent += `Total Bookings,${data.total_bookings}\n`
+          csvContent += `Confirmed Rate,${(data.confirmed_rate * 100).toFixed(1)}%\n`
+          csvContent += `Cancellation Rate,${(data.cancellation_rate * 100).toFixed(1)}%\n`
+          csvContent += `Avg Lead Time,${data.avg_lead_time} Days\n`
+          if (data.chart_data && Array.isArray(data.chart_data)) {
+            csvContent += "\nMonth,Inquiries,Confirmed,Cancelled,Conversion (%)\n"
+            data.chart_data.forEach((row) => {
+              csvContent += `${escapeCSV(row.month)},${row.inquiries},${row.confirmed},${row.cancelled},${row.conversion.toFixed(1)}\n`
+            })
+          }
           break
         }
         case "clients": {
+          const data = await fetchAnalyticsPerformance(currentPeriod)
           csvContent = "Metric,Value\n"
-          csvContent += "Total Active Clients,128\n"
-          csvContent += "New Acquisitions,84\n"
-          csvContent += "Repeat Rate,34%\n"
-          csvContent += "Lifetime Value (LTV),120000\n"
-          csvContent += "\nMonth,New Clients,Repeat Clients\n"
-          csvContent += "Jan,12,4\n"
-          csvContent += "Feb,15,5\n"
-          csvContent += "Mar,18,6\n"
-          csvContent += "Apr,14,5\n"
-          csvContent += "May,25,8\n"
+          csvContent += `Total Active Clients,${data.total_clients}\n`
+          csvContent += `New Acquisitions,${data.new_acquisitions}\n`
+          csvContent += `Repeat Rate,${(data.repeat_rate * 100).toFixed(1)}%\n`
+          csvContent += `Lifetime Value (LTV),₹${data.lifetime_value.toLocaleString("en-IN")}\n`
           break
         }
         case "team": {
+          const data = await fetchAnalyticsPerformance(currentPeriod)
           csvContent = "Metric,Value\n"
-          csvContent += "Total Covered Shoots,48\n"
-          csvContent += "Most Active,Rahul S. (18 shoots)\n"
-          csvContent += "Total Payouts,120000\n"
-          csvContent += "Pending Payouts,52000\n"
-          csvContent += "Avg Per/Shoot Fee,3500\n"
+          csvContent += `Total Covered Shoots,${data.team_covered_shoots}\n`
+          csvContent += `Total Payouts,₹${data.total_payouts.toLocaleString("en-IN")}\n`
+          csvContent += `Pending Payouts,₹${data.pending_payouts.toLocaleString("en-IN")}\n`
+          csvContent += `Avg Per/Shoot Fee,₹${data.avg_per_shoot_fee.toLocaleString("en-IN")}\n`
           break
         }
         case "gallery": {
+          const data = await fetchAnalyticsPerformance(currentPeriod)
           csvContent = "Metric,Value\n"
-          csvContent += "Galleries Dispatched,105\n"
-          csvContent += "Avg Turnaround,6.4 Days\n"
-          csvContent += "Selection Hit Rate,72%\n"
-          csvContent += "Storage Used,450 GB\n"
-          csvContent += "\nDelivery Timeframe,Count\n"
-          csvContent += "Same Day,5\n"
-          csvContent += "1-3 Days,25\n"
-          csvContent += "4-7 Days,40\n"
-          csvContent += "8-15 Days,20\n"
-          csvContent += "16-30 Days,10\n"
-          csvContent += "30+ Days,5\n"
+          csvContent += `Galleries Dispatched,${data.galleries_dispatched}\n`
+          csvContent += `Avg Turnaround,${data.avg_turnaround_days} Days\n`
+          csvContent += `Selection Hit Rate,${(data.selection_hit_rate * 100).toFixed(1)}%\n`
+          csvContent += `Storage Used,${data.storage_used_gb} GB\n`
           break
         }
         default:

@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import useSWR, { useSWRConfig } from "swr"
-import { fetchBookingsList, BookingListResult, BookingSummary, BookingTeamMember, updateBookingStage } from "@/lib/api"
+import type { BookingListResult, BookingSummary, BookingTeamMember } from "@/lib/api"
+import { fetchBookingsList, updateBookingStage } from "@/lib/api"
 import { useSearchParams, useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { EventTypeDot } from "@/components/bookings/shared/EventTypeDot"
@@ -64,7 +65,7 @@ export default function BookingsList() {
     {
       accessorKey: "clientName",
       header: "Client",
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <div className="flex flex-col">
           <span className="font-medium text-sm text-foreground">{row.original.clientName}</span>
           <span className="text-xs text-muted-foreground">{row.original.city || "Unknown City"}</span>
@@ -74,7 +75,7 @@ export default function BookingsList() {
     {
       accessorKey: "event",
       header: "Event",
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <EventTypeDot type={row.original.eventType} />
           <span className="text-sm font-medium">{row.original.eventName || row.original.eventType}</span>
@@ -83,7 +84,7 @@ export default function BookingsList() {
     },
     {
       accessorKey: "date",
-      header: ({ column }: any) => {
+      header: ({ column }) => {
         return (
           <Button variant="ghost" className="-ml-4 h-8 data-[state=open]:bg-accent" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Date
@@ -91,7 +92,7 @@ export default function BookingsList() {
           </Button>
         )
       },
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <div className="flex flex-col">
           <span className="text-sm">{row.original.date}</span>
           {row.original.daysUntil && (
@@ -102,7 +103,7 @@ export default function BookingsList() {
     },
     {
       accessorKey: "stage",
-      header: ({ column }: any) => {
+      header: ({ column }) => {
         return (
           <Button variant="ghost" className="-ml-4 h-8" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Stage
@@ -110,7 +111,7 @@ export default function BookingsList() {
           </Button>
         )
       },
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <BookingStatusBadge stage={row.original.stage || "Inquiry"} />
       )
     },

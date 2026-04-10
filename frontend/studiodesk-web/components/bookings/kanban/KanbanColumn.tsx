@@ -1,3 +1,4 @@
+import type { BookingSummary } from "@/lib/api"
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useDroppable } from "@dnd-kit/core"
 import { KanbanCard } from "./KanbanCard"
@@ -5,7 +6,7 @@ import { Plus } from "lucide-react"
 
 interface KanbanColumnProps {
   stage: string;
-  bookings: any[];
+  bookings: BookingSummary[];
   totalValue: number;
   updatingId: string | null;
   onAdd?: (stage: string) => void;

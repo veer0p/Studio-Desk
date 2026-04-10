@@ -1,13 +1,13 @@
 "use client"
 
 import Link from "next/link"
-import { useAuth } from "@/hooks/use-auth"
+import { usePortalAuth } from "@/lib/portal-auth"
 import { UpcomingShoot } from "./UpcomingShoot"
 import { ActionItems } from "./ActionItems"
 import { CalendarCheck, FileText, Image as ImageIcon, Phone } from "lucide-react"
 
 export function ClientHome({ studioSlug }: { studioSlug: string }) {
-  const { user } = useAuth()
+  const { user } = usePortalAuth()
 
   const studioName = studioSlug.split("-").map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join(" ")
 
@@ -18,7 +18,7 @@ export function ClientHome({ studioSlug }: { studioSlug: string }) {
     { label: "Contact", icon: Phone, href: `#contact`, external: false },
   ]
 
-  const clientName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Guest"
+  const clientName = user?.clientName || "Client"
 
   return (
     <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">

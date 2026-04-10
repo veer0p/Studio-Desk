@@ -61,7 +61,37 @@ export function PayoutList() {
       <div className="bg-card border border-border/60 rounded-md overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-border/40">
           <h3 className="text-sm font-semibold">Payout Registry</h3>
-          <Button variant="outline" size="sm" className="h-8 text-[10px] font-mono tracking-widest uppercase">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="h-8 text-[10px] font-mono tracking-widest uppercase"
+            onClick={() => {
+              // Generate CSV content
+              const headers = ["Date", "Member", "Amount", "Status"]
+              const rows = payouts.map((p: PayoutRecord) => [
+                p.date || "",
+                p.memberName || "",
+                p.amount?.toString() || "0",
+                p.status || ""
+              ])
+              
+              const csvContent = [
+                headers.join(","),
+                ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
+              ].join("\n")
+              
+              // Download CSV
+              const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+              const link = document.createElement("a")
+              const url = URL.createObjectURL(blob)
+              link.setAttribute("href", url)
+              link.setAttribute("download", `payouts_${new Date().toISOString().split("T")[0]}.csv`)
+              link.style.visibility = "hidden"
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link)
+            }}
+          >
             <Download className="w-3 h-3 mr-2" /> CSV
           </Button>
         </div>

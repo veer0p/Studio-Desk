@@ -17,7 +17,7 @@ export async function PATCH(req: NextRequest, props: { params: Promise<{  id: st
       return Response.error(parsed.error.issues[0]?.message || 'Invalid status', 'VALIDATION_ERROR', 400)
     }
 
-    const updated = await BookingService.updateStatus(supabase, (await props.params).id, member.studio_id, parsed.data.status, user.id)
+    const updated = await BookingService.updateStatus(supabase, params.id, member.studio_id, parsed.data.status, user.id)
     return Response.ok(updated)
   } catch (err: unknown) {
     if (err instanceof ServiceError) return Response.error(err.message, err.code, err.status)

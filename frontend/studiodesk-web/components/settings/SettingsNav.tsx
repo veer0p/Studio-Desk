@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Building, User, CreditCard, Package, IndianRupee, Bell, Plug, AlertTriangle } from "lucide-react"
+import { Building, User, CreditCard, Package, IndianRupee, Bell, Plug, AlertTriangle, Zap } from "lucide-react"
 
 const navLinks = [
   { href: "/settings/studio", label: "Studio Profile", icon: Building },
@@ -10,6 +10,7 @@ const navLinks = [
   { href: "/settings/billing", label: "Billing & Plan", icon: CreditCard },
   { href: "/settings/packages", label: "Packages", icon: Package },
   { href: "/settings/finance", label: "Finance & GST", icon: IndianRupee },
+  { href: "/settings/automations", label: "Automations", icon: Zap },
   { href: "/settings/notifications", label: "Notifications", icon: Bell },
   { href: "/settings/integrations", label: "Integrations", icon: Plug },
   { href: "/settings/danger", label: "Danger Zone", icon: AlertTriangle, danger: true },

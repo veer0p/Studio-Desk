@@ -9,7 +9,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{  id: stri
   const params = await props.params;
   try {
     const { member, supabase } = await requireAuth(req)
-    const feed = await BookingService.getActivityFeed(supabase, (await props.params).id, member.studio_id)
+    const feed = await BookingService.getActivityFeed(supabase, params.id, member.studio_id)
     return Response.ok(feed)
   } catch (err: unknown) {
     if (err instanceof ServiceError) return Response.error(err.message, err.code, err.status)

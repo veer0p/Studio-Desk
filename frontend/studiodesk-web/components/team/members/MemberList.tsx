@@ -4,6 +4,12 @@ import { useState } from "react"
 import { Search, Filter } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { MemberCard } from "./MemberCard"
 
 import useSWR from "swr"
@@ -11,6 +17,8 @@ import { fetchTeamMembers, TeamMember } from "@/lib/api"
 
 export function MemberList() {
   const [search, setSearch] = useState("")
+  const [filterOpen, setFilterOpen] = useState(false)
+  const [roleFilter, setRoleFilter] = useState<string>()
   const { data, isLoading } = useSWR("/api/v1/team", fetchTeamMembers)
 
   const members = data?.list || []
@@ -18,7 +26,9 @@ export function MemberList() {
     const name = (m.name ?? "").toLowerCase()
     const role = (m.role ?? "").toLowerCase()
     const q = search.toLowerCase()
-    return name.includes(q) || role.includes(q)
+    const matchesSearch = name.includes(q) || role.includes(q)
+    const matchesRole = !roleFilter || m.role === roleFilter
+    return matchesSearch && matchesRole
   })
 
   if (isLoading) {
@@ -45,9 +55,22 @@ export function MemberList() {
           />
         </div>
         <div className="flex items-center gap-2 max-sm:w-full">
-          <Button variant="outline" className="bg-background max-sm:flex-1 rounded-sm h-9 text-[10px] font-mono font-bold tracking-widest uppercase border-border/60">
-            <Filter className="w-3.5 h-3.5 mr-2" /> Filters
-          </Button>
+          <DropdownMenu open={filterOpen} onOpenChange={setFilterOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="bg-background max-sm:flex-1 rounded-sm h-9 text-[10px] font-mono font-bold tracking-widest uppercase border-border/60">
+                <Filter className="w-3.5 h-3.5 mr-2" /> Filters
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem onClick={() => setRoleFilter(undefined)}>All Roles</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setRoleFilter("Photographer")}>Photographer</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setRoleFilter("Videographer")}>Videographer</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setRoleFilter("Editor")}>Editor</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setRoleFilter("Drone Operator")}>Drone Operator</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setRoleFilter("Assistant")}>Assistant</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setRoleFilter("Freelancer")}>Freelancer</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

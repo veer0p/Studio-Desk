@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react"
 import useSWR from "swr"
+import type { BookingListResult, BookingSummary } from "@/lib/api"
 import { fetchBookingsList, updateBookingStage } from "@/lib/api"
 import { toast } from "sonner"
 import { useSearchParams } from "next/navigation"
@@ -37,7 +38,7 @@ const MOBILE_BREAKPOINT = 768
 export default function KanbanBoard() {
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
-  const { data, isLoading, error, mutate } = useSWR(
+  const { data, isLoading, error, mutate } = useSWR<BookingListResult>(
     `/api/v1/bookings?view=kanban&${queryString}`,
     fetchBookingsList,
     { dedupingInterval: 60000 }
@@ -45,7 +46,7 @@ export default function KanbanBoard() {
 
   const [isMobile, setIsMobile] = useState(false)
   const [activeId, setActiveId] = useState<string | null>(null)
-  const [activeBooking, setActiveBooking] = useState<any | null>(null)
+  const [activeBooking, setActiveBooking] = useState<BookingSummary | null>(null)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -73,9 +74,9 @@ export default function KanbanBoard() {
   const columns = useMemo(() => {
     const list = Array.isArray(data?.list) ? data.list : []
     return PIPELINE_STAGES.reduce((acc, stage) => {
-      acc[stage] = list.filter((booking: any) => booking.stage === stage)
+      acc[stage] = list.filter((booking) => booking.stage === stage)
       return acc
-    }, {} as Record<string, any[]>)
+    }, {} as Record<string, BookingSummary[]>)
   }, [data])
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -109,8 +110,8 @@ export default function KanbanBoard() {
       // Small delay to let drag overlay dismiss before revalidation
       await new Promise((r) => setTimeout(r, 100))
       mutate()
-    } catch (err: any) {
-      const msg = err?.message || "Invalid transition — check allowed stages"
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Invalid transition — check allowed stages"
       toast.error(msg)
     } finally {
       setUpdatingId(null)
@@ -181,7 +182,7 @@ export default function KanbanBoard() {
         >
           {PIPELINE_STAGES.map((stage) => {
             const stageBookings = columns[stage] || []
-            const totalValue = stageBookings.reduce((sum: number, b: any) => sum + (b.amount || 0), 0)
+            const totalValue = stageBookings.reduce((sum, b) => sum + b.amount, 0)
 
             return (
               <KanbanColumn

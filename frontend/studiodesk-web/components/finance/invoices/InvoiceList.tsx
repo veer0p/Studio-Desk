@@ -5,6 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Plus, Search, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { InvoiceRow } from "./InvoiceRow"
 import { InvoiceDetail } from "./InvoiceDetail"
 import { CreateInvoiceDialog } from "./CreateInvoiceDialog"
@@ -15,9 +21,30 @@ export function InvoiceList() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [searchQuery, setSearchQuery] = useState("")
+  const [filterOpen, setFilterOpen] = useState(false)
 
   const { data: response, isLoading } = useSWR("/api/v1/invoices", fetchInvoicesList)
-  const invoices = response?.list || []
+  const allInvoices = response?.list || []
+
+  // Apply search filtering
+  let invoices = allInvoices.filter(inv => 
+    inv.clientName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    inv.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    inv.invoiceNumber?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  // Apply status filter from URL
+  const statusFilter = searchParams.get("status")
+  if (statusFilter) {
+    invoices = invoices.filter(inv => {
+      const bal = inv.balance ?? 0
+      if (statusFilter === "outstanding") return inv.status === "sent" && bal > 0
+      if (statusFilter === "overdue") return inv.status === "overdue" || (bal > 0 && new Date(inv.dueDate) < new Date())
+      if (statusFilter === "paid") return inv.status === "paid" || bal === 0
+      if (statusFilter === "draft") return inv.status === "draft"
+      return true
+    })
+  }
 
   // If URL has id, it implies slide-over is open
   const openInvoiceId = searchParams.get("id")
@@ -56,10 +83,45 @@ export function InvoiceList() {
               />
             </div>
             
-            <Button variant="outline" size="sm" className="bg-background border-border/60 h-10">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter
-            </Button>
+            <DropdownMenu open={filterOpen} onOpenChange={setFilterOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="bg-background border-border/60 h-10">
+                  <Filter className="w-4 h-4 mr-2" />
+                  Filter
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString())
+                  params.delete("status")
+                  router.push(`/finance?${params.toString()}`)
+                }}>All Invoices</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString())
+                  params.set("tab", "invoices")
+                  params.set("status", "draft")
+                  router.push(`/finance?${params.toString()}`)
+                }}>Draft</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString())
+                  params.set("tab", "invoices")
+                  params.set("status", "outstanding")
+                  router.push(`/finance?${params.toString()}`)
+                }}>Outstanding</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString())
+                  params.set("tab", "invoices")
+                  params.set("status", "overdue")
+                  router.push(`/finance?${params.toString()}`)
+                }}>Overdue</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString())
+                  params.set("tab", "invoices")
+                  params.set("status", "paid")
+                  router.push(`/finance?${params.toString()}`)
+                }}>Paid</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <CreateInvoiceDialog>
               <Button size="sm" className="h-10 shrink-0">

@@ -87,10 +87,24 @@ export function MemberCard({ member }: { member: TeamMember }) {
         </div>
 
         <div className="flex items-center gap-2 min-w-0">
-          <Button variant="outline" className="flex-1 min-w-0 text-[10px] h-8 bg-muted/10 rounded-sm font-mono font-bold tracking-widest uppercase truncate px-2" onClick={(e) => e.stopPropagation()}>
+          <Button 
+            variant="outline" 
+            className="flex-1 min-w-0 text-[10px] h-8 bg-muted/10 rounded-sm font-mono font-bold tracking-widest uppercase truncate px-2" 
+            onClick={(e) => {
+              e.stopPropagation()
+              router.push(`/team/${member.id}`)
+            }}
+          >
             Profile
           </Button>
-          <Button variant="default" className="flex-1 min-w-0 text-[10px] h-8 rounded-sm font-mono font-bold tracking-widest uppercase truncate px-2 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+          <Button 
+            variant="default" 
+            className="flex-1 min-w-0 text-[10px] h-8 rounded-sm font-mono font-bold tracking-widest uppercase truncate px-2 whitespace-nowrap" 
+            onClick={(e) => {
+              e.stopPropagation()
+              router.push(`/bookings?assign=${member.id}`)
+            }}
+          >
             <CalendarPlus className="w-3 h-3 mr-1 shrink-0" /> Assign
           </Button>
         </div>

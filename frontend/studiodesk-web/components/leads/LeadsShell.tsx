@@ -4,12 +4,34 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { LayoutGrid, List as ListIcon, Plus, Search, Filter } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { NewLeadDialog } from "@/components/leads/NewLeadDialog"
 
-export function LeadsShell({ children, count = 0 }: { children: React.ReactNode, count?: number }) {
+export function LeadsShell({ 
+  children, 
+  count = 0, 
+  searchQuery = "",
+  onSearchChange,
+  filterOpen,
+  onFilterOpenChange,
+  overdueCount = 0
+}: { 
+  children: React.ReactNode
+  count?: number
+  searchQuery?: string
+  onSearchChange?: (val: string) => void
+  filterOpen?: boolean
+  onFilterOpenChange?: (open: boolean) => void
+  overdueCount?: number
+}) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentView = searchParams.get("view") || "kanban"
-  const searchQuery = searchParams.get("search") || ""
 
   const setView = (view: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -17,15 +39,14 @@ export function LeadsShell({ children, count = 0 }: { children: React.ReactNode,
     router.push(`/leads?${params.toString()}`)
   }
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
+  const handleFilterChange = (stage: string) => {
     const params = new URLSearchParams(searchParams.toString())
-    if (val) {
-      params.set("search", val)
+    if (stage === "all") {
+      params.delete("stage")
     } else {
-      params.delete("search")
+      params.set("stage", stage)
     }
-    router.replace(`/leads?${params.toString()}`)
+    router.push(`/leads?${params.toString()}`)
   }
 
   return (
@@ -33,33 +54,43 @@ export function LeadsShell({ children, count = 0 }: { children: React.ReactNode,
       <div className="sticky top-0 z-30 border-b border-border/40 bg-background/95 backdrop-blur shrink-0 px-6 py-6 md:px-8 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div className="flex flex-col">
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight uppercase font-mono">Leads</h1>
-          <p className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground mt-2">{count} active inquiries • {count > 0 ? "3 overdue" : "All caught up"}</p>
+          <p className="text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground mt-2">{count} active inquiries • {count > 0 ? `${overdueCount} overdue` : "All caught up"}</p>
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative w-full sm:w-64">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search leads..." 
-              className="pl-9 h-9 rounded-sm font-mono text-xs tracking-wider" 
+            <Input
+              placeholder="Search leads..."
+              className="pl-9 h-9 rounded-sm font-mono text-xs tracking-wider"
               defaultValue={searchQuery}
-              onChange={(e) => handleSearch(e)}
+              onChange={(e) => onSearchChange?.(e.target.value)}
             />
           </div>
 
-          <Button variant="outline" size="sm" className="h-9 rounded-sm text-[10px] font-mono font-bold tracking-widest uppercase border hover:bg-muted/50 hidden md:flex shrink-0">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </Button>
+          <DropdownMenu open={filterOpen} onOpenChange={onFilterOpenChange}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-9 rounded-sm text-[10px] font-mono font-bold tracking-widest uppercase border hover:bg-muted/50 hidden md:flex shrink-0">
+                <Filter className="w-4 h-4 mr-2" />
+                Filter
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem onClick={() => handleFilterChange("all")}>All Leads</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleFilterChange("Inquiry")}>Inquiry</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleFilterChange("Proposal Sent")}>Proposal Sent</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleFilterChange("Negotiation")}>Negotiation</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <div className="flex items-center bg-muted/20 p-0.5 rounded-sm border border-border/40 shrink-0">
-            <button 
+            <button
               onClick={() => setView("kanban")}
               className={`p-1.5 rounded-sm transition-colors ${currentView === "kanban" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
             >
               <LayoutGrid className="w-4 h-4" />
             </button>
-            <button 
+            <button
               onClick={() => setView("list")}
               className={`p-1.5 rounded-sm transition-colors ${currentView === "list" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
             >
@@ -67,10 +98,12 @@ export function LeadsShell({ children, count = 0 }: { children: React.ReactNode,
             </button>
           </div>
 
-          <Button size="sm" className="h-9 rounded-sm bg-foreground text-background hover:bg-foreground/90 text-[10px] font-mono font-bold tracking-widest uppercase px-6 shrink-0 shadow-sm">
-            <Plus className="w-3.5 h-3.5 mr-2" />
-            Quick Add
-          </Button>
+          <NewLeadDialog>
+            <Button size="sm" className="h-9 rounded-sm bg-foreground text-background hover:bg-foreground/90 text-[10px] font-mono font-bold tracking-widest uppercase px-6 shrink-0 shadow-sm">
+              <Plus className="w-3.5 h-3.5 mr-2" />
+              Quick Add
+            </Button>
+          </NewLeadDialog>
         </div>
       </div>
 

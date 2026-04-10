@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog"
 import {
   Form,
@@ -39,59 +40,54 @@ const indianMobile = z
   .string()
   .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit mobile number")
 
-const newBookingSchema = z.object({
+const newLeadSchema = z.object({
   clientName: z.string().min(2, "Required"),
   phone: indianMobile,
   eventName: z.string().min(2, "Required"),
   eventType: z.string().min(1, "Required"),
   date: z.string().min(1, "Required"),
-  time: z.string(),
-  venue: z.string(),
-  city: z.string(),
-  package: z.string(),
-  amount: z.string(),
-  stage: z.string(),
-  notes: z.string(),
+  venue: z.string().optional(),
+  city: z.string().optional(),
+  amount: z.string().optional(),
+  notes: z.string().optional(),
 })
 
-type NewBookingFormData = z.infer<typeof newBookingSchema>
+type NewLeadFormData = z.infer<typeof newLeadSchema>
 
-export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
+export function NewLeadDialog({ children }: { children?: React.ReactNode }) {
   const [open, setOpen] = useState(false)
   const { mutate } = useSWRConfig()
 
-  const form = useForm<NewBookingFormData>({
-    resolver: zodResolver(newBookingSchema),
+  const form = useForm<NewLeadFormData>({
+    resolver: zodResolver(newLeadSchema),
     defaultValues: {
       clientName: "",
       phone: "",
       eventName: "",
       eventType: "",
       date: "",
-      time: "",
       venue: "",
       city: "",
-      package: "",
       amount: "",
-      stage: "Inquiry",
       notes: "",
     },
   })
 
-  const onSubmit = async (values: NewBookingFormData) => {
+  const onSubmit = async (values: NewLeadFormData) => {
     try {
       const bookingData = {
         ...values,
         amount: values.amount || undefined,
+        stage: "Inquiry",
       }
       await createBooking(bookingData)
-      toast.success("Booking created successfully")
+      toast.success("Lead created successfully")
       setOpen(false)
       form.reset()
       // invalidate SWR booking queries
       mutate((key) => typeof key === 'string' && key.startsWith('/api/v1/bookings'))
     } catch (error) {
-      toast.error("Failed to create booking")
+      toast.error("Failed to create lead")
     }
   }
 
@@ -101,13 +97,13 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
         {children || (
           <Button size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            New Booking
+            New Lead
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto custom-scrollbar">
         <DialogHeader>
-          <DialogTitle>Create New Booking</DialogTitle>
+          <DialogTitle>Create New Lead</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -126,7 +122,7 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
                 <FormItem>
                   <FormLabel>Client Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Search or enter client name" {...field} />
+                    <Input placeholder="Enter client name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -204,12 +200,17 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
               />
               <FormField
                 control={form.control}
-                name="time"
+                name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Event Time</FormLabel>
+                    <FormLabel>Estimated Value (₹)</FormLabel>
                     <FormControl>
-                      <Input type="time" {...field} />
+                      <Input
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="75000"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -246,74 +247,6 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-2">
-                <FormField
-                  control={form.control}
-                  name="package"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Selected Package</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value || undefined}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select package" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Standard Wedding">Standard Wedding</SelectItem>
-                          <SelectItem value="Premium Video">Premium Video</SelectItem>
-                          <SelectItem value="Custom">Custom</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="amount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Total Value (₹)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        inputMode="numeric"
-                        placeholder="75000"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="stage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Initial Stage</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select stage" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Inquiry">Inquiry</SelectItem>
-                      <SelectItem value="Proposal Sent">Proposal Sent</SelectItem>
-                      <SelectItem value="Confirmed">Confirmed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="notes"
@@ -328,14 +261,14 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
               )}
             />
 
-            <div className="flex justify-end gap-2 pt-4 border-t border-border/40">
+            <DialogFooter className="pt-4 border-t border-border/40 mt-4">
               <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? "Creating..." : "Create Booking"}
+                {form.formState.isSubmitting ? "Creating..." : "Create Lead"}
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

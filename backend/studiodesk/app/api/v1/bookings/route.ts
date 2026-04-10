@@ -10,14 +10,18 @@ export async function GET(req: NextRequest) {
     const { user, member, supabase } = await requireAuth(req)
     const { searchParams } = new URL(req.url)
 
+    // Support both frontend param names: limit/pageSize and page/offset
+    const limit = parseInt(searchParams.get('limit') || searchParams.get('pageSize') || '100')
+    const page = parseInt(searchParams.get('page') || '0')
+
     const params = {
       status: searchParams.get('status') || undefined,
       event_type: searchParams.get('event_type') || undefined,
       search: searchParams.get('search') || undefined,
       from_date: searchParams.get('from_date') || undefined,
       to_date: searchParams.get('to_date') || undefined,
-      page: parseInt(searchParams.get('page') || '0'),
-      pageSize: parseInt(searchParams.get('pageSize') || '20')
+      page,
+      pageSize: Math.min(limit, 200) // Cap at 200 to prevent abuse
     }
 
     const bookings = await BookingService.listBookings(supabase, member.studio_id, params)

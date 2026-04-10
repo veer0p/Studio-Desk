@@ -89,11 +89,31 @@ export default function BookingsShell({ children }: { children: React.ReactNode 
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem onClick={() => router.push("/bookings?stage=Inquiry")}>Inquiry</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/bookings?stage=Proposal Sent")}>Proposal Sent</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/bookings?stage=Confirmed")}>Confirmed</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/bookings?stage=In Progress")}>In Progress</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/bookings?stage=Delivered")}>Delivered</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                const params = new URLSearchParams(searchParams.toString())
+                params.set("stage", "Inquiry")
+                router.push(`/bookings?${params.toString()}`)
+              }}>Inquiry</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                const params = new URLSearchParams(searchParams.toString())
+                params.set("stage", "Proposal Sent")
+                router.push(`/bookings?${params.toString()}`)
+              }}>Proposal Sent</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                const params = new URLSearchParams(searchParams.toString())
+                params.set("stage", "Confirmed")
+                router.push(`/bookings?${params.toString()}`)
+              }}>Confirmed</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                const params = new URLSearchParams(searchParams.toString())
+                params.set("stage", "In Progress")
+                router.push(`/bookings?${params.toString()}`)
+              }}>In Progress</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                const params = new URLSearchParams(searchParams.toString())
+                params.set("stage", "Delivered")
+                router.push(`/bookings?${params.toString()}`)
+              }}>Delivered</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 

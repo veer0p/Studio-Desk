@@ -1,10 +1,11 @@
 "use client"
 
 import Link from "next/link"
-import useSWR from "swr"
+import { usePortalAuth } from "@/lib/portal-auth"
 import { fetchClientBookings, ClientPortalBooking } from "@/lib/api"
 import { Calendar, MapPin, ArrowRight } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
+import useSWR from "swr"
 
 const statusStyles: Record<string, string> = {
   upcoming: "bg-blue-500/10 text-blue-600",
@@ -16,8 +17,9 @@ const statusStyles: Record<string, string> = {
 }
 
 export function ClientBookingList({ studioSlug }: { studioSlug: string }) {
+  const { user } = usePortalAuth()
   const { data: bookings, isLoading, error } = useSWR(
-    `/api/v1/portal/${studioSlug}/bookings`,
+    user?.token ? `/api/v1/portal/${user.token}/bookings` : null,
     fetchClientBookings
   )
 
