@@ -102,6 +102,26 @@ export type ClientListResult = {
   meta: PaginationMeta;
 };
 
+export type ClientDocument = {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  url: string;
+  uploadedAt: string;
+};
+
+export type ClientCommunication = {
+  id: string;
+  type: string;
+  channel: string;
+  date: string;
+  notes: string;
+  note?: string;
+  user?: string;
+  direction?: "inbound" | "outbound";
+};
+
 export type ClientDetail = ClientSummary & {
   address: string | null;
   state: string | null;
@@ -110,10 +130,10 @@ export type ClientDetail = ClientSummary & {
   gstin: string | null;
   notes: string;
   bookings: BookingSummary[];
-  communications: Array<Record<string, unknown>>;
+  communications: ClientCommunication[];
   invoices: InvoiceRecord[];
   payments: PaymentRecord[];
-  documents: Array<Record<string, unknown>>;
+  documents: ClientDocument[];
 };
 
 export type InvoiceRecord = {
@@ -386,6 +406,61 @@ type BackendClientDetail = BackendClientSummary & {
   documents?: Array<Record<string, unknown>> | null;
 };
 
+function normalizeInvoice(row: Record<string, unknown>): InvoiceRecord {
+  return {
+    id: String(row.id ?? ""),
+    invoiceNumber: String(row.invoiceNumber ?? row.invoice_number ?? ""),
+    clientName: String(row.clientName ?? row.client_name ?? ""),
+    clientCity: row.clientCity ?? row.client_city ? String(row.clientCity ?? row.client_city) : undefined,
+    bookingName: row.bookingName ?? row.booking_name ? String(row.bookingName ?? row.booking_name) : undefined,
+    bookingId: row.bookingId ?? row.booking_id ? String(row.bookingId ?? row.booking_id) : undefined,
+    issueDate: String(row.issueDate ?? row.issue_date ?? ""),
+    dueDate: String(row.dueDate ?? row.due_date ?? ""),
+    amount: toNumber(row.amount as MoneyLike),
+    paidAmount: toNumber((row.paidAmount ?? row.paid_amount) as MoneyLike),
+    balance: toNumber(row.balance as MoneyLike),
+    status: String(row.status ?? "Draft"),
+  };
+}
+
+function normalizePayment(row: Record<string, unknown>): PaymentRecord {
+  return {
+    id: String(row.id ?? ""),
+    date: String(row.date ?? ""),
+    clientName: String(row.clientName ?? row.client_name ?? ""),
+    bookingName: row.bookingName ?? row.booking_name ? String(row.bookingName ?? row.booking_name) : undefined,
+    invoiceRef: row.invoiceRef ?? row.invoice_ref ? String(row.invoiceRef ?? row.invoice_ref) : undefined,
+    amount: toNumber(row.amount as MoneyLike),
+    method: String(row.method ?? ""),
+    reference: row.reference ? String(row.reference) : undefined,
+    recordedBy: row.recordedBy ?? row.recorded_by ? String(row.recordedBy ?? row.recorded_by) : undefined,
+  };
+}
+
+function normalizeClientDocument(row: Record<string, unknown>): ClientDocument {
+  return {
+    id: String(row.id ?? ""),
+    name: String(row.name ?? ""),
+    type: String(row.type ?? ""),
+    size: toNumber(row.size as MoneyLike),
+    url: String(row.url ?? ""),
+    uploadedAt: String(row.uploadedAt ?? row.uploaded_at ?? ""),
+  };
+}
+
+function normalizeCommunication(row: Record<string, unknown>): ClientCommunication {
+  return {
+    id: String(row.id ?? ""),
+    type: String(row.type ?? ""),
+    channel: String(row.channel ?? ""),
+    date: String(row.date ?? ""),
+    notes: String(row.notes ?? row.note ?? ""),
+    note: row.note ? String(row.note) : undefined,
+    user: row.user ? String(row.user) : undefined,
+    direction: (row.direction as "inbound" | "outbound" | undefined) ?? undefined,
+  };
+}
+
 type BackendDashboardOverview = DashboardOverview;
 
 type BackendDashboardToday = {
@@ -592,10 +667,10 @@ function normalizeClientDetail(row: BackendClientDetail): ClientDetail {
     totalInvoiced,
     totalPaid,
     lastBookingDate: latestBooking,
-    communications: Array.isArray(row.communications) ? row.communications : [],
-    invoices: Array.isArray(row.invoices) ? (row.invoices as any) : [],
-    payments: Array.isArray(row.payments) ? (row.payments as any) : [],
-    documents: Array.isArray(row.documents) ? row.documents : [],
+    communications: Array.isArray(row.communications) ? row.communications.map(normalizeCommunication) : [],
+    invoices: Array.isArray(row.invoices) ? row.invoices.map(normalizeInvoice) : [],
+    payments: Array.isArray(row.payments) ? row.payments.map(normalizePayment) : [],
+    documents: Array.isArray(row.documents) ? row.documents.map(normalizeClientDocument) : [],
   };
 }
 
@@ -1212,7 +1287,7 @@ export async function updateExpense(id: string, data: JsonObject) {
 }
 
 export async function deleteExpense(id: string) {
-  const res = await fetch(`/api/v1/expenses/${id}`, {
+  const res = await fetch(`/api/v1/expenses?id=${encodeURIComponent(id)}`, {
     method: "DELETE",
   });
   if (!res.ok) throw new Error("Failed to delete expense");
@@ -1360,6 +1435,10 @@ export async function fetchTeamMembers(url: string = "/api/v1/team"): Promise<Te
     list: Array.isArray(payload) ? payload : [],
     count: Array.isArray(payload) ? payload.length : 0,
   };
+}
+
+export async function fetchTeamMemberDetail(id: string): Promise<TeamMember> {
+  return await fetchApiData<TeamMember>(`/api/v1/team/${id}`);
 }
 
 // Analytics API
@@ -1730,5 +1809,400 @@ export async function fetchBillingInfo(url: string = "/api/v1/settings/billing")
   if (!res.ok) throw new Error("Failed to fetch billing info");
   const json = await res.json();
   return json.data ?? json;
+}
+
+
+// --- Referral ---
+export type ReferralRedemption = {
+  id: string;
+  referred_studio_id: string;
+  rewarded: boolean;
+  created_at: string;
+};
+
+export type ReferralInfo = {
+  referral_code: string | null;
+  reward_value: number;
+  total_referrals: number;
+  total_credits_earned: number;
+  redemptions: ReferralRedemption[];
+};
+
+export async function fetchReferralInfo(): Promise<ReferralInfo> {
+  const res = await fetch("/api/v1/referral", { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to fetch referral info");
+  const json = await res.json();
+  return json.data ?? json;
+}
+
+export async function generateReferralCode(): Promise<{ code: string }> {
+  const res = await fetch("/api/v1/referral/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Failed to generate referral code");
+  const json = await res.json();
+  return json.data ?? json;
+}
+
+export async function redeemReferralCode(code: string, referredStudioId: string): Promise<{ success: boolean; credits_awarded: number; message: string }> {
+  const res = await fetch("/api/v1/referral/redeem", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code, referredStudioId }),
+  });
+  if (!res.ok) {
+    const json = await res.json().catch(() => null);
+    throw new Error(json?.error ?? "Failed to redeem referral code");
+  }
+  const json = await res.json();
+  return json.data ?? json;
+}
+
+// ─── Notifications ───────────────────────────────────────────────
+
+export type Notification = {
+  id: string;
+  studio_id: string;
+  type: string;
+  title: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+  read_at: string | null;
+  metadata: Record<string, unknown> | null;
+  channel: string;
+};
+
+export type NotificationListResult = {
+  notifications: Notification[];
+  nextCursor: string | null;
+  count: number;
+};
+
+export type NotificationType =
+  | "booking_created"
+  | "payment_received"
+  | "gallery_ready"
+  | "contract_signed"
+  | "new_inquiry"
+  | "invoice_overdue"
+  | "gallery_viewed"
+  | "photo_selection_submitted"
+  | "team_invite_accepted";
+
+export const NOTIFICATION_TYPE_LABELS: Record<string, string> = {
+  booking_created: "Booking Created",
+  payment_received: "Payment Received",
+  gallery_ready: "Gallery Ready",
+  contract_signed: "Contract Signed",
+  new_inquiry: "New Inquiry",
+  invoice_overdue: "Invoice Overdue",
+  gallery_viewed: "Gallery Viewed",
+  photo_selection_submitted: "Photos Selected",
+  team_invite_accepted: "Team Invite Accepted",
+};
+
+export const NOTIFICATION_TYPE_COLORS: Record<string, string> = {
+  booking_created: "text-blue-600 dark:text-blue-400",
+  payment_received: "text-emerald-600 dark:text-emerald-400",
+  gallery_ready: "text-purple-600 dark:text-purple-400",
+  contract_signed: "text-amber-600 dark:text-amber-400",
+  new_inquiry: "text-cyan-600 dark:text-cyan-400",
+  invoice_overdue: "text-red-600 dark:text-red-400",
+  gallery_viewed: "text-indigo-600 dark:text-indigo-400",
+  photo_selection_submitted: "text-orange-600 dark:text-orange-400",
+  team_invite_accepted: "text-teal-600 dark:text-teal-400",
+};
+
+export type NotificationChannel = "in_app" | "email" | "whatsapp";
+
+export type NotificationPreferences = {
+  [key in NotificationType]?: {
+    in_app: boolean;
+    email: boolean;
+    whatsapp: boolean;
+  };
+};
+
+export async function fetchNotifications(params?: {
+  limit?: number;
+  cursor?: string;
+  type?: string;
+  is_read?: boolean;
+}): Promise<NotificationListResult> {
+  const searchParams = new URLSearchParams();
+  if (params?.limit) searchParams.set("limit", String(params.limit));
+  if (params?.cursor) searchParams.set("cursor", params.cursor);
+  if (params?.type) searchParams.set("type", params.type);
+  if (params?.is_read !== undefined) searchParams.set("is_read", String(params.is_read));
+
+  const url = `/api/v1/notifications${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
+  const res = await fetch(url, { cache: "no-store" });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error ?? "Failed to fetch notifications");
+  return json.data ?? json;
+}
+
+export async function markNotificationRead(id: string): Promise<Notification> {
+  const res = await fetch("/api/v1/notifications", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ notificationId: id }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error ?? "Failed to mark notification as read");
+  return json.data ?? json;
+}
+
+export async function markAllNotificationsRead(): Promise<{ marked: number }> {
+  const res = await fetch("/api/v1/notifications/mark-all-read", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error ?? "Failed to mark all notifications as read");
+  return json.data ?? json;
+}
+
+export async function getUnreadNotificationCount(): Promise<number> {
+  const res = await fetch("/api/v1/notifications/unread-count", { cache: "no-store" });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error ?? "Failed to get unread count");
+  const data = json.data ?? json;
+  return data.count ?? 0;
+}
+
+export async function deleteNotification(id: string): Promise<void> {
+  const res = await fetch(`/api/v1/notifications?id=${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    const json = await res.json().catch(() => null);
+    throw new Error(json?.error ?? "Failed to delete notification");
+  }
+}
+
+// --- Feature Flags ---
+
+export type FeatureFlag = {
+  id: string;
+  key: string;
+  label: string;
+  description: string;
+  is_enabled: boolean;
+  category: string;
+  metadata: Record<string, unknown> | null;
+  updated_at: string;
+  created_at: string;
+};
+
+export async function fetchFeatureFlags(): Promise<FeatureFlag[]> {
+  const res = await fetch("/api/v1/feature-flags");
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error ?? "Failed to fetch feature flags");
+  return Array.isArray(json?.data) ? json.data : [];
+}
+
+export async function toggleFeatureFlag(key: string, isEnabled: boolean): Promise<FeatureFlag> {
+  const res = await fetch("/api/v1/feature-flags", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ key, is_enabled: isEnabled }),
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error ?? "Failed to toggle feature flag");
+  return json?.data ?? json;
+}
+
+// --- Freelancer Payments ---
+
+export type FreelancerPayment = {
+  id: string;
+  studio_id: string;
+  assignment_id: string;
+  member_id: string;
+  booking_id: string;
+  amount: number;
+  payment_method: "upi" | "cash" | "neft" | "rtgs" | "net_banking" | "card" | "cheque" | "wallet" | "other" | null;
+  status: "pending" | "processing" | "captured" | "refunded" | "failed";
+  reference_number: string | null;
+  paid_at: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  studio_members?: {
+    full_name: string;
+    role: string;
+  } | null;
+  bookings?: {
+    id: string;
+    client_name: string;
+    event_type: string;
+  } | null;
+};
+
+export type FreelancerPaymentSummary = {
+  total_pending: number;
+  total_paid_this_month: number;
+  overdue_count: number;
+};
+
+export type FreelancerPaymentsResult = {
+  payments: FreelancerPayment[];
+  summary: FreelancerPaymentSummary;
+};
+
+export async function fetchFreelancerPayments(params?: {
+  status?: "pending" | "processing" | "captured" | "refunded" | "failed";
+  member_id?: string;
+}): Promise<FreelancerPaymentsResult> {
+  const query = new URLSearchParams();
+  if (params?.status) query.set("status", params.status);
+  if (params?.member_id) query.set("member_id", params.member_id);
+  const url = `/api/v1/freelancer-payments${query.toString() ? `?${query.toString()}` : ""}`;
+  return await fetchApiData(url);
+}
+
+export async function createFreelancerPayment(data: {
+  member_id: string;
+  assignment_id: string;
+  booking_id: string;
+  amount: number;
+  payment_method?: "upi" | "cash" | "neft" | "rtgs" | "net_banking" | "card" | "cheque" | "wallet" | "other";
+  notes?: string | null;
+}) {
+  const res = await fetch("/api/v1/freelancer-payments", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const json = await res.json().catch(() => null);
+    throw new Error(json?.error ?? "Failed to create payment");
+  }
+  return res.json();
+}
+
+export async function updateFreelancerPayment(
+  id: string,
+  data: {
+    status: "pending" | "processing" | "captured" | "refunded" | "failed";
+    payment_method?: "upi" | "cash" | "neft" | "rtgs" | "net_banking" | "card" | "cheque" | "wallet" | "other" | null;
+    reference_number?: string | null;
+    paid_at?: string | null;
+  }
+) {
+  const res = await fetch("/api/v1/freelancer-payments", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, ...data }),
+  });
+  if (!res.ok) {
+    const json = await res.json().catch(() => null);
+    throw new Error(json?.error ?? "Failed to update payment");
+  }
+  return res.json();
+}
+
+export async function deleteFreelancerPayment(id: string) {
+  const res = await fetch(`/api/v1/freelancer-payments?id=${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    const json = await res.json().catch(() => null);
+    throw new Error(json?.error ?? "Failed to delete payment");
+  }
+  return res.json();
+}
+
+// --- Contract Clause Library ---
+
+export type ContractClause = {
+  id: string;
+  studio_id: string;
+  title: string;
+  category: "payment" | "delivery" | "liability" | "copyright" | "cancellation" | "general";
+  content: string;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ContractClauseDefaults = {
+  title: string;
+  category: "payment" | "delivery" | "liability" | "copyright" | "cancellation" | "general";
+  content: string;
+};
+
+export type ContractClausesResult = {
+  studio: ContractClause[];
+  defaults: ContractClauseDefaults[];
+};
+
+export async function fetchContractClauses(category?: string): Promise<ContractClausesResult> {
+  const query = new URLSearchParams();
+  if (category) query.set("category", category);
+  const url = `/api/v1/contract-clauses${query.toString() ? `?${query.toString()}` : ""}`;
+  const res = await fetch(url);
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error ?? "Failed to fetch contract clauses");
+  return json?.data ?? { studio: [], defaults: [] };
+}
+
+export async function createContractClause(data: {
+  title: string;
+  category: "payment" | "delivery" | "liability" | "copyright" | "cancellation" | "general";
+  content: string;
+  sort_order?: number;
+}): Promise<ContractClause> {
+  const res = await fetch("/api/v1/contract-clauses", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error ?? "Failed to create clause");
+  return json?.data ?? json;
+}
+
+export async function updateContractClause(
+  id: string,
+  data: {
+    title?: string;
+    category?: "payment" | "delivery" | "liability" | "copyright" | "cancellation" | "general";
+    content?: string;
+    is_active?: boolean;
+    sort_order?: number;
+  }
+): Promise<ContractClause> {
+  const res = await fetch("/api/v1/contract-clauses", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, ...data }),
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error ?? "Failed to update clause");
+  return json?.data ?? json;
+}
+
+export async function deleteContractClause(id: string) {
+  const res = await fetch(`/api/v1/contract-clauses?id=${id}`, {
+    method: "DELETE",
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error ?? "Failed to delete clause");
+  return json?.data ?? json;
+}
+
+export async function fetchContractClauseDefaults(category?: string): Promise<ContractClauseDefaults[]> {
+  const query = new URLSearchParams();
+  if (category) query.set("category", category);
+  const url = `/api/v1/contract-clauses/defaults${query.toString() ? `?${query.toString()}` : ""}`;
+  const res = await fetch(url);
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error ?? "Failed to fetch default clauses");
+  return Array.isArray(json?.data) ? json.data : [];
 }
 

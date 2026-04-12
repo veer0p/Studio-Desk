@@ -3,9 +3,30 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FileText, Download, UploadCloud, Trash2 } from "lucide-react"
+import type { ClientDetail, ClientDocument } from "@/lib/api"
 
-export function ClientDocuments({ client }: { client: any }) {
-  const documents = client.documents || []
+function formatBytes(bytes: number): string {
+  if (bytes === 0) return "0 B"
+  const k = 1024
+  const sizes = ["B", "KB", "MB", "GB"]
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return `${Number((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
+}
+
+function formatDate(dateStr: string): string {
+  if (!dateStr) return "Unknown"
+  const date = new Date(dateStr)
+  if (Number.isNaN(date.getTime())) return dateStr
+  return date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+}
+
+export function ClientDocuments({ client }: { client: ClientDetail }) {
+  const documents: Array<{ id: string; name: string; size: string; date: string }> = client.documents.map((doc: ClientDocument) => ({
+    id: doc.id,
+    name: doc.name,
+    size: formatBytes(doc.size),
+    date: formatDate(doc.uploadedAt),
+  }))
 
   return (
     <div className="space-y-6 pb-10">
@@ -43,7 +64,7 @@ export function ClientDocuments({ client }: { client: any }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
-                  {documents.map((doc: any) => (
+                  {documents.map((doc) => (
                     <tr key={doc.id} className="hover:bg-muted/30 transition-colors">
                       <td className="px-4 py-3 flex items-center gap-2">
                         <FileText className="w-4 h-4 text-muted-foreground" />

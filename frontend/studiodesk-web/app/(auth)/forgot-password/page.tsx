@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { forgotPassword } from "@/lib/auth"
+import { ROUTES } from "@/lib/constants/routes"
 
 const forgotPasswordSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -55,7 +56,7 @@ export default function ForgotPasswordPage() {
                     If an account exists, you&apos;ll receive a password reset link shortly.
                 </p>
                 <Button variant="outline" className="mt-4" asChild>
-                    <Link href="/login">Back to login</Link>
+                    <Link href={ROUTES.LOGIN}>Back to login</Link>
                 </Button>
             </div>
         )
@@ -106,7 +107,7 @@ export default function ForgotPasswordPage() {
             </Form>
 
             <div className="text-center mt-4">
-                <Link href="/login" className="text-sm font-medium text-primary hover:underline">
+                <Link href={ROUTES.LOGIN} className="text-sm font-medium text-primary hover:underline">
                     Back to login
                 </Link>
             </div>

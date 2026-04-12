@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Plus, Search, Filter } from "lucide-react"
+import { ROUTES } from "@/lib/constants/routes"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -52,13 +53,13 @@ export function InvoiceList() {
   const handleRowClick = (id: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("id", id)
-    router.push(`/finance?${params.toString()}`)
+    router.push(`${ROUTES.FINANCE}?${params.toString()}`, { scroll: false })
   }
 
   const handleCloseDetail = () => {
     const params = new URLSearchParams(searchParams.toString())
     params.delete("id")
-    router.replace(`/finance?${params.toString()}`)
+    router.replace(`/finance?${params.toString()}`, { scroll: false })
   }
 
   return (
@@ -94,31 +95,31 @@ export function InvoiceList() {
                 <DropdownMenuItem onClick={() => {
                   const params = new URLSearchParams(searchParams.toString())
                   params.delete("status")
-                  router.push(`/finance?${params.toString()}`)
+                  router.push(`${ROUTES.FINANCE}?${params.toString()}`, { scroll: false })
                 }}>All Invoices</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
                   const params = new URLSearchParams(searchParams.toString())
                   params.set("tab", "invoices")
                   params.set("status", "draft")
-                  router.push(`/finance?${params.toString()}`)
+                  router.push(`${ROUTES.FINANCE}?${params.toString()}`, { scroll: false })
                 }}>Draft</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
                   const params = new URLSearchParams(searchParams.toString())
                   params.set("tab", "invoices")
                   params.set("status", "outstanding")
-                  router.push(`/finance?${params.toString()}`)
+                  router.push(`${ROUTES.FINANCE}?${params.toString()}`, { scroll: false })
                 }}>Outstanding</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
                   const params = new URLSearchParams(searchParams.toString())
                   params.set("tab", "invoices")
                   params.set("status", "overdue")
-                  router.push(`/finance?${params.toString()}`)
+                  router.push(`${ROUTES.FINANCE}?${params.toString()}`, { scroll: false })
                 }}>Overdue</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
                   const params = new URLSearchParams(searchParams.toString())
                   params.set("tab", "invoices")
                   params.set("status", "paid")
-                  router.push(`/finance?${params.toString()}`)
+                  router.push(`${ROUTES.FINANCE}?${params.toString()}`, { scroll: false })
                 }}>Paid</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

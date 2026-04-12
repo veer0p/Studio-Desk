@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Plus, Search, Filter, MoreHorizontal, Edit2, Trash2 } from "lucide-react"
+import { ROUTES } from "@/lib/constants/routes"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PaymentMethodBadge } from "../shared/PaymentMethodBadge"
@@ -20,6 +21,7 @@ const formatINR = (amt: number) => new Intl.NumberFormat("en-IN", { style: "curr
 
 export function PaymentList() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { data: response, isLoading } = useSWR("/api/v1/payments", fetchPaymentsList)
   const [searchQuery, setSearchQuery] = useState("")
   const allPayments = response?.list || []
@@ -99,8 +101,12 @@ export function PaymentList() {
                     <td className="px-4 py-3 text-sm text-muted-foreground truncate max-w-[150px]">{pay.bookingName}</td>
                     <td className="px-4 py-3 text-sm">
                       {pay.invoiceRef ? (
-                        <span 
-                          onClick={() => router.push(`/finance?tab=invoices&id=${pay.invoiceRef}`)}
+                        <span
+                          onClick={() => {
+                            const params = new URLSearchParams(searchParams.toString())
+                            params.set("id", pay.invoiceRef!)
+                            router.push(`${ROUTES.FINANCE}?${params.toString()}`, { scroll: false })
+                          }}
                           className="font-mono text-primary hover:underline cursor-pointer"
                         >
                           {pay.invoiceRef}

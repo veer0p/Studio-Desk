@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { signUp } from "@/lib/auth"
 import { cn } from "@/lib/utils"
+import { ROUTES } from "@/lib/constants/routes"
 
 const signupSchema = z.object({
     fullName: z.string().min(2, { message: "Full name must be at least 2 characters" }),
@@ -72,7 +73,7 @@ export default function SignupPage() {
         setError(null)
         try {
             const result = await signUp(values.email, values.password, values.fullName, values.studioName, values.studioSlug)
-            router.push("/onboarding")
+            router.push(ROUTES.ONBOARDING)
         } catch (err: unknown) {
             if (err instanceof Error && 'status' in err && (err as Error & { status: number }).status === 409) {
                 setError("An account with this email already exists")
@@ -239,7 +240,7 @@ export default function SignupPage() {
                     />
 
                     {error && (
-                        <div className="text-sm font-medium text-destructive mt-2" role="alert">
+                        <div id="signup-error" className="text-sm font-medium text-destructive mt-2" role="alert" aria-live="assertive" aria-atomic="true">
                             {error}
                         </div>
                     )}
@@ -260,7 +261,7 @@ export default function SignupPage() {
             <div className="text-center mt-4">
                 <p className="text-sm text-muted-foreground">
                     Already have an account?{" "}
-                    <Link href="/login" className="font-medium text-primary hover:underline">
+                    <Link href={ROUTES.LOGIN} className="font-medium text-primary hover:underline">
                         Log in
                     </Link>
                 </p>

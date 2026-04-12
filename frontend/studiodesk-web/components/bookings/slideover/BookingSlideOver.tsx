@@ -1,7 +1,9 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import useSWR from "swr"
+import { ROUTES } from "@/lib/constants/routes"
 import { fetchBookingDetail } from "@/lib/api"
 import { EventTypeDot } from "@/components/bookings/shared/EventTypeDot"
 import { BookingStatusBadge } from "@/components/bookings/shared/BookingStatusBadge"
@@ -13,20 +15,28 @@ import SlideOverTabs from "@/components/bookings/slideover/SlideOverTabs"
 export default function BookingSlideOver({ bookingId }: { bookingId: string }) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
   const { data: booking, isLoading, error } = useSWR(`/api/v1/bookings/${bookingId}`, fetchBookingDetail, {
     dedupingInterval: 60000
   })
 
+  // Show immediate loading state when bookingId changes
+  useEffect(() => {
+    setIsTransitioning(true)
+    const timer = setTimeout(() => setIsTransitioning(false), 200)
+    return () => clearTimeout(timer)
+  }, [bookingId])
+
   const closeSlideOver = () => {
     const params = new URLSearchParams(searchParams.toString())
     params.delete("id")
-    router.push(`/bookings?${params.toString()}`, { scroll: false })
+    router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
   }
 
-  if (isLoading) {
+  if (isLoading || isTransitioning) {
     return (
-      <div className="w-full h-full flex flex-col p-6 gap-6">
+      <div className="w-full h-full flex flex-col p-6 gap-6 animate-pulse">
         <Skeleton className="w-48 h-8" />
         <Skeleton className="w-full h-64" />
         <Skeleton className="w-full h-64" />

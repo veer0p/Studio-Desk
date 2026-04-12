@@ -13,7 +13,11 @@ export default async function GalleryDetailPage({ params }: { params: Promise<{ 
   const resolvedParams = await params;
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">
-      <Suspense fallback={<div className="p-8 text-center text-muted-foreground animate-pulse font-mono tracking-widest uppercase text-[10px]">Decompressing Face Clusters & Buffering 4K Thumbs...</div>}>
+      <Suspense fallback={
+        <div className="flex items-center justify-center h-full p-8">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      }>
         <GalleryDetail galleryId={resolvedParams.id} />
       </Suspense>
     </div>

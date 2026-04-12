@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import useSWR from "swr"
 import { fetchBookingDetail } from "@/lib/api"
 import SlideOverTabs from "@/components/bookings/slideover/SlideOverTabs"
@@ -10,16 +10,20 @@ import { BookingStatusBadge } from "@/components/bookings/shared/BookingStatusBa
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, MoreHorizontal } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ROUTES } from "@/lib/constants/routes"
 
 export default function MobileBookingDetail({ id }: { id: string }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { data: booking, isLoading } = useSWR(`/api/v1/bookings/${id}`, fetchBookingDetail, { dedupingInterval: 60000 })
 
   useEffect(() => {
     let resizeTimer: ReturnType<typeof setTimeout>
     const checkLayout = () => {
       if (window.innerWidth >= 1024) {
-        router.replace(`/bookings?id=${id}`)
+        const params = new URLSearchParams(searchParams.toString())
+        params.set("id", id)
+        router.replace(`/bookings?${params.toString()}`, { scroll: false })
       }
     }
     checkLayout()
@@ -48,7 +52,7 @@ export default function MobileBookingDetail({ id }: { id: string }) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center lg:hidden p-6 text-center">
         <p className="text-muted-foreground">Booking not found.</p>
-        <Button onClick={() => router.push("/bookings")} variant="outline" className="mt-4">
+        <Button onClick={() => router.push(ROUTES.BOOKINGS)} variant="outline" className="mt-4">
           Go back
         </Button>
       </div>
@@ -61,7 +65,7 @@ export default function MobileBookingDetail({ id }: { id: string }) {
         
         {/* Nav Header */}
         <div className="flex items-center justify-between p-4">
-          <Button variant="ghost" size="sm" onClick={() => router.push("/bookings")} className="-ml-2 text-muted-foreground">
+          <Button variant="ghost" size="sm" onClick={() => router.push(ROUTES.BOOKINGS)} className="-ml-2 text-muted-foreground">
             <ArrowLeft className="w-4 h-4 mr-1" /> Bookings
           </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8">

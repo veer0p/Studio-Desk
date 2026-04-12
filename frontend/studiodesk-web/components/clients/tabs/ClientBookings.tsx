@@ -1,12 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { EventTypeDot } from "@/components/bookings/shared/EventTypeDot"
+import { ROUTES } from "@/lib/constants/routes"
 import { BookingStatusBadge } from "@/components/bookings/shared/BookingStatusBadge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ChevronRight, Plus } from "lucide-react"
+import type { BookingSummary, ClientDetail } from "@/lib/api"
 
 const formatAmount = (amt: number) => {
   if (!amt) return "₹0"
@@ -15,14 +17,15 @@ const formatAmount = (amt: number) => {
   return `₹${amt}`
 }
 
-export function ClientBookings({ client }: { client: any }) {
+export function ClientBookings({ client }: { client: ClientDetail }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [filter, setFilter] = useState("All")
 
   const filters = ["All", "Active", "Completed", "Cancelled"]
   const bookings = client.bookings || []
 
-  const filteredBookings = bookings.filter((b: any) => {
+  const filteredBookings = bookings.filter((b) => {
     if (filter === "All") return true
     if (filter === "Completed") return b.stage === "Delivered"
     if (filter === "Cancelled") return b.stage === "Cancelled"
@@ -70,10 +73,14 @@ export function ClientBookings({ client }: { client: any }) {
         </Card>
       ) : (
         <div className="space-y-3">
-          {filteredBookings.map((booking: any) => (
+          {filteredBookings.map((booking: BookingSummary) => (
             <div 
               key={booking.id}
-              onClick={() => router.push(`/bookings?id=${booking.id}`)}
+              onClick={() => {
+                const params = new URLSearchParams(searchParams.toString())
+                params.set("id", booking.id)
+                router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
+              }}
               className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-md border border-border/60 bg-card hover:border-foreground/20 transition-colors cursor-pointer shadow-none"
             >
               <div className="flex items-center gap-4 mb-3 sm:mb-0">

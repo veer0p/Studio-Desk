@@ -1,17 +1,11 @@
-import { AnalyticsShell } from "@/components/analytics/AnalyticsShell"
-import { Suspense } from "react"
+"use client"
 
-export const dynamic = "force-dynamic"
+import CommandAnalytics from "@/components/analytics/CommandAnalytics"
 
-export const metadata = {
-  title: "Analytics | StudioDesk",
-  description: "Track your studio performance across Indian fiscal bounds smoothly.",
-}
-
-export default function AnalyticsIndex() {
+export default function AnalyticsPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-muted-foreground animate-pulse font-mono tracking-widest uppercase text-[10px]">Loading Primary BI Engine...</div>}>
-      <AnalyticsShell />
-    </Suspense>
+    <div className="flex-1 w-full h-full bg-[#0f0f0f] text-[#fafaf9] overflow-auto flex flex-col font-sans">
+      <CommandAnalytics />
+    </div>
   )
 }

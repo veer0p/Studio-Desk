@@ -1,6 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton"
 import { CheckCircle, AlertCircle } from "lucide-react"
 import Link from "next/link"
+import { ROUTES } from "@/lib/constants/routes"
 
 export function NeedsAttentionSkeleton() {
   return (
@@ -37,7 +38,7 @@ const ATTENTION_ITEMS = [
     subtitle: "Oldest: 5 days ago",
     colorClass: "bg-red-500",
     textClass: "text-red-500",
-    link: "/finance"
+    link: ROUTES.FINANCE
   },
   {
     id: "att-2",
@@ -46,7 +47,7 @@ const ATTENTION_ITEMS = [
     subtitle: "Sent 3 days ago",
     colorClass: "bg-amber-500",
     textClass: "text-amber-500",
-    link: "/bookings"
+    link: ROUTES.BOOKINGS
   },
   {
     id: "att-3",
@@ -55,7 +56,7 @@ const ATTENTION_ITEMS = [
     subtitle: "Sharma Wedding · 450 photos",
     colorClass: "bg-blue-500",
     textClass: "text-blue-500",
-    link: "/gallery"
+    link: ROUTES.GALLERY
   }
 ];
 

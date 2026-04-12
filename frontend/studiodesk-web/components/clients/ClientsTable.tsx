@@ -2,12 +2,12 @@
 
 import { useState } from "react"
 import useSWR from "swr"
-import { fetchClientsList } from "@/lib/api"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { MoreHorizontal, ArrowUpDown, Phone as PhoneIcon } from "lucide-react"
 import { ClientAvatar } from "@/components/clients/shared/ClientAvatar"
+import { clientDetailUrl } from "@/lib/constants/routes"
 
 import {
   flexRender,
@@ -16,7 +16,11 @@ import {
   getPaginationRowModel,
   useReactTable,
   SortingState,
+  ColumnDef,
+  Column,
+  Row,
 } from "@tanstack/react-table"
+import { ClientSummary, fetchClientsList } from "@/lib/api"
 
 import {
   DropdownMenu,
@@ -43,10 +47,10 @@ export default function ClientsTable() {
 
   const [sorting, setSorting] = useState<SortingState>([])
 
-  const columns = [
+  const columns: ColumnDef<ClientSummary>[] = [
     {
       accessorKey: "name",
-      header: ({ column }: any) => {
+      header: ({ column }) => {
         return (
           <Button variant="ghost" className="-ml-4 h-8" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Client
@@ -54,7 +58,7 @@ export default function ClientsTable() {
           </Button>
         )
       },
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <ClientAvatar name={row.original.name || "Unknown"} size="sm" />
           <div className="flex flex-col">
@@ -67,9 +71,9 @@ export default function ClientsTable() {
     {
       accessorKey: "phone",
       header: "Phone",
-      cell: ({ row }: any) => (
-        <a 
-          href={`tel:${row.original.phone}`} 
+      cell: ({ row }) => (
+        <a
+          href={`tel:${row.original.phone}`}
           className="flex items-center gap-2 hover:text-primary transition-colors text-sm"
           onClick={(e) => e.stopPropagation()}
         >
@@ -81,13 +85,13 @@ export default function ClientsTable() {
     {
       accessorKey: "tags",
       header: "Tags",
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         const tags = row.original.tags || []
         if (tags.length === 0) return <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">-</span>
-        
+
         return (
           <div className="flex items-center gap-1.5 flex-wrap max-w-[180px]">
-            {tags.slice(0, 2).map((tag: string, i: number) => (
+            {tags.slice(0, 2).map((tag, i) => (
               <span key={i} className="px-1.5 py-0.5 rounded-sm bg-muted border border-border/40 text-[9px] font-mono tracking-widest uppercase text-muted-foreground whitespace-nowrap">
                 {tag}
               </span>
@@ -101,7 +105,7 @@ export default function ClientsTable() {
     },
     {
       accessorKey: "bookingsCount",
-      header: ({ column }: any) => {
+      header: ({ column }) => {
         return (
           <Button variant="ghost" className="-ml-4 h-8" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Bookings
@@ -109,13 +113,13 @@ export default function ClientsTable() {
           </Button>
         )
       },
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <span className="text-[11px] font-mono tracking-widest uppercase">{row.original.bookingsCount || 0}</span>
       )
     },
     {
       accessorKey: "totalSpend",
-      header: ({ column }: any) => {
+      header: ({ column }) => {
         return (
           <div className="text-right">
             <Button variant="ghost" className="h-8 pr-0 justify-end w-full" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -125,13 +129,13 @@ export default function ClientsTable() {
           </div>
         )
       },
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <div className="text-right font-mono text-[11px] tracking-widest uppercase font-medium mt-0.5">{formatAmount(row.original.totalSpend)}</div>
       )
     },
     {
       accessorKey: "lastBookingDate",
-      header: ({ column }: any) => {
+      header: ({ column }) => {
         return (
           <div className="text-right">
             <Button variant="ghost" className="h-8 pr-0 justify-end w-full" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -141,13 +145,13 @@ export default function ClientsTable() {
           </div>
         )
       },
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <div className="text-right text-[11px] font-mono tracking-widest uppercase text-muted-foreground mt-0.5">{row.original.lastBookingDate || "Never"}</div>
       )
     },
     {
       id: "actions",
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         return (
           <div className="text-right">
             <DropdownMenu>
@@ -158,7 +162,7 @@ export default function ClientsTable() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); router.push(`/clients/${row.original.id}`) }}>
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); router.push(clientDetailUrl(row.original.id), { scroll: false }) }}>
                   View profile
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
@@ -236,7 +240,7 @@ export default function ClientsTable() {
               <tr 
                 key={row.id} 
                 className="border-b border-border/40 hover:bg-muted/30 transition-colors cursor-pointer block sm:table-row"
-                onClick={() => router.push(`/clients/${row.original.id}`)}
+                onClick={() => router.push(clientDetailUrl(row.original.id), { scroll: false })}
               >
                 {row.getVisibleCells().map((cell, i) => (
                   <td key={cell.id} className={`px-4 py-3 align-middle ${i !== 0 ? 'hidden sm:table-cell' : 'block w-full'}`}>

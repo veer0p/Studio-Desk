@@ -7,12 +7,13 @@ import { LayoutDashboard, CalendarDays, Receipt, Image as ImageIcon } from "luci
 import { cn } from "@/lib/utils"
 
 import { useAuth } from "@/hooks/use-auth"
+import { ROUTES } from "@/lib/constants/routes"
 
 const MOBILE_NAV_ITEMS = [
-    { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-    { icon: CalendarDays, label: "Bookings", href: "/bookings" },
-    { icon: Receipt, label: "Finance", href: "/finance" },
-    { icon: ImageIcon, label: "Gallery", href: "/gallery" },
+    { icon: LayoutDashboard, label: "Dashboard", href: ROUTES.DASHBOARD },
+    { icon: CalendarDays, label: "Bookings", href: ROUTES.BOOKINGS },
+    { icon: Receipt, label: "Finance", href: ROUTES.FINANCE },
+    { icon: ImageIcon, label: "Gallery", href: ROUTES.GALLERY },
 ]
 
 export function BottomNav() {

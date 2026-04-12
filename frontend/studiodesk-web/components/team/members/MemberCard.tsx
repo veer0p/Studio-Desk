@@ -5,6 +5,7 @@ import { RoleBadge } from "@/components/team/shared/RoleBadge"
 import { CalendarPlus, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import { ROUTES, teamMemberDetailUrl } from "@/lib/constants/routes"
 
 import { TeamMember } from "@/lib/api"
 
@@ -32,7 +33,7 @@ export function MemberCard({ member }: { member: TeamMember }) {
 
   return (
     <div
-      onClick={() => router.push(`/team/${member.id}`)}
+      onClick={() => router.push(teamMemberDetailUrl(member.id), { scroll: false })}
       className="group relative flex flex-col bg-card rounded-md border border-border/60 overflow-hidden shadow-sm hover:border-border transition-all cursor-pointer"
     >
       <div className="p-5 flex items-start gap-4">
@@ -92,7 +93,7 @@ export function MemberCard({ member }: { member: TeamMember }) {
             className="flex-1 min-w-0 text-[10px] h-8 bg-muted/10 rounded-sm font-mono font-bold tracking-widest uppercase truncate px-2" 
             onClick={(e) => {
               e.stopPropagation()
-              router.push(`/team/${member.id}`)
+              router.push(teamMemberDetailUrl(member.id), { scroll: false })
             }}
           >
             Profile
@@ -102,7 +103,7 @@ export function MemberCard({ member }: { member: TeamMember }) {
             className="flex-1 min-w-0 text-[10px] h-8 rounded-sm font-mono font-bold tracking-widest uppercase truncate px-2 whitespace-nowrap" 
             onClick={(e) => {
               e.stopPropagation()
-              router.push(`/bookings?assign=${member.id}`)
+              router.push(`${ROUTES.BOOKINGS}?assign=${member.id}`, { scroll: false })
             }}
           >
             <CalendarPlus className="w-3 h-3 mr-1 shrink-0" /> Assign

@@ -8,12 +8,23 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
 import { Phone, Mail, MessageCircle, FileText, CheckCircle, Clock } from "lucide-react"
+import type { ClientDetail, ClientCommunication } from "@/lib/api"
 
-export function ClientCommunication({ client }: { client: any }) {
+type CommLog = { id: string; type: string; note: string; date: string; user?: string }
+
+export function ClientCommunication({ client }: { client: ClientDetail }) {
   const { mutate } = useSWRConfig()
   const [type, setType] = useState("call_logged")
   const [note, setNote] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const logs: CommLog[] = client.communications.map((comm: ClientCommunication) => ({
+    id: comm.id,
+    type: comm.type,
+    note: comm.note ?? comm.notes,
+    date: comm.date,
+    user: comm.user,
+  }))
 
   const handleLog = async () => {
     if (!note.trim()) {
@@ -33,8 +44,6 @@ export function ClientCommunication({ client }: { client: any }) {
       setIsSubmitting(false)
     }
   }
-
-  const logs = client.communications || []
 
   const getIcon = (logType: string) => {
     switch (logType) {
@@ -90,7 +99,7 @@ export function ClientCommunication({ client }: { client: any }) {
             </div>
           ) : (
             <div className="relative pl-6 space-y-6 before:absolute before:inset-0 before:ml-6 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
-              {logs.map((log: any, index: number) => (
+              {logs.map((log, index) => (
                 <div key={log.id || index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                   <div className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-background bg-muted text-slate-500 shadow shrink-0 z-10">
                     {getIcon(log.type)}
@@ -101,7 +110,7 @@ export function ClientCommunication({ client }: { client: any }) {
                       <time className="text-xs font-medium text-muted-foreground font-mono">{log.date}</time>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {log.message}
+                      {log.note}
                     </div>
                   </div>
                 </div>

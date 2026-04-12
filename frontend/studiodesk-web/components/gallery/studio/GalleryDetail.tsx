@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ExternalLink, Copy, Share2, MoreHorizontal, Download, ArrowRight, CheckCircle2 } from "lucide-react"
+import { ExternalLink, Copy, Share2, MoreHorizontal, Download, ArrowRight, CheckCircle2, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -17,6 +17,7 @@ import { FaceClusterPanel } from "./FaceClusterPanel"
 import { DeliverySettings } from "./DeliverySettings"
 import useSWR from "swr"
 import { fetchGalleryDetail, GalleryDetail as GalleryDetailType } from "@/lib/api"
+import { ROUTES } from "@/lib/constants/routes"
 
 const statusConfig: Record<string, { label: string, color: string }> = {
   "Selection Pending": { label: "Selection Pending", color: "bg-muted text-foreground border-primary/40" },
@@ -37,7 +38,7 @@ export function GalleryDetail({ galleryId }: { galleryId: string }) {
       <div className="p-8 flex flex-col items-center justify-center text-center text-muted-foreground">
         <p className="font-medium text-foreground mb-1">Failed to load gallery</p>
         <p className="text-sm">{error.message || "Please try again later."}</p>
-        <Button onClick={() => router.push("/gallery")} className="mt-4">Back to Galleries</Button>
+        <Button onClick={() => router.push(ROUTES.GALLERY)} className="mt-4">Back to Galleries</Button>
       </div>
     )
   }
@@ -45,7 +46,7 @@ export function GalleryDetail({ galleryId }: { galleryId: string }) {
   if (isLoading || !gallery) return <div className="p-8 animate-pulse text-muted-foreground font-mono tracking-widest uppercase text-xs">Loading Gallery Details...</div>
 
   const setTab = (tab: string) => {
-    router.replace(`/gallery/${galleryId}?tab=${tab}`)
+    router.replace(`/gallery/${galleryId}?tab=${tab}`, { scroll: false })
   }
 
   const steps = [
@@ -78,7 +79,7 @@ export function GalleryDetail({ galleryId }: { galleryId: string }) {
       {/* Detail Header */}
       <div className="px-8 pt-8 pb-6 shrink-0 border-b border-border/40">
         <div className="flex items-center gap-2 mb-4 text-sm text-muted-foreground font-medium">
-          <Link href="/gallery" className="hover:text-foreground transition-colors">
+          <Link href={ROUTES.GALLERY} className="hover:text-foreground transition-colors">
             Galleries
           </Link>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -88,7 +89,7 @@ export function GalleryDetail({ galleryId }: { galleryId: string }) {
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight">{gallery.clientName}</h1>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{gallery.clientName}</h1>
               <span className={`px-2 py-0.5 rounded-sm text-[9px] font-mono font-bold tracking-widest uppercase border ${cfg.color}`}>
                 {cfg.label}
               </span>
@@ -186,9 +187,9 @@ export function GalleryDetail({ galleryId }: { galleryId: string }) {
       {/* Content Engine */}
       <div className="flex-1 overflow-hidden relative">
         {currentTab === "photos" && (
-          <div className="w-full h-full flex items-start gap-px bg-muted/5 relative">
+          <div className="w-full h-full flex flex-col lg:flex-row items-start gap-px bg-muted/5 relative">
             <div className="flex-1 h-full overflow-y-auto custom-scrollbar flex flex-col relative">
-              <div className="p-8 pb-32">
+              <div className="p-4 md:p-8 pb-32">
                 {gallery.photos && gallery.photos.length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {gallery.photos.map((photo) => (
@@ -209,8 +210,16 @@ export function GalleryDetail({ galleryId }: { galleryId: string }) {
               </div>
             </div>
 
+            {/* Desktop upload panel */}
             <div className="hidden lg:block w-80 shrink-0 h-full relative z-30">
               <UploadPanel galleryId={galleryId} />
+            </div>
+            {/* Mobile upload button */}
+            <div className="lg:hidden w-full shrink-0 border-t border-border/40 bg-background p-4">
+              <Button variant="outline" className="w-full" onClick={() => setTab("settings")}>
+                <Upload className="w-4 h-4 mr-2" />
+                Upload Photos
+              </Button>
             </div>
           </div>
         )}

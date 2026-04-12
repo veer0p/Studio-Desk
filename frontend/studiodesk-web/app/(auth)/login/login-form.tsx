@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { signIn } from "@/lib/auth"
 import { useAuth } from "@/hooks/use-auth"
+import { ROUTES } from "@/lib/constants/routes"
 
 const loginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -61,13 +62,13 @@ export default function LoginFormInner() {
             mutate(data)
 
             if (data?.studio?.onboarding_completed) {
-                router.push("/dashboard")
+                router.push(ROUTES.DASHBOARD)
             } else if (data?.studio) {
-                router.push("/onboarding")
+                router.push(ROUTES.ONBOARDING)
             } else if (data?.member) {
-                router.push("/dashboard")
+                router.push(ROUTES.DASHBOARD)
             } else {
-                router.push("/onboarding")
+                router.push(ROUTES.ONBOARDING)
             }
         } catch (err) {
             const message = err instanceof Error ? err.message : "Invalid email or password"
@@ -113,7 +114,7 @@ export default function LoginFormInner() {
                                 <div className="flex items-center justify-between">
                                     <FormLabel>Password</FormLabel>
                                     <Link
-                                        href="/forgot-password"
+                                        href={ROUTES.FORGOT_PASSWORD}
                                         className="text-xs font-medium text-primary hover:underline"
                                     >
                                         Forgot password?
@@ -150,7 +151,7 @@ export default function LoginFormInner() {
                     />
 
                     {error && (
-                        <div className="text-sm font-medium text-destructive mt-2" role="alert">
+                        <div id="login-error" className="text-sm font-medium text-destructive mt-2" role="alert" aria-live="assertive" aria-atomic="true">
                             {error}
                         </div>
                     )}
@@ -171,7 +172,7 @@ export default function LoginFormInner() {
             <div className="text-center mt-4">
                 <p className="text-sm text-muted-foreground">
                     Don&apos;t have an account?{" "}
-                    <Link href="/signup" className="font-medium text-primary hover:underline">
+                    <Link href={ROUTES.SIGNUP} className="font-medium text-primary hover:underline">
                         Sign up
                     </Link>
                 </p>

@@ -15,14 +15,14 @@ export function FinanceShell({ children }: { children: React.ReactNode }) {
     params.delete("status")
     params.delete("method")
     params.delete("category")
-    router.replace(`/finance?${params.toString()}`)
+    router.replace(`/finance?${params.toString()}`, { scroll: false })
   }
 
   const handleKPIFilter = (status: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("tab", "invoices")
     params.set("status", status)
-    router.replace(`/finance?${params.toString()}`)
+    router.replace(`/finance?${params.toString()}`, { scroll: false })
   }
 
   const tabs = [
@@ -37,7 +37,7 @@ export function FinanceShell({ children }: { children: React.ReactNode }) {
       {/* Header Area */}
       <div className="px-4 md:px-8 pt-4 md:pt-8 pb-4 shrink-0 space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Finance</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Finance</h1>
           <p className="text-muted-foreground mt-1">Manage billing, collect payments, and track studio expenses natively.</p>
         </div>
 

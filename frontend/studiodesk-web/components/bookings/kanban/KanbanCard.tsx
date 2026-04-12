@@ -1,16 +1,20 @@
+"use client"
+
 import type { BookingSummary } from "@/lib/api"
 import { CSS } from "@dnd-kit/utilities"
 import { useSortable } from "@dnd-kit/sortable"
-import { EventTypeDot } from "@/components/bookings/shared/EventTypeDot"
 import { useRouter, useSearchParams } from "next/navigation"
+import { ROUTES } from "@/lib/constants/routes"
+import { EventTypeDot } from "@/components/bookings/shared/EventTypeDot"
+import { FileText, MessageSquare, CalendarClock } from "lucide-react"
 
-const eventColors: Record<string, string> = {
-  Wedding: "bg-indigo-500",
-  Engagement: "bg-rose-500",
-  Corporate: "bg-blue-500",
-  Birthday: "bg-amber-500",
-  "Product Shoot": "bg-teal-500",
-  Other: "bg-slate-500",
+// Anti-AI styling mandate palettes
+const statusColorBorder: Record<string, string> = {
+  "Inquiry": "bg-[#f59e0b]",
+  "Proposal Sent": "bg-[#f59e0b]",
+  "Confirmed": "bg-[#10b981]",
+  "In Progress": "bg-[#10b981]",
+  "Delivered": "bg-[#78716c]",
 }
 
 interface KanbanCardProps {
@@ -22,6 +26,8 @@ export function KanbanCard({ booking, isUpdating = false }: KanbanCardProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentView = searchParams.get("view") || "kanban"
+  const selectedId = searchParams.get("id") || undefined
+  const isSelected = booking.id === selectedId
 
   const {
     attributes,
@@ -38,12 +44,12 @@ export function KanbanCard({ booking, isUpdating = false }: KanbanCardProps) {
     },
   })
 
+  // Smooth out dropping transforms
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
   }
 
-  // Formatting compact INR (e.g. ₹2.4L)
   const formatAmount = (amt: number) => {
     if (amt >= 100000) return `₹${(amt / 100000).toFixed(1)}L`;
     if (amt >= 1000) return `₹${(amt / 1000).toFixed(0)}K`;
@@ -52,13 +58,15 @@ export function KanbanCard({ booking, isUpdating = false }: KanbanCardProps) {
 
   if (isDragging) {
     return (
-      <div 
-        ref={setNodeRef} 
-        style={style} 
-        className="h-[140px] w-full rounded-xl bg-muted/60 border-2 border-dashed border-primary/50 opacity-50" 
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="h-[140px] w-full rounded-lg bg-[#1a1a1a] border border-dashed border-[#f59e0b] opacity-40"
       />
     )
   }
+
+  const defaultBorder = statusColorBorder[booking.stage] || "bg-[#78716c]"
 
   return (
     <div
@@ -66,50 +74,60 @@ export function KanbanCard({ booking, isUpdating = false }: KanbanCardProps) {
       style={style}
       {...attributes}
       {...listeners}
-      onClick={() => router.push(`/bookings?view=${currentView}&id=${booking.id}`)}
-      className={`relative flex flex-col gap-2 p-3 bg-card border border-border/60 rounded-xl shadow-sm cursor-grab active:cursor-grabbing hover:ring-1 hover:ring-primary/30 transition-all ${isDragging ? "opacity-50" : ""} ${isUpdating ? "opacity-60 pointer-events-none" : ""}`}
+      onClick={() => {
+        const params = new URLSearchParams(searchParams.toString())
+        params.set("id", booking.id)
+        router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
+      }}
+      className={`group relative flex flex-col p-4 overflow-hidden rounded-lg shadow-sm cursor-grab active:cursor-grabbing transition-all ${isSelected
+          ? "border-[#f59e0b] ring-1 ring-[#f59e0b] bg-[#1a1a1a]"
+          : "border-[#333333] hover:border-[#555] bg-[#1a1a1a]"
+        } border ${isDragging ? "opacity-50" : ""} ${isUpdating ? "opacity-30 pointer-events-none" : ""}`}
     >
+      {/* 1% opacity noise grain pattern trick (simulated via subtle repeating svg) */}
+      <div
+        className="absolute inset-0 opacity-[0.01] pointer-events-none mix-blend-overlay"
+        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
+      />
+
       {isUpdating && (
-        <div className="absolute inset-0 flex items-center justify-center bg-card/80 rounded-xl z-10">
-          <div className="w-4 h-4 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
+        <div className="absolute inset-0 flex items-center justify-center bg-[#0f0f0f]/80 z-10 transition-opacity">
+          <div className="w-4 h-4 border-2 border-[#1a1a1a] border-t-[#f59e0b] rounded-full animate-spin" />
         </div>
       )}
-      {/* Absolute Left Color Border */}
-      <div className={`absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl ${eventColors[booking.eventType] || eventColors.Other}`} />
-      
-      <div className="pl-2">
-        <div className="flex justify-between items-start gap-2">
-          <span className="font-medium text-sm line-clamp-1">{booking.clientName}</span>
-          <span className="text-xs text-muted-foreground whitespace-nowrap">{booking.date}</span>
+
+      {/* Vertical Status Pill replacing plain colors */}
+      <div className={`absolute left-0 top-0 bottom-0 w-[3px] ${defaultBorder}`} />
+
+      {/* Quick Actions overlay triggering on group hover */}
+      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-[#1a1a1a]/90 px-1 py-1 rounded">
+        <button onClick={(e) => { e.stopPropagation(); console.log("Invoice clicked"); }} className="p-1 hover:bg-[#333] rounded transition-colors text-[#78716c] hover:text-[#fafaf9]">
+          <FileText className="w-4 h-4" />
+        </button>
+        <button onClick={(e) => { e.stopPropagation(); window.open(`https://wa.me/something`); }} className="p-1 hover:bg-[#333] rounded transition-colors text-[#78716c] hover:text-[#fafaf9]">
+          <MessageSquare className="w-4 h-4" />
+        </button>
+        <button onClick={(e) => { e.stopPropagation(); console.log("Reschedule clicked"); }} className="p-1 hover:bg-[#333] rounded transition-colors text-[#78716c] hover:text-[#fafaf9]">
+          <CalendarClock className="w-4 h-4" />
+        </button>
+      </div>
+
+      <div className="pl-1 flex flex-col h-full z-0 font-sans text-sm">
+        <div className="font-serif text-[#fafaf9] text-base mb-1" style={{ fontFamily: '"Playfair Display", serif' }}>
+          {booking.clientName}
         </div>
 
-        <div className="mt-1 flex items-center justify-between gap-2">
-          <span className="text-sm text-muted-foreground line-clamp-1">{booking.venue}</span>
+        <div className="flex items-center justify-between text-[#78716c]">
+          <span className="truncate pr-4 leading-tight">{booking.venue}</span>
+          <span className="shrink-0">{booking.date}</span>
         </div>
 
-        <div className="mt-2 flex items-center gap-1.5">
-          <EventTypeDot type={booking.eventType} className="w-2 h-2" />
-          <span className="text-xs text-muted-foreground font-medium">{booking.eventType}</span>
-        </div>
-
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex -space-x-2">
-            {booking.team?.slice(0, 3).map((member, i: number) => (
-              <div key={i} className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center text-[10px] font-medium overflow-hidden shrink-0">
-                {member.avatar ? (
-                  <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
-                ) : (
-                  member.name.charAt(0)
-                )}
-              </div>
-            ))}
-            {(booking.team?.length || 0) > 3 && (
-              <div className="w-6 h-6 rounded-full bg-background border-2 border-background flex items-center justify-center text-[10px] font-medium text-muted-foreground z-10 shrink-0">
-                +{(booking.team?.length || 0) - 3}
-              </div>
-            )}
+        <div className="mt-4 flex items-center justify-between pt-2 border-t border-[#333]">
+          <div className="flex items-center gap-1.5 text-[#f59e0b]">
+            <EventTypeDot type={booking.eventType} className="w-2 h-2 opacity-80 mix-blend-screen" />
+            <span className="text-xs font-semibold">{booking.eventType}</span>
           </div>
-          <span className="text-sm font-medium font-mono">{formatAmount(booking.amount)}</span>
+          <span className="font-medium font-mono tabular-nums text-[#fafaf9]">{formatAmount(booking.amount)}</span>
         </div>
       </div>
     </div>

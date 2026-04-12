@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Plus } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { ROUTES, bookingDetailUrl } from "@/lib/constants/routes"
 
 const PIPELINE_STAGES = ["Inquiry", "Proposal Sent", "Confirmed", "In Progress", "Delivered"]
 
@@ -41,7 +42,7 @@ export default function BookingPipeline() {
     <div className="w-full flex flex-col gap-4">
       <div className="flex justify-between items-center px-1">
         <h2 className="text-xl font-semibold tracking-tight">Pipeline</h2>
-        <Link href="/bookings" className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors">
+        <Link href={ROUTES.BOOKINGS} className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors">
           View all
         </Link>
       </div>
@@ -80,7 +81,7 @@ export default function BookingPipeline() {
               if (!item) return null
               return (
                 <Link
-                  href={`/bookings/${item.id}`}
+                  href={bookingDetailUrl(item.id)}
                   key={item.id}
                   className="group bg-card border border-border/60 hover:border-foreground/20 transition-colors rounded-md p-4 flex items-center justify-between"
                 >
@@ -99,7 +100,7 @@ export default function BookingPipeline() {
               )
             })}
             {PIPELINE_STAGES.filter((stage) => (stages[stage] || []).length > 0).length > 3 && (
-              <Link href="/bookings" className="text-[11px] font-mono tracking-widest uppercase text-center text-muted-foreground hover:text-foreground py-2 transition-colors">
+              <Link href={ROUTES.BOOKINGS} className="text-[11px] font-mono tracking-widest uppercase text-center text-muted-foreground hover:text-foreground py-2 transition-colors">
                 View all bookings →
               </Link>
             )}
@@ -122,7 +123,7 @@ export default function BookingPipeline() {
                   <div className="flex flex-col gap-2">
                     {visibleItems.map((item: any) => (
                       <Link
-                        href={`/bookings/${item.id}`}
+                        href={bookingDetailUrl(item.id)}
                         key={item.id}
                         className="group bg-card border border-border/60 hover:border-foreground/20 transition-colors rounded-md p-3"
                       >
@@ -138,7 +139,7 @@ export default function BookingPipeline() {
                     ))}
 
                     {remaining > 0 ? (
-                      <Link href={`/bookings?stage=${encodeURIComponent(stage)}`} className="text-[10px] font-mono tracking-widest uppercase text-center text-muted-foreground hover:text-foreground py-2 mt-1 transition-colors border border-dashed border-border/40 rounded-md">
+                      <Link href={`${ROUTES.BOOKINGS}?stage=${encodeURIComponent(stage)}`} className="text-[10px] font-mono tracking-widest uppercase text-center text-muted-foreground hover:text-foreground py-2 mt-1 transition-colors border border-dashed border-border/40 rounded-md">
                         + {remaining} more
                       </Link>
                     ) : null}

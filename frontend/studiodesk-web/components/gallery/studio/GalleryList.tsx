@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Plus, Search, Filter, Folder } from "lucide-react"
+import { ROUTES } from "@/lib/constants/routes"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -46,7 +47,7 @@ export function GalleryList() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-3xl font-bold tracking-tight">Galleries</h1>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Galleries</h1>
               <span className="px-2 py-0.5 rounded-sm bg-muted text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">{finalGalleries.length} total</span>
             </div>
             <p className="text-muted-foreground mt-1 text-sm">Organize and share deliverables directly with clients.</p>
@@ -74,17 +75,17 @@ export function GalleryList() {
                 <DropdownMenuItem onClick={() => {
                   const params = new URLSearchParams(searchParams.toString())
                   params.delete("status")
-                  router.push(`/gallery?${params.toString()}`)
+                  router.push(`${ROUTES.GALLERY}?${params.toString()}`, { scroll: false })
                 }}>All Galleries</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
                   const params = new URLSearchParams(searchParams.toString())
                   params.set("status", "pending")
-                  router.push(`/gallery?${params.toString()}`)
+                  router.push(`${ROUTES.GALLERY}?${params.toString()}`, { scroll: false })
                 }}>Pending</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
                   const params = new URLSearchParams(searchParams.toString())
                   params.set("status", "delivered")
-                  router.push(`/gallery?${params.toString()}`)
+                  router.push(`${ROUTES.GALLERY}?${params.toString()}`, { scroll: false })
                 }}>Delivered</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

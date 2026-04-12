@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { SWRConfig } from "swr"
+import { ROUTES } from "@/lib/constants/routes"
 
 export function SWRProvider({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +12,7 @@ export function SWRProvider({ children }: { children: React.ReactNode }) {
       dedupingInterval: 5000,
       fetcher: (url: string) => fetch(url).then(res => {
         if (!res.ok) {
-          const error = new Error('An error occurred while fetching the data.') as any
+          const error = new Error('An error occurred while fetching the data.') as Error & { status?: number }
           error.status = res.status
           throw error
         }
@@ -20,7 +21,7 @@ export function SWRProvider({ children }: { children: React.ReactNode }) {
       onError: (error) => {
         if (error.status === 401) {
           if (typeof window !== "undefined") {
-            window.location.href = "/login"
+            window.location.href = ROUTES.LOGIN
           }
         }
       }

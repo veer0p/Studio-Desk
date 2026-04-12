@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Download, Receipt } from "lucide-react"
+import type { ClientDetail } from "@/lib/api"
 
 const formatAmount = (amt: number) => {
   if (!amt) return "₹0"
@@ -10,7 +11,7 @@ const formatAmount = (amt: number) => {
   return `₹${amt}`
 }
 
-export function ClientFinance({ client }: { client: any }) {
+export function ClientFinance({ client }: { client: ClientDetail }) {
   const totalInvoiced = client.totalInvoiced || 0
   const totalPaid = client.totalPaid || 0
   const outstanding = Math.max(0, totalInvoiced - totalPaid)
@@ -59,11 +60,11 @@ export function ClientFinance({ client }: { client: any }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
-                  {client.invoices.map((inv: any) => (
+                  {client.invoices.map((inv) => (
                     <tr key={inv.id} className="hover:bg-muted/30 transition-colors">
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="font-mono text-[11px] uppercase tracking-widest">{inv.number}</div>
-                        <div className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mt-0.5">{inv.date}</div>
+                        <div className="font-mono text-[11px] uppercase tracking-widest">{inv.invoiceNumber}</div>
+                        <div className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground mt-0.5">{inv.issueDate}</div>
                       </td>
                       <td className="px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-right">{formatAmount(inv.amount)}</td>
                       <td className="px-4 py-3 text-center">
@@ -108,7 +109,7 @@ export function ClientFinance({ client }: { client: any }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
-                  {client.payments.map((pay: any) => (
+                  {client.payments.map((pay) => (
                     <tr key={pay.id} className="hover:bg-muted/30 transition-colors">
                       <td className="px-4 py-3 whitespace-nowrap text-[11px] font-mono tracking-widest uppercase text-muted-foreground">{pay.date}</td>
                       <td className="px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-right">{formatAmount(pay.amount)}</td>

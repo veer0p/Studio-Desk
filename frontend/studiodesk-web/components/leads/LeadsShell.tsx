@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
+import { ROUTES } from "@/lib/constants/routes"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { LayoutGrid, List as ListIcon, Plus, Search, Filter } from "lucide-react"
@@ -36,7 +37,7 @@ export function LeadsShell({
   const setView = (view: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("view", view)
-    router.push(`/leads?${params.toString()}`)
+    router.push(`${ROUTES.LEADS}?${params.toString()}`, { scroll: false })
   }
 
   const handleFilterChange = (stage: string) => {
@@ -46,7 +47,7 @@ export function LeadsShell({
     } else {
       params.set("stage", stage)
     }
-    router.push(`/leads?${params.toString()}`)
+    router.push(`${ROUTES.LEADS}?${params.toString()}`, { scroll: false })
   }
 
   return (

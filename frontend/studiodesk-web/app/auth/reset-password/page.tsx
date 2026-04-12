@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
-import { Eye, EyeOff, Loader2, Camera } from "lucide-react"
+import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { resetPassword } from "@/lib/auth"
 import { cn } from "@/lib/utils"
+import { ROUTES } from "@/lib/constants/routes"
 
 const resetPasswordSchema = z.object({
     password: z.string()
@@ -73,7 +74,7 @@ export default function ResetPasswordPage() {
 
             // Delay redirect to show success toast
             setTimeout(() => {
-                router.push("/login")
+                router.push(ROUTES.LOGIN)
             }, 2000)
         } catch (err) {
             const message = err instanceof Error ? err.message : "Failed to update password. Please try again."
@@ -82,21 +83,17 @@ export default function ResetPasswordPage() {
     }
 
     return (
-        <div className="min-h-screen w-full bg-background flex items-center justify-center p-4">
-            <div className="max-w-md w-full rounded-3xl border bg-card p-8 shadow-modal flex flex-col items-center">
-                <div className="flex flex-col items-center mb-8 gap-2">
-                    <div className="h-12 w-12 rounded-xl bg-sidebar flex items-center justify-center mb-2">
-                        <Camera className="h-[28px] w-[28px] text-white" />
-                    </div>
-                    <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                        Update Password
-                    </h1>
-                    <p className="text-sm text-muted-foreground">
-                        Enter your new password below.
-                    </p>
-                </div>
+        <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center mb-4 gap-2">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">
+                    Update Password
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                    Enter your new password below.
+                </p>
+            </div>
 
-                <Form {...form}>
+            <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
                         <FormField
                             control={form.control}
@@ -176,7 +173,7 @@ export default function ResetPasswordPage() {
                         />
 
                         {error && (
-                            <div className="text-sm font-medium text-destructive mt-2" role="alert">
+                            <div id="reset-password-error" className="text-sm font-medium text-destructive mt-2" role="alert" aria-live="assertive" aria-atomic="true">
                                 {error}
                             </div>
                         )}
@@ -193,7 +190,6 @@ export default function ResetPasswordPage() {
                         </Button>
                     </form>
                 </Form>
-            </div>
         </div>
     )
 }

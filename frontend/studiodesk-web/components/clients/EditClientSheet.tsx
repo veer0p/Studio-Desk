@@ -27,12 +27,28 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import type { ClientSummary } from "@/lib/api"
+import type { z } from "zod"
 
-export function EditClientSheet({ children, client }: { children: React.ReactNode; client: any }) {
+type EditClientFormValues = z.infer<typeof editClientSchema>
+
+type ClientExtended = ClientSummary & {
+  source?: string | null
+  referred_by?: string | null
+  date_of_birth?: string | null
+  anniversary?: string | null
+  companyName?: string | null
+  gstin?: string | null
+  state?: string | null
+  pincode?: string | null
+  address?: string | null
+}
+
+export function EditClientSheet({ children, client }: { children: React.ReactNode; client: ClientExtended }) {
   const [open, setOpen] = useState(false)
   const { mutate } = useSWRConfig()
 
-  const form = useForm<any>({
+  const form = useForm<EditClientFormValues>({
     resolver: zodResolver(editClientSchema),
     defaultValues: {
       fullName: client?.name || "",
@@ -68,7 +84,7 @@ export function EditClientSheet({ children, client }: { children: React.ReactNod
     }
   }
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: EditClientFormValues) => {
     try {
       if (!client?.id) return
 

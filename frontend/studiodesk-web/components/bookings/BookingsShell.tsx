@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { LayoutGrid, List as ListIcon, Plus, Search, Filter } from "lucide-react"
 import { NewBookingDialog } from "@/components/bookings/shared/NewBookingDialog"
+import { ROUTES } from "@/lib/constants/routes"
 import BookingCountBadge from "@/components/bookings/shared/BookingCountBadge"
 
 export default function BookingsShell({ children }: { children: React.ReactNode }) {
@@ -31,7 +32,7 @@ export default function BookingsShell({ children }: { children: React.ReactNode 
   const setView = (view: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("view", view)
-    router.push(`/bookings?${params.toString()}`)
+    router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
   }
 
   const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +45,7 @@ export default function BookingsShell({ children }: { children: React.ReactNode 
       } else {
         params.delete("search")
       }
-      router.replace(`/bookings?${params.toString()}`)
+      router.replace(`/bookings?${params.toString()}`, { scroll: false })
     }, 300)
   }, [router, searchParams])
 
@@ -92,27 +93,27 @@ export default function BookingsShell({ children }: { children: React.ReactNode 
               <DropdownMenuItem onClick={() => {
                 const params = new URLSearchParams(searchParams.toString())
                 params.set("stage", "Inquiry")
-                router.push(`/bookings?${params.toString()}`)
+                router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
               }}>Inquiry</DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
                 const params = new URLSearchParams(searchParams.toString())
                 params.set("stage", "Proposal Sent")
-                router.push(`/bookings?${params.toString()}`)
+                router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
               }}>Proposal Sent</DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
                 const params = new URLSearchParams(searchParams.toString())
                 params.set("stage", "Confirmed")
-                router.push(`/bookings?${params.toString()}`)
+                router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
               }}>Confirmed</DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
                 const params = new URLSearchParams(searchParams.toString())
                 params.set("stage", "In Progress")
-                router.push(`/bookings?${params.toString()}`)
+                router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
               }}>In Progress</DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
                 const params = new URLSearchParams(searchParams.toString())
                 params.set("stage", "Delivered")
-                router.push(`/bookings?${params.toString()}`)
+                router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
               }}>Delivered</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

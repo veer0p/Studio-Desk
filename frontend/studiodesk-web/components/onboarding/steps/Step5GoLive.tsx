@@ -6,6 +6,7 @@ import { CheckCircle2, Store, User, Users, Package, ArrowRight } from "lucide-re
 import { Button } from "@/components/ui/button"
 import { submitStudioProfile, submitOwnerProfile, submitTeamMembers, submitPackages, completeOnboardingFlag } from "@/lib/api"
 import { Step1Data, Step2Data, Step3Data, Step4Data } from "@/lib/validations/onboarding"
+import { ROUTES } from "@/lib/constants/routes"
 
 interface Step5Props {
   formData: {
@@ -31,7 +32,7 @@ export default function Step5GoLive({ formData, onBack, isSubmitting, setIsSubmi
       if (formData.step4 && formData.step4.packages.length > 0) await submitPackages(formData.step4)
       await completeOnboardingFlag()
 
-      router.push("/dashboard")
+      router.push(ROUTES.DASHBOARD)
       router.refresh()
     } catch (error) {
       console.error("[ONBOARDING_API_ERROR]", error)

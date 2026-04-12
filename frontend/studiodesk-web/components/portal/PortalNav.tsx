@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { AlignLeft, LogOut, Settings, User } from "lucide-react"
+import { ROUTES } from "@/lib/constants/routes"
 
 export function PortalNav({ studioSlug }: { studioSlug: string }) {
   const pathname = usePathname()
@@ -21,7 +22,7 @@ export function PortalNav({ studioSlug }: { studioSlug: string }) {
         
         {/* Left: Studio Branding */}
         <div className="flex items-center gap-4">
-          <Link href={`/portal/${studioSlug}/dashboard`} className="flex items-center gap-2 transition-opacity hover:opacity-80">
+          <Link href={ROUTES.PORTAL_DASHBOARD(studioSlug)} className="flex items-center gap-2 transition-opacity hover:opacity-80">
             <span className="font-bold text-lg tracking-tight text-foreground">{studioName}</span>
           </Link>
         </div>

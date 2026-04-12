@@ -8,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { MapPin, Mail, Phone, CalendarDays, ExternalLink, Gift, HeartHandshake } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { clientDetailUrl } from "@/lib/constants/routes"
+import type { ClientDetail } from "@/lib/api"
 
 const formatAmount = (amt: number) => {
   if (!amt) return "₹0"
@@ -16,7 +18,7 @@ const formatAmount = (amt: number) => {
   return `₹${amt}`
 }
 
-export function ClientOverview({ client }: { client: any }) {
+export function ClientOverview({ client }: { client: ClientDetail & { date_of_birth?: string | null; anniversary?: string | null; referred_clients?: Array<{ id: string; name: string; date?: string }>; source?: string | null; referred_by?: string | null; created_at?: string | null; completedBookings?: number; averageBookingValue?: number } }) {
   const router = useRouter()
   const { mutate } = useSWRConfig()
   const [internalNotes, setInternalNotes] = useState(client.notes || "")
@@ -217,8 +219,8 @@ export function ClientOverview({ client }: { client: any }) {
                 <span className="text-muted-foreground mb-1">
                   Referred <strong className="text-foreground">{client.referred_clients.length}</strong> clients:
                 </span>
-                {client.referred_clients.map((rc: any) => (
-                  <div key={rc.id} className="flex items-center justify-between p-2 rounded-md bg-muted/40 hover:bg-muted/80 transition-colors cursor-pointer" onClick={() => router.push(`/clients/${rc.id}`)}>
+                {client.referred_clients.map((rc) => (
+                  <div key={rc.id} className="flex items-center justify-between p-2 rounded-md bg-muted/40 hover:bg-muted/80 transition-colors cursor-pointer" onClick={() => router.push(clientDetailUrl(rc.id), { scroll: false })}>
                     <span className="font-medium text-foreground">{rc.name}</span>
                     <span className="text-xs text-muted-foreground">{rc.date || "Unknown date"}</span>
                   </div>

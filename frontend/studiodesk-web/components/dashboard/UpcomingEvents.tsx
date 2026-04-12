@@ -4,6 +4,7 @@ import useSWR from "swr"
 import { fetchDashboardOverview } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
+import { ROUTES, bookingDetailUrl } from "@/lib/constants/routes"
 
 const eventColors: Record<string, string> = {
   Wedding: "bg-foreground",
@@ -47,7 +48,7 @@ export default function UpcomingEvents() {
                 <div className="flex flex-col gap-2">
                   {(day.bookings || []).map((event: any) => (
                     <Link
-                      href={`/bookings/${event.id}`}
+                      href={bookingDetailUrl(event.id)}
                       key={event.id}
                       className="group flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-md border border-border/40 hover:border-foreground/20 hover:bg-muted/5 transition-colors gap-2 shadow-none"
                     >
@@ -67,7 +68,7 @@ export default function UpcomingEvents() {
               </div>
             ))}
 
-            <Link href="/bookings" className="text-xs font-mono tracking-widest uppercase text-muted-foreground hover:text-foreground text-center pt-2">
+            <Link href={ROUTES.BOOKINGS} className="text-xs font-mono tracking-widest uppercase text-muted-foreground hover:text-foreground text-center pt-2">
               View all bookings
             </Link>
           </div>

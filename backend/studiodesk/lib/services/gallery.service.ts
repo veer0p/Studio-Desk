@@ -349,15 +349,60 @@ export const GalleryService = {
         access_type: 'view',
       })
     )
+
+    // Get studio's Immich credentials
+    let immichApiKey: string | null = null
+    try {
+      const creds = await ImmichService.getStudioImmichCredentials(admin, gallery.studio_id)
+      immichApiKey = creds.apiKey
+    } catch {
+      // Immich not configured - gallery will show metadata only
+    }
+
+    // Fetch photos from Immich if available
+    let photos: any[] = []
+    let totalCount = gallery.total_photos || 0
+
+    if (immichApiKey && gallery.immich_album_id) {
+      try {
+        const res = await ImmichService.immichRequest(
+          `/albums/${gallery.immich_album_id}/assets?size=thumbnail&withPartners=false&withPeople=true`,
+          { method: 'GET', headers: { 'x-api-key': immichApiKey } },
+          immichApiKey
+        )
+        const immichAssets = await res.json()
+        const allAssets = Array.isArray(immichAssets) ? immichAssets : immichAssets?.assets || []
+        totalCount = allAssets.length
+
+        // Return first page (first 48 photos)
+        photos = allAssets.slice(0, 48).map((asset: any) => ({
+          id: asset.id,
+          immich_asset_id: asset.id,
+          filename: asset.originalFileName || asset.originalPath?.split('/').pop() || 'photo.jpg',
+          mime_type: asset.type === 'video' ? asset.originalMimeType || 'video/mp4' : asset.originalMimeType || 'image/jpeg',
+          taken_at: asset.exifInfo?.dateTimeOriginal || asset.fileCreatedAt || asset.createdAt,
+          width: asset.exifInfo?.exifImageWidth || 0,
+          height: asset.exifInfo?.exifImageHeight || 0,
+          is_video: asset.type === 'VIDEO',
+          thumb_url: `/api/v1/gallery/${slug}/photos/${asset.id}/thumb`,
+          download_url: `/api/v1/gallery/${slug}/photos/${asset.id}/download`,
+        }))
+      } catch {
+        // Immich unavailable - return empty photos
+      }
+    }
+
     const face_clusters = (await galleryRepo.getFaceClusters(admin, gallery.id, gallery.studio_id))
       .filter((row) => row.is_labeled)
       .map((row) => ({ label: row.label, face_count: row.face_count }))
+
     return {
       name: gallery.name,
       status: gallery.status,
-      total_photos: gallery.total_photos,
+      total_photos: totalCount,
       share_link_url: gallery.share_link_url,
       face_clusters,
+      photos,
       studio: {
         name: gallery.studio_name,
         logo_url: gallery.studio_logo_url,

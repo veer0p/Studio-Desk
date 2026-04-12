@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Building, User, CreditCard, Package, IndianRupee, Bell, Plug, AlertTriangle, Zap } from "lucide-react"
+import { Building, User, CreditCard, Package, IndianRupee, Bell, Plug, AlertTriangle, Zap, Gift, Flag, KeyRound, FileText, Wifi, Wallet, BookText } from "lucide-react"
 
 const navLinks = [
   { href: "/settings/studio", label: "Studio Profile", icon: Building },
@@ -10,9 +10,15 @@ const navLinks = [
   { href: "/settings/billing", label: "Billing & Plan", icon: CreditCard },
   { href: "/settings/packages", label: "Packages", icon: Package },
   { href: "/settings/finance", label: "Finance & GST", icon: IndianRupee },
+  { href: "/settings/payments", label: "Payments", icon: Wallet },
   { href: "/settings/automations", label: "Automations", icon: Zap },
   { href: "/settings/notifications", label: "Notifications", icon: Bell },
   { href: "/settings/integrations", label: "Integrations", icon: Plug },
+  { href: "/settings/api-keys", label: "API Keys", icon: KeyRound },
+  { href: "/settings/templates", label: "Templates", icon: FileText },
+  { href: "/settings/contract-clauses", label: "Clause Library", icon: BookText },
+  { href: "/settings/feature-flags", label: "Feature Flags", icon: Flag },
+  { href: "/settings/referral", label: "Referral", icon: Gift },
   { href: "/settings/danger", label: "Danger Zone", icon: AlertTriangle, danger: true },
 ]
 

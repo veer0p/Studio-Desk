@@ -1,19 +1,11 @@
-import { Suspense } from "react"
-import { GalleryList } from "@/components/gallery/studio/GalleryList"
+"use client"
 
-export const dynamic = "force-dynamic"
-
-export const metadata = {
-  title: "Galleries | StudioDesk",
-  description: "Manage client photo and video deliverables.",
-}
+import GalleryHub from "@/components/gallery/GalleryHub"
 
 export default function GalleryPage() {
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-background">
-      <Suspense fallback={<div className="p-8 text-center text-muted-foreground animate-pulse font-mono tracking-widest uppercase text-[10px]">Loading Asset Clusters...</div>}>
-        <GalleryList />
-      </Suspense>
+    <div className="flex-1 w-full h-full bg-black text-[#fafaf9] overflow-hidden flex flex-col">
+      <GalleryHub />
     </div>
   )
 }

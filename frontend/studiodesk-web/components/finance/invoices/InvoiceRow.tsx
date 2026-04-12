@@ -1,7 +1,8 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { MoreHorizontal, FileText, Send, BellRing, Copy, Trash2, Edit2, Ban, Download } from "lucide-react"
+import { ROUTES } from "@/lib/constants/routes"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,6 +37,7 @@ const getStatusColor = (status: string) => {
 
 export function InvoiceRow({ invoice, onRowClick }: { invoice: any, onRowClick: (id: string) => void }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const isOverdue = invoice.status.toLowerCase() === "overdue"
   const isCancelled = invoice.status.toLowerCase() === "cancelled"
@@ -63,7 +65,11 @@ export function InvoiceRow({ invoice, onRowClick }: { invoice: any, onRowClick: 
         <span 
           onClick={(e) => {
             e.stopPropagation()
-            if (invoice.bookingId) router.push(`/bookings?id=${invoice.bookingId}`)
+            if (invoice.bookingId) {
+              const params = new URLSearchParams(searchParams.toString())
+              params.set("id", invoice.bookingId)
+              router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
+            }
           }}
           className="text-sm font-medium text-primary hover:underline cursor-pointer truncate max-w-[150px] inline-block"
         >

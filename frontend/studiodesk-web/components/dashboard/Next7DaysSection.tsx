@@ -1,6 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { CalendarClock } from "lucide-react"
+import { ROUTES } from "@/lib/constants/routes"
 
 export function Next7DaysSkeleton() {
   return (
@@ -142,7 +143,7 @@ export default async function Next7DaysSection() {
           })}
           
           <div className="px-4 py-3 text-center hover:bg-muted/10 transition-colors">
-            <Link href="/bookings" className="text-xs font-mono font-medium text-primary hover:text-primary-hover hover:underline">
+            <Link href={ROUTES.BOOKINGS} className="text-xs font-mono font-medium text-primary hover:text-primary-hover hover:underline">
               View all bookings &rarr;
             </Link>
           </div>

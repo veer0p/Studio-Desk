@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import { ROUTES, galleryDetailUrl, clientDetailUrl } from "@/lib/constants/routes"
 
 const statusConfig: Record<string, { label: string, color: string }> = {
   "Not Started": { label: "Not Started", color: "bg-muted text-muted-foreground border-border/40" },
@@ -29,7 +30,7 @@ export function GalleryCard({ gallery }: { gallery: any }) {
 
   return (
     <div 
-      onClick={() => router.push(`/gallery/${gallery.id}`)}
+      onClick={() => router.push(galleryDetailUrl(gallery.id), { scroll: false })}
       className="group relative flex flex-col bg-card rounded-md border border-border/60 overflow-hidden shadow-sm hover:border-primary/40 transition-all cursor-pointer"
     >
       {/* Cover Image */}
@@ -118,7 +119,7 @@ export function GalleryCard({ gallery }: { gallery: any }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-              <DropdownMenuItem onClick={() => window.open(`/gallery/p/client-${gallery.slug}`, "_blank")}>
+              <DropdownMenuItem onClick={() => window.open(ROUTES.PUBLIC_GALLERY(`client-${gallery.slug}`), "_blank")}>
                 <LinkIcon className="w-4 h-4 mr-2" /> View Public Link ↗
               </DropdownMenuItem>
               <DropdownMenuItem>Copy Gallery PIN</DropdownMenuItem>

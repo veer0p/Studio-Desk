@@ -44,7 +44,7 @@ export default function LeadsClient({ search, view }: { search: string, view: st
           } else {
             params.delete("search")
           }
-          router.replace(`/leads?${params.toString()}`)
+          router.replace(`/leads?${params.toString()}`, { scroll: false })
         }, 300)
       }}
       filterOpen={filterOpen}

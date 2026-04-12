@@ -2,6 +2,8 @@ import { ClientAvatar } from "@/components/clients/shared/ClientAvatar"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { whatsappUrl } from "@/lib/phone"
+import { clientDetailUrl } from "@/lib/constants/routes"
+import type { ClientSummary } from "@/lib/api"
 
 const formatAmount = (amt: number) => {
   if (!amt) return "₹0"
@@ -10,7 +12,7 @@ const formatAmount = (amt: number) => {
   return `₹${amt}`
 }
 
-export default function ClientCard({ client }: { client: any }) {
+export default function ClientCard({ client }: { client: ClientSummary }) {
   const router = useRouter()
   const tags = client.tags || []
 
@@ -18,12 +20,12 @@ export default function ClientCard({ client }: { client: any }) {
     <div className="flex flex-col bg-card border border-border/60 rounded-md overflow-hidden shadow-none hover:ring-1 hover:ring-foreground/10 transition-all duration-200">
       <div className="p-6 flex flex-col items-center text-center">
         <ClientAvatar name={client.name || "Unknown"} size="lg" className="mb-4" />
-        
+
         <h3 className="font-semibold text-lg line-clamp-1">{client.name}</h3>
         <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">{client.city || "No City"}</p>
-        
+
         <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 w-full h-6">
-          {tags.slice(0, 3).map((tag: string, i: number) => (
+          {tags.slice(0, 3).map((tag, i) => (
             <span key={i} className="px-1.5 py-0.5 rounded-sm bg-muted border border-border/40 text-[9px] font-mono uppercase tracking-widest text-muted-foreground whitespace-nowrap">
               {tag}
             </span>
@@ -79,7 +81,7 @@ export default function ClientCard({ client }: { client: any }) {
         <Button
           variant="ghost" 
           className="text-foreground text-[11px] font-mono uppercase tracking-widest"
-          onClick={() => router.push(`/clients/${client.id}`)}
+          onClick={() => router.push(clientDetailUrl(client.id), { scroll: false })}
         >
           View Profile
         </Button>

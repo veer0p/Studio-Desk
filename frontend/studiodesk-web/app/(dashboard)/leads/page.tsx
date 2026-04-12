@@ -16,7 +16,7 @@ export default async function LeadsPage({
   return (
     <Suspense fallback={
       <div className="flex items-center justify-center h-full w-full bg-background">
-        <div className="text-[10px] font-mono tracking-widest uppercase animate-pulse">Initializing Leads Pipeline...</div>
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     }>
       <LeadsClient search={params.search || ""} view={params.view || "kanban"} />

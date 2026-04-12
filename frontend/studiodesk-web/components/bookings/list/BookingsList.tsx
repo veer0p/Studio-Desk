@@ -3,14 +3,15 @@
 import { useState } from "react"
 import useSWR, { useSWRConfig } from "swr"
 import type { BookingListResult, BookingSummary, BookingTeamMember } from "@/lib/api"
-import { fetchBookingsList, updateBookingStage } from "@/lib/api"
 import { useSearchParams, useRouter } from "next/navigation"
+import { ROUTES } from "@/lib/constants/routes"
+import { fetchBookingsList, updateBookingStage } from "@/lib/api"
 import { toast } from "sonner"
 import { EventTypeDot } from "@/components/bookings/shared/EventTypeDot"
 import { BookingStatusBadge } from "@/components/bookings/shared/BookingStatusBadge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal, ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, Eye, CheckCircle, CreditCard } from "lucide-react"
 
 import {
   flexRender,
@@ -22,14 +23,6 @@ import {
   ColumnDef,
 } from "@tanstack/react-table"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
 const formatAmount = (amt: number) => {
   if (!amt) return "₹0"
   if (amt >= 100000) return `₹${(amt / 100000).toFixed(1)}L`
@@ -40,9 +33,15 @@ const formatAmount = (amt: number) => {
 export default function BookingsList() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const queryString = searchParams.toString()
+  const selectedId = searchParams.get("id") || undefined
+
+  // Build query string WITHOUT id parameter (list doesn't need it)
+  const params = new URLSearchParams(searchParams.toString())
+  params.delete("id")
+  const listQuery = params.toString() || "limit=50&sortBy=created_at&order=desc"
+  
   const { data, isLoading, error } = useSWR<BookingListResult>(
-    `/api/v1/bookings?${queryString || "limit=50&sortBy=created_at&order=desc"}`,
+    `/api/v1/bookings?${listQuery}`,
     fetchBookingsList,
     { refreshInterval: 60000 }
   )
@@ -172,29 +171,37 @@ export default function BookingsList() {
     },
     {
       id: "actions",
+      header: () => <div className="text-right">Actions</div>,
       cell: ({ row }: any) => {
         return (
-          <div className="text-right">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0" onClick={(e) => e.stopPropagation()}>
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openDetail(row.original.id as string) }}>
-                  View details
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => handleMarkConfirmed(row.original.id as string, e)}>
-                  Mark confirmed
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-muted-foreground" onClick={(e) => e.stopPropagation()}>
-                  Add payment
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="text-right flex items-center justify-end gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2"
+              onClick={(e) => { e.stopPropagation(); openDetail(row.original.id as string) }}
+              title="View details"
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2"
+              onClick={(e) => handleMarkConfirmed(row.original.id as string, e)}
+              title="Mark confirmed"
+            >
+              <CheckCircle className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2 text-muted-foreground"
+              onClick={(e) => e.stopPropagation()}
+              title="Add payment"
+            >
+              <CreditCard className="h-4 w-4" />
+            </Button>
           </div>
         )
       }
@@ -221,7 +228,7 @@ export default function BookingsList() {
   const openDetail = (id: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("id", id)
-    router.push(`/bookings?${params.toString()}`, { scroll: false })
+    router.push(`${ROUTES.BOOKINGS}?${params.toString()}`, { scroll: false })
   }
 
   if (isLoading) {
@@ -253,12 +260,18 @@ export default function BookingsList() {
 
         {/* Mobile Card View */}
         <div className="flex flex-col gap-3 py-4 sm:hidden">
-          {table.getRowModel().rows.map(row => (
-            <div
-              key={row.id}
-              className="bg-card border border-border/60 rounded-xl p-4 shadow-sm cursor-pointer transition-colors hover:ring-1 hover:ring-primary/30"
-              onClick={() => openDetail(row.original.id as string)}
-            >
+          {table.getRowModel().rows.map(row => {
+            const isSelected = row.original.id === selectedId
+            return (
+              <div
+                key={row.id}
+                className={`bg-card border rounded-xl p-4 shadow-sm cursor-pointer transition-all ${
+                  isSelected
+                    ? "border-primary ring-2 ring-primary/20 bg-primary/5"
+                    : "border-border/60 hover:ring-1 hover:ring-primary/30"
+                }`}
+                onClick={() => openDetail(row.original.id as string)}
+              >
               <div className="flex justify-between items-start gap-4">
                 <div>
                   <h3 className="font-semibold text-base line-clamp-1">{row.original.clientName}</h3>
@@ -317,12 +330,13 @@ export default function BookingsList() {
                 </div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Desktop Table View */}
         <table className="hidden sm:table w-full text-sm text-left">
-          <thead className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0 z-10">
+          <thead className="text-xs text-muted-foreground uppercase bg-muted sticky top-0 z-10">
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
@@ -337,22 +351,29 @@ export default function BookingsList() {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map(row => (
-              <tr
-                key={row.id}
-                className="border-b border-border/40 hover:bg-muted/40 transition-colors cursor-pointer"
-                onClick={() => openDetail(row.original.id as string)}
-              >
-                {row.getVisibleCells().map((cell, i) => (
-                  <td key={cell.id} className="px-4 py-3 align-middle">
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {table.getRowModel().rows.map(row => {
+              const isSelected = row.original.id === selectedId
+              return (
+                <tr
+                  key={row.id}
+                  className={`border-b transition-all cursor-pointer ${
+                    isSelected
+                      ? "border-primary/50 bg-primary/5 ring-1 ring-inset ring-primary/30"
+                      : "border-border/40 hover:bg-muted/40"
+                  }`}
+                  onClick={() => openDetail(row.original.id as string)}
+                >
+                  {row.getVisibleCells().map((cell, i) => (
+                    <td key={cell.id} className="px-4 py-3 align-middle">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

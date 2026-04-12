@@ -44,8 +44,8 @@ export default function TodayStrip() {
       {/* Content */}
       {isLoading ? (
         <div className="flex gap-3 xs:gap-4 overflow-x-auto pb-3 xs:pb-4 [&::-webkit-scrollbar]:hidden">
-          <Skeleton className="min-w-[calc(100vw-3rem)] xs:min-w-[260px] h-[120px] rounded-md" />
-          <Skeleton className="min-w-[calc(100vw-3rem)] xs:min-w-[260px] h-[120px] rounded-md" />
+          <Skeleton className="min-w-[85vw] xs:min-w-[260px] h-[120px] rounded-md" />
+          <Skeleton className="min-w-[85vw] xs:min-w-[260px] h-[120px] rounded-md" />
         </div>
       ) : shoots.length > 0 ? (
         <div className="flex gap-3 xs:gap-4 overflow-x-auto pb-3 xs:pb-4 [&::-webkit-scrollbar]:hidden">
@@ -53,7 +53,7 @@ export default function TodayStrip() {
             <Link
               href={`/bookings/${shoot.id}`}
               key={shoot.id}
-              className="group min-w-[calc(100vw-3rem)] xs:min-w-[260px] flex bg-card border border-border/60 hover:border-foreground/20 transition-colors rounded-md overflow-hidden shadow-none cursor-pointer relative"
+              className="group min-w-[85vw] xs:min-w-[260px] flex bg-card border border-border/60 hover:border-foreground/20 transition-colors rounded-md overflow-hidden shadow-none cursor-pointer relative"
             >
               <div className="p-4 flex flex-col flex-1 gap-3">
                 <div className="flex justify-between items-start gap-4">

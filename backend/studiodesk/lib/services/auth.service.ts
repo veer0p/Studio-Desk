@@ -36,7 +36,7 @@ export class AuthService {
       ) {
         // If user exists, we check if they have a studio.
         const { data: existingUser } = await admin.from('users').select('id').eq('email', validated.email).maybeSingle()
-        
+
         if (existingUser) {
           userId = existingUser.id
           // Check if they already have a studio
@@ -109,8 +109,8 @@ export class AuthService {
       return { user: authData.user, studio: null, member: null }
     }
 
-    const studioData = Array.isArray((member as any).studios) 
-      ? (member as any).studios[0] 
+    const studioData = Array.isArray((member as any).studios)
+      ? (member as any).studios[0]
       : (member as any).studios
 
     return {
@@ -243,12 +243,74 @@ export class AuthService {
 
     if (memberError || !member) throw Errors.forbidden()
 
-    const studioData = Array.isArray((member as any).studios) 
-      ? (member as any).studios[0] 
+    const studioData = Array.isArray((member as any).studios)
+      ? (member as any).studios[0]
       : (member as any).studios
 
     return {
       user,
+      member: {
+        ...member,
+        studios: undefined
+      },
+      studio: studioData
+    }
+  }
+
+  static async requestWhatsAppOtp(supabase: any, phone: string) {
+    console.log('[AuthService] Requesting WhatsApp OTP for:', phone)
+    const admin = createAdminClient()
+    const validPhone = phone.replace(/^\+91/, '').replace(/\D/g, '')
+
+    const { error } = await admin.auth.signInWithOtp({
+      phone: `+91${validPhone}`,
+      options: {
+        channel: 'whatsapp',
+      }
+    });
+
+    if (error) {
+      console.error('[AuthService] OTP Request Error:', error.message)
+      throw error;
+    }
+
+    return { success: true };
+  }
+
+  static async verifyWhatsAppOtp(supabase: any, phone: string, token: string) {
+    console.log('[AuthService] Verifying WhatsApp OTP for:', phone)
+    const validPhone = phone.replace(/^\+91/, '').replace(/\D/g, '')
+
+    const { data: authData, error } = await supabase.auth.verifyOtp({
+      phone: `+91${validPhone}`,
+      token,
+      type: 'sms', // Supabase handles WhatsApp OTPs using the 'sms' token type natively
+    });
+
+    if (error) {
+      console.error('[AuthService] OTP Verify Error:', error.message)
+      throw error;
+    }
+
+    if (!authData?.user) throw Errors.unauthorized()
+
+    // Lookup existing member
+    const { data: member, error: memberError } = await supabase
+      .from('studio_members')
+      .select('*, studios (*)')
+      .eq('user_id', authData.user.id)
+      .single()
+
+    if (memberError || !member) {
+      return { user: authData.user, studio: null, member: null }
+    }
+
+    const studioData = Array.isArray((member as any).studios)
+      ? (member as any).studios[0]
+      : (member as any).studios
+
+    return {
+      user: authData.user,
       member: {
         ...member,
         studios: undefined

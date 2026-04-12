@@ -52,6 +52,7 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/api/v1/inquiry') ||
     request.nextUrl.pathname.startsWith('/api/v1/portal') ||
     request.nextUrl.pathname.startsWith('/api/v1/auth') ||
+    request.nextUrl.pathname.startsWith('/api/v1/admin/auth') ||
     request.nextUrl.pathname === '/api/v1/ping'
 
   if (!user && !isPublicRoute) {

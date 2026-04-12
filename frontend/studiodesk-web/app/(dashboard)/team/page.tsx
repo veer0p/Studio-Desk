@@ -11,7 +11,11 @@ export const metadata = {
 export default function TeamPage() {
   return (
     <div className="flex flex-col h-full overflow-hidden bg-background">
-      <Suspense fallback={<div className="p-8 text-center text-muted-foreground animate-pulse">Loading Team HQ...</div>}>
+      <Suspense fallback={
+        <div className="flex items-center justify-center h-full p-8">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      }>
         <TeamShell />
       </Suspense>
     </div>

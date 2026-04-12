@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { clientDetailUrl } from "@/lib/constants/routes"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
@@ -35,7 +36,7 @@ export function NewClientDialog({ children }: { children: React.ReactNode }) {
   const { mutate } = useSWRConfig()
   const router = useRouter()
 
-  const form = useForm<any>({
+  const form = useForm<NewClientData>({
     resolver: zodResolver(newClientSchema),
     defaultValues: {
       fullName: "",
@@ -69,7 +70,7 @@ export function NewClientDialog({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: NewClientData) => {
     try {
       const newClient = await createClient(values)
       toast.success("Client created successfully")
@@ -81,7 +82,7 @@ export function NewClientDialog({ children }: { children: React.ReactNode }) {
       
       // Optionally route to profile
       if (newClient?.id) {
-        router.push(`/clients/${newClient.id}`)
+        router.push(clientDetailUrl(newClient.id), { scroll: false })
       }
     } catch (error) {
       toast.error("Failed to create client")

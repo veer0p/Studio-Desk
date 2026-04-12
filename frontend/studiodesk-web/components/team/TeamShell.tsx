@@ -21,7 +21,7 @@ export function TeamShell() {
   const setTab = (tab: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("tab", tab)
-    router.replace(`/team?${params.toString()}`)
+    router.replace(`/team?${params.toString()}`, { scroll: false })
   }
 
   const tabs = [
@@ -38,7 +38,7 @@ export function TeamShell() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight">Team & HR</h1>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Team & HR</h1>
               <span className="px-2.5 py-1 rounded-sm bg-muted border border-border/60 text-[10px] font-mono font-bold tracking-widest uppercase">{memberCount} Members</span>
             </div>
             <p className="text-muted-foreground mt-1 text-sm">Organize availability, detect shoot conflicts, and map TDS validations actively.</p>

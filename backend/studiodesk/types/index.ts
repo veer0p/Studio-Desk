@@ -61,3 +61,18 @@ export type PaymentMethod =
   | 'other'
 
 export type PaymentStatus = 'pending' | 'processing' | 'captured' | 'failed' | 'refunded'
+
+// Admin types
+export type {
+  AdminRole,
+  PlatformAdmin,
+  AdminSession,
+  AdminLoginInput,
+  AdminLoginResult,
+  AdminContext,
+  AuditLogEntry,
+  FeatureFlag,
+  PlatformSetting,
+  SupportNote,
+  StudioImpersonation,
+} from './admin'

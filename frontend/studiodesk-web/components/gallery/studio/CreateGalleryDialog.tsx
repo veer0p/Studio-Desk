@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { createGallery, fetchBookingsList } from "@/lib/api"
+import { ROUTES, galleryDetailUrl } from "@/lib/constants/routes"
 
 const gallerySchema = z.object({
   bookingId: z.string().min(1, "Linked Booking required"),
@@ -98,9 +99,9 @@ export function CreateGalleryDialog({ children }: { children: React.ReactNode })
       const galleryId = result?.data?.id ?? result?.id
       setOpen(false)
       if (galleryId) {
-        router.push(`/gallery/${galleryId}?tab=photos`)
+        router.push(galleryDetailUrl(galleryId), { scroll: false })
       } else {
-        router.push("/gallery")
+        router.push(ROUTES.GALLERY, { scroll: false })
       }
     } catch (err) {
       console.error("Failed to create gallery:", err)

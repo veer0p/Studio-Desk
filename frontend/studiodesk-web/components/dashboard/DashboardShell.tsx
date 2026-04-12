@@ -2,13 +2,14 @@
 
 import React, { useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { ROUTES } from "@/lib/constants/routes"
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const router = useRouter()
 
   useEffect(() => {
     // Prefetch key routes to make navigation feel instant
-    const routes = ["/bookings", "/clients", "/finance", "/team"]
+    const routes = [ROUTES.BOOKINGS, ROUTES.CLIENTS, ROUTES.FINANCE, ROUTES.TEAM]
     routes.forEach(route => router.prefetch(route))
   }, [router])
 

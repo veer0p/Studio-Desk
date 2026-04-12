@@ -6,7 +6,6 @@ import { useTheme } from "next-themes"
 import {
     Search,
     Plus,
-    Bell,
     Sun,
     Moon,
     CalendarPlus,
@@ -29,18 +28,20 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { NotificationBell } from "@/components/shared/NotificationBell"
 import { useAuth } from "@/hooks/use-auth"
 import { signOut } from "@/lib/auth"
+import { ROUTES } from "@/lib/constants/routes"
 
 const TITLE_MAP: Record<string, string> = {
-    "/dashboard": "Dashboard",
-    "/bookings": "Bookings",
-    "/clients": "Clients",
-    "/finance": "Finance",
-    "/gallery": "Gallery",
-    "/team": "Team",
-    "/analytics": "Analytics",
-    "/settings": "Settings",
+    [ROUTES.DASHBOARD]: "Dashboard",
+    [ROUTES.BOOKINGS]: "Bookings",
+    [ROUTES.CLIENTS]: "Clients",
+    [ROUTES.FINANCE]: "Finance",
+    [ROUTES.GALLERY]: "Gallery",
+    [ROUTES.TEAM]: "Team",
+    [ROUTES.ANALYTICS]: "Analytics",
+    [ROUTES.SETTINGS]: "Settings",
 }
 
 export function Header() {
@@ -86,6 +87,8 @@ export function Header() {
 
             {/* Right: Actions */}
             <div className="flex items-center gap-2 md:gap-3">
+                {/* Notification Bell */}
+                <NotificationBell />
                 {/* + New Button */}
                 <div className="hidden sm:block">
                     <DropdownMenu>
@@ -123,15 +126,7 @@ export function Header() {
                 </div>
 
                 {/* Notifications */}
-                <div className="relative">
-                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
-                        <Bell className="h-5 w-5" />
-                    </Button>
-                    <span className="absolute top-2 right-2 flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                    </span>
-                </div>
+                <NotificationBell />
 
                 {/* Theme Toggle */}
                 <Button

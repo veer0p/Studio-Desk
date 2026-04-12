@@ -18,7 +18,17 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Edit3 } from "lucide-react"
 
-export function EditMemberSheet({ member, trigger }: { member: any, trigger?: React.ReactNode }) {
+import type { TeamMember } from "@/lib/api"
+
+interface ExtendedTeamMember extends TeamMember {
+  designation?: string
+  city?: string
+  fee?: number
+  upi?: string
+  appAccess?: boolean
+}
+
+export function EditMemberSheet({ member, trigger }: { member: ExtendedTeamMember, trigger?: React.ReactNode }) {
   const [open, setOpen] = useState(false)
 
   // A simplified validation mapping core updates

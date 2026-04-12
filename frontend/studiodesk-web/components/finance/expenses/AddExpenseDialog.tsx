@@ -23,44 +23,71 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Paperclip } from "lucide-react"
+import { Paperclip, Loader2 } from "lucide-react"
+import { createExpense } from "@/lib/api"
+import { mutate } from "swr"
 
 const expenseSchema = z.object({
   description: z.string().min(1, "Description is required"),
-  category: z.string().min(1, "Required"),
+  category: z.string().min(1, "Category is required"),
   amount: z.number().min(1, "Amount must be greater than 0"),
-  gstInput: z.number().optional(),
   date: z.string().min(1, "Date is required"),
-  vendor: z.string().optional(),
-  bookingId: z.string().optional(),
-  notes: z.string().optional()
+  vendor: z.string().optional().default(""),
+  bookingId: z.string().optional().nullable(),
+  notes: z.string().optional().default(""),
 })
 
 const CATEGORIES = [
-  "Equipment", "Travel", "Studio Rent", "Freelancer Fee", 
-  "Software", "Marketing", "Printing", "Food & Misc", "Other"
+  { label: "Equipment", value: "equipment" },
+  { label: "Travel", value: "travel" },
+  { label: "Studio Rent", value: "studio_rent" },
+  { label: "Freelancer Fee", value: "freelancer" },
+  { label: "Software", value: "software" },
+  { label: "Marketing", value: "marketing" },
+  { label: "Printing", value: "printing" },
+  { label: "Food & Misc", value: "food" },
+  { label: "Other", value: "other" },
 ]
 
-export function AddExpenseDialog({ children }: { children: React.ReactNode }) {
+export function AddExpenseDialog({ children, onCreated }: { children: React.ReactNode; onCreated?: () => void }) {
   const [open, setOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const form = useForm<z.infer<typeof expenseSchema>>({
-    resolver: zodResolver(expenseSchema),
+  const form = useForm({
+    resolver: zodResolver(expenseSchema) as any,
     defaultValues: {
       description: "",
       category: "",
-      amount: 0,
-      gstInput: 0,
+      amount: undefined as unknown as number,
       date: new Date().toISOString().split('T')[0],
       vendor: "",
-      bookingId: "",
-      notes: ""
+      bookingId: null as string | null,
+      notes: "",
     }
   })
 
-  const onSubmit = (data: any) => {
-    console.log("Adding expense", data)
-    setOpen(false)
+  const onSubmit = async (data: z.infer<typeof expenseSchema>) => {
+    setIsSubmitting(true)
+    try {
+      await createExpense({
+        category: data.category,
+        description: data.description,
+        amount: data.amount,
+        incurred_at: data.date,
+        vendor: data.vendor || undefined,
+        booking_id: data.bookingId || null,
+        notes: data.notes || undefined,
+      })
+      await mutate("/api/v1/expenses")
+      form.reset()
+      setOpen(false)
+      onCreated?.()
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to add expense"
+      form.setError("root", { message })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -74,10 +101,18 @@ export function AddExpenseDialog({ children }: { children: React.ReactNode }) {
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-          
+          {form.formState.errors.root && (
+            <div className="text-sm text-red-600 bg-red-500/5 border border-red-500/20 rounded-md p-2">
+              {form.formState.errors.root.message}
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label>Description *</Label>
             <Input {...form.register("description")} placeholder="e.g., Camera lens rental" />
+            {form.formState.errors.description && (
+              <p className="text-xs text-red-600">{form.formState.errors.description.message}</p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -87,26 +122,29 @@ export function AddExpenseDialog({ children }: { children: React.ReactNode }) {
                 <SelectTrigger><SelectValue placeholder="Select type..." /></SelectTrigger>
                 <SelectContent>
                   {CATEGORIES.map(cat => (
-                    <SelectItem key={cat} value={cat.toLowerCase()}>{cat}</SelectItem>
+                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {form.formState.errors.category && (
+                <p className="text-xs text-red-600">{form.formState.errors.category.message}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label>Date *</Label>
               <Input type="date" {...form.register("date")} />
+              {form.formState.errors.date && (
+                <p className="text-xs text-red-600">{form.formState.errors.date.message}</p>
+              )}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2 flex flex-col">
-              <Label>Total Amount (₹) *</Label>
-              <Input type="number" {...form.register("amount", { valueAsNumber: true })} />
-            </div>
-            <div className="space-y-2 flex flex-col">
-              <Label>GST Input Credit (₹)</Label>
-              <Input type="number" {...form.register("gstInput", { valueAsNumber: true })} />
-            </div>
+          <div className="space-y-2 flex flex-col">
+            <Label>Total Amount (₹) *</Label>
+            <Input type="number" {...form.register("amount", { valueAsNumber: true })} />
+            {form.formState.errors.amount && (
+              <p className="text-xs text-red-600">{form.formState.errors.amount.message}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -141,7 +179,10 @@ export function AddExpenseDialog({ children }: { children: React.ReactNode }) {
 
           <DialogFooter className="pt-4 border-t border-border/40">
             <Button variant="ghost" type="button" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button type="submit">Add Expense</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Add Expense
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

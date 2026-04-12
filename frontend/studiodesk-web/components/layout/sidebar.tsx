@@ -43,23 +43,24 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useAuth } from "@/hooks/use-auth"
 import { signOut } from "@/lib/auth"
+import { ROUTES } from "@/lib/constants/routes"
 
 const NAV_ITEMS = [
-    { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-    { icon: Contact2, label: "Leads", href: "/leads" },
-    { icon: CalendarDays, label: "Bookings", href: "/bookings" },
-    { icon: Users, label: "Clients", href: "/clients" },
-    { icon: FileText, label: "Proposals", href: "/proposals" },
-    { icon: ShieldCheck, label: "Contracts", href: "/contracts" },
-    { icon: Receipt, label: "Finance", href: "/finance" },
-    { icon: Zap, label: "Addons", href: "/addons" },
-    { icon: ImageIcon, label: "Gallery", href: "/gallery" },
-    { icon: Users2, label: "Team", href: "/team" },
+    { icon: LayoutDashboard, label: "Dashboard", href: ROUTES.DASHBOARD },
+    { icon: Contact2, label: "Leads", href: ROUTES.LEADS },
+    { icon: CalendarDays, label: "Bookings", href: ROUTES.BOOKINGS },
+    { icon: Users, label: "Clients", href: ROUTES.CLIENTS },
+    { icon: FileText, label: "Proposals", href: ROUTES.PROPOSALS },
+    { icon: ShieldCheck, label: "Contracts", href: ROUTES.CONTRACTS },
+    { icon: Receipt, label: "Finance", href: ROUTES.FINANCE },
+    { icon: Zap, label: "Addons", href: ROUTES.ADDONS },
+    { icon: ImageIcon, label: "Gallery", href: ROUTES.GALLERY },
+    { icon: Users2, label: "Team", href: ROUTES.TEAM },
 ]
 
 const BOTTOM_ITEMS = [
-    { icon: BarChart2, label: "Analytics", href: "/analytics" },
-    { icon: Settings, label: "Settings", href: "/settings" },
+    { icon: BarChart2, label: "Analytics", href: ROUTES.ANALYTICS },
+    { icon: Settings, label: "Settings", href: ROUTES.SETTINGS },
 ]
 
 export function Sidebar() {
@@ -177,13 +178,13 @@ export function Sidebar() {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
-                            <Link href="/settings/owner" className="cursor-pointer">
+                            <Link href={ROUTES.SETTINGS_OWNER} className="cursor-pointer">
                                 <User className="mr-2 h-4 w-4" />
                                 <span>My Profile</span>
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                            <Link href="/settings" className="cursor-pointer">
+                            <Link href={ROUTES.SETTINGS} className="cursor-pointer">
                                 <Settings className="mr-2 h-4 w-4" />
                                 <span>Studio Settings</span>
                             </Link>

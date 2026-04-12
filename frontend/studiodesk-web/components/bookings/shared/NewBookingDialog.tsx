@@ -147,7 +147,7 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="eventName"
@@ -188,7 +188,7 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="date"
@@ -217,7 +217,7 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="venue"
@@ -246,7 +246,7 @@ export function NewBookingDialog({ children }: { children?: React.ReactNode }) {
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="col-span-2">
                 <FormField
                   control={form.control}

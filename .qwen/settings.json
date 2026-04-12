@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(solofinancehub.com)",
+      "WebFetch(genesysgrowth.com)",
+      "WebFetch(leadheed.com)",
+      "WebFetch(ogblocks.dev)",
+      "WebFetch(www.slrlounge.com)",
+      "WebFetch(www.getmonetizely.com)",
+      "Read(///**)",
+      "Read(//home/**)"
+    ]
+  },
+  "$version": 3
+}

@@ -5,6 +5,7 @@ import { Errors } from '@/lib/errors'
 import { env } from '@/lib/env'
 import { logError } from '@/lib/logger'
 import { sendEmail } from '@/lib/resend/client'
+import { whatsappClient } from '@/lib/whatsapp/client'
 import { checkAndIncrementRateLimitWithCustomMax } from '@/lib/rate-limit'
 import { formatIndianDate } from '@/lib/formatters'
 import { phoneSchema } from '@/lib/validations/common.schema'
@@ -207,16 +208,7 @@ async function fetchLead(db: Db, studioId: string, leadId: string) {
 async function sendWhatsAppImpl(params: { to: string; message: string; studioId: string }) {
   const phone = formatPhone(params.to)
   if (!phoneSchema.safeParse(phone).success) throw Errors.validation('Invalid Indian mobile number')
-  const baseUrl = env.WHATSAPP_API_BASE_URL?.replace(/\/+$/, '')
-  if (!baseUrl || !env.WHATSAPP_API_KEY) throw Errors.external('WhatsApp')
-  const res = await fetch(`${baseUrl}/messages`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': env.WHATSAPP_API_KEY },
-    body: JSON.stringify({ to: `+91${phone}`, message: params.message, studio_id: params.studioId }),
-  })
-  const body = await res.json().catch(() => ({}))
-  if (!res.ok) throw Errors.external('WhatsApp')
-  return { messageId: String(body.messageId ?? body.id ?? '') }
+  return whatsappClient.sendTextMessage(`+91${phone}`, params.message)
 }
 
 export const automationTransport = { sendWhatsApp: sendWhatsAppImpl }
@@ -309,7 +301,7 @@ export const AutomationService = {
     if (!settings.length) {
       await automationRepo
         .ensureDefaultSettings(supabase, studioId, persistedDefaults as unknown as Array<Record<string, unknown>>)
-        .catch(() => {})
+        .catch(() => { })
       settings = await automationRepo.getSettings(supabase, studioId)
     }
     return mergeWithDefaults(settings, studioId) as AutomationSetting[]
@@ -380,7 +372,7 @@ export const AutomationService = {
       leadId: data.lead_id,
       clientId: String(record.client_id),
       variables,
-    }).catch(() => {})
+    }).catch(() => { })
     return { message: 'Automation triggered. Check the log for delivery status.' }
   },
 
@@ -428,7 +420,7 @@ export const AutomationService = {
         turnaround_days: '30',
         today_date: '15 Nov 2025',
       },
-    }).catch(() => {})
+    }).catch(() => { })
     return { message: `Test message sent to +91${formatPhone(data.phone)}` }
   },
 

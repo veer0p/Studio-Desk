@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Git pre-commit hook: blocks commits if .ai.md files are stale relative to source files.
+# Install: cp scripts/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+#
+# This hook runs the staleness check before every commit.
+# To skip: git commit --no-verify
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# If the check script doesn't exist, allow the commit (don't block on missing tooling)
+if [ ! -f "$PROJECT_ROOT/scripts/check-ai-docs.sh" ]; then
+  exit 0
+fi
+
+echo "🔍 Checking .ai.md documentation freshness..."
+bash "$PROJECT_ROOT/scripts/check-ai-docs.sh"
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+  echo ""
+  echo "⛔ Commit blocked: .ai.md files are stale."
+  echo "   Run: scripts/update-ai-docs.sh to identify affected files."
+  echo "   Then regenerate .ai.md files and retry."
+  echo "   To skip: git commit --no-verify"
+  exit 1
+fi
+
+exit 0

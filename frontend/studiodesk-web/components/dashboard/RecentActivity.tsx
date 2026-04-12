@@ -5,6 +5,7 @@ import { fetchBookingsList } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { Activity, CalendarPlus, RefreshCcw } from "lucide-react"
+import { ROUTES, bookingDetailUrl } from "@/lib/constants/routes"
 
 function relativeTime(value?: string | null) {
   if (!value) return "Just now"
@@ -72,7 +73,7 @@ export default function RecentActivity() {
                   </div>
                   <div className="flex flex-col flex-1 gap-0.5">
                     <div className="text-sm">
-                      <Link href={`/bookings/${activity.id}`} className="font-medium hover:text-foreground transition-colors hover:underline">
+                      <Link href={bookingDetailUrl(activity.id)} className="font-medium hover:text-foreground transition-colors hover:underline">
                         {activity.text}
                       </Link>
                       <span className="text-muted-foreground ml-1">{activity.suffix}</span>
@@ -83,7 +84,7 @@ export default function RecentActivity() {
               )
             })}
 
-            <Link href="/bookings" className="text-[11px] font-mono tracking-widest uppercase text-center text-muted-foreground hover:text-foreground pt-4 mt-2 border-t border-border/40 transition-colors">
+            <Link href={ROUTES.BOOKINGS} className="text-[11px] font-mono tracking-widest uppercase text-center text-muted-foreground hover:text-foreground pt-4 mt-2 border-t border-border/40 transition-colors">
               View all bookings
             </Link>
           </div>

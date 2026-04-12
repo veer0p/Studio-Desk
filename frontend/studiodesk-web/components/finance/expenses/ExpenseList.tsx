@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Plus, Search, Filter, MoreHorizontal, Edit2, Trash2, Camera, Car, Building2, Users, Monitor, Megaphone, Printer, Coffee, HelpCircle, Paperclip } from "lucide-react"
+import { Plus, Search, MoreHorizontal, Trash2, Camera, Car, Building2, Users, Monitor, Megaphone, Printer, Coffee, HelpCircle, Paperclip } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { AddExpenseDialog } from "./AddExpenseDialog"
 import useSWR from "swr"
-import { fetchExpensesListTyped, ExpenseRecord } from "@/lib/api"
+import { mutate as swrMutate } from "swr"
+import { fetchExpensesListTyped, ExpenseRecord, deleteExpense } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 
 const formatINR = (amt: number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(amt)
@@ -39,6 +40,16 @@ export function ExpenseList() {
   const expenses = data?.list || []
   const totalExp = data?.totalExp ?? expenses.reduce((acc, curr: ExpenseRecord) => acc + Number(curr.amount ?? 0), 0)
   const totalGst = data?.totalGst ?? expenses.reduce((acc, curr: ExpenseRecord) => acc + Number(curr.gstInput ?? 0), 0)
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this expense? This cannot be undone.")) return
+    try {
+      await deleteExpense(id)
+      swrMutate("/api/v1/expenses")
+    } catch {
+      alert("Failed to delete expense. Please try again.")
+    }
+  }
 
   const filtered = expenses.filter((exp: ExpenseRecord) =>
     exp.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -148,10 +159,7 @@ export function ExpenseList() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Edit2 className="mr-2 h-4 w-4" /> Edit expense
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem onClick={() => handleDelete(exp.id)} className="text-red-600 focus:text-red-600">
                             <Trash2 className="mr-2 h-4 w-4" /> Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>

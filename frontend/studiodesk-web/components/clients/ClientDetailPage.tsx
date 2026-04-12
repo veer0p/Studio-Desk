@@ -16,6 +16,7 @@ import { ClientCommunication } from "./tabs/ClientCommunication"
 import { ClientDocuments } from "./tabs/ClientDocuments"
 import { ChevronLeft, MessageCircle, MoreHorizontal, Plus } from "lucide-react"
 import { whatsappUrl } from "@/lib/phone"
+import { ROUTES } from "@/lib/constants/routes"
 
 import {
   DropdownMenu,
@@ -42,7 +43,7 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
   const setTab = (tab: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("tab", tab)
-    router.replace(`/clients/${clientId}?${params.toString()}`)
+    router.replace(`/clients/${clientId}?${params.toString()}`, { scroll: false })
   }
 
   if (isLoading) {
@@ -61,7 +62,7 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
         <p className="text-muted-foreground">
           {isNotFound ? "Client not found." : "Failed to load client details."}
         </p>
-        <Button onClick={() => router.push("/clients")}>Back to clients</Button>
+        <Button onClick={() => router.push(ROUTES.CLIENTS)}>Back to clients</Button>
       </div>
     )
   }
@@ -70,7 +71,7 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
     return (
       <div className="p-8 flex items-center justify-center flex-col gap-4">
         <p className="text-muted-foreground">No client data available.</p>
-        <Button onClick={() => router.push("/clients")}>Back to clients</Button>
+        <Button onClick={() => router.push(ROUTES.CLIENTS)}>Back to clients</Button>
       </div>
     )
   }
@@ -91,8 +92,8 @@ export default function ClientDetailPage({ clientId }: { clientId: string }) {
       
       {/* Back button layer */}
       <div className="px-6 pt-4 shrink-0">
-        <button 
-          onClick={() => router.push("/clients")}
+        <button
+          onClick={() => router.push(ROUTES.CLIENTS)}
           className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />

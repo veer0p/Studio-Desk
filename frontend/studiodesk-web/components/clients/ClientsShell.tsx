@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { LayoutGrid, List as ListIcon, Plus, Search, Filter } from "lucide-react"
 import { NewClientDialog } from "@/components/clients/NewClientDialog"
+import { ROUTES } from "@/lib/constants/routes"
 
 export default function ClientsShell({ children, totalCount }: { children: React.ReactNode; totalCount?: number }) {
   const router = useRouter()
@@ -30,7 +31,7 @@ export default function ClientsShell({ children, totalCount }: { children: React
   const setView = (view: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("view", view)
-    router.push(`/clients?${params.toString()}`)
+    router.push(`${ROUTES.CLIENTS}?${params.toString()}`, { scroll: false })
   }
 
   const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +44,7 @@ export default function ClientsShell({ children, totalCount }: { children: React
       } else {
         params.delete("search")
       }
-      router.replace(`/clients?${params.toString()}`)
+      router.replace(`${ROUTES.CLIENTS}?${params.toString()}`, { scroll: false })
     }, 300)
   }, [router, searchParams])
 
@@ -80,9 +81,9 @@ export default function ClientsShell({ children, totalCount }: { children: React
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem onClick={() => router.push("/clients?tag=Wedding")}>Wedding</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/clients?tag=Corporate")}>Corporate</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/clients?tag=Pre-Wedding")}>Pre-Wedding</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push(`${ROUTES.CLIENTS}?tag=Wedding`, { scroll: false })}>Wedding</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push(`${ROUTES.CLIENTS}?tag=Corporate`, { scroll: false })}>Corporate</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push(`${ROUTES.CLIENTS}?tag=Pre-Wedding`, { scroll: false })}>Pre-Wedding</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 

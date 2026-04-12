@@ -1,2 +1,3 @@
 import { redirect } from 'next/navigation';
-export default function DashboardRoot() { redirect('/dashboard'); }
+import { ROUTES } from '@/lib/constants/routes';
+export default function DashboardRoot() { redirect(ROUTES.DASHBOARD); }
