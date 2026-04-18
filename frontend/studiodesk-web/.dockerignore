@@ -1,0 +1,13 @@
+node_modules
+.next
+npm-debug.log
+.env
+.env.local
+.env.*.local
+*.log
+tests
+tests.bak
+playwright.config.ts.bak
+.git
+.gitignore
+README.md
