@@ -22,7 +22,7 @@ ENV RAZORPAY_WEBHOOK_SECRET=placeholder
 ENV WHATSAPP_API_KEY=placeholder
 ENV IMMICH_BASE_URL=http://placeholder.local
 ENV IMMICH_API_KEY=placeholder
-ENV ENCRYPTION_KEY=placeholderplaceholderplaceholder32
+ENV ENCRYPTION_KEY=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
 RUN npm run build
 

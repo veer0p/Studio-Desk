@@ -119,7 +119,7 @@ function ClauseEditor({
 
   const insertVariable = useCallback((variable: string) => {
     setContent((prev) => {
-      const textarea = document.getElementById('clause-content-textarea')
+      const textarea = document.getElementById('clause-content-textarea') as HTMLTextAreaElement | null
       const start = textarea?.selectionStart ?? prev.length
       const end = textarea?.selectionEnd ?? prev.length
       return prev.slice(0, start) + variable + prev.slice(end)
