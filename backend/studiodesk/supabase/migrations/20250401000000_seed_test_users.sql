@@ -22,78 +22,28 @@
 -- ================================================================
 
 -- ── Studio Members (upsert) ───────────────────────────────────────────────
--- Uses subqueries to resolve auth.users IDs by email
-INSERT INTO public.studio_members (
-  id,
-  studio_id,
-  user_id,
-  role,
-  display_name,
-  phone,
-  whatsapp,
-  specialization,
-  is_active,
-  accepted_at
-)
-VALUES
-  (
-    'c0000001-0001-4000-8000-000000000001',
-    'a0000001-0001-4000-8000-000000000001',
-    (SELECT id FROM auth.users WHERE email = 'owner@test.com' LIMIT 1),
-    'owner',
-    'Studio Owner',
-    NULL,
-    NULL,
-    NULL,
-    true,
-    NOW()
-  ),
-  (
-    'c0000001-0001-4000-8000-000000000002',
-    'a0000001-0001-4000-8000-000000000001',
-    (SELECT id FROM auth.users WHERE email = 'photographer@test.com' LIMIT 1),
-    'photographer',
-    'Test Photographer',
-    '9876500001',
-    '9876500001',
-    ARRAY['wedding', 'portrait'],
-    true,
-    NOW()
-  ),
-  (
-    'c0000001-0001-4000-8000-000000000003',
-    'a0000001-0001-4000-8000-000000000001',
-    (SELECT id FROM auth.users WHERE email = 'editor@test.com' LIMIT 1),
-    'editor',
-    'Test Editor',
-    '9876500002',
-    '9876500002',
-    ARRAY['corporate', 'video'],
-    true,
-    NOW()
-  ),
-  (
-    'c0000001-0001-4000-8000-000000000004',
-    'a0000001-0001-4000-8000-000000000002',
-    (SELECT id FROM auth.users WHERE email = 'outsider@test.com' LIMIT 1),
-    'owner',
-    'Outside Owner',
-    NULL,
-    NULL,
-    NULL,
-    true,
-    NOW()
-  )
-ON CONFLICT (id) DO UPDATE SET
-  user_id = EXCLUDED.user_id,
-  studio_id = EXCLUDED.studio_id,
-  role = EXCLUDED.role,
-  display_name = EXCLUDED.display_name,
-  phone = EXCLUDED.phone,
-  whatsapp = EXCLUDED.whatsapp,
-  specialization = EXCLUDED.specialization,
-  is_active = EXCLUDED.is_active,
-  accepted_at = EXCLUDED.accepted_at;
+-- INSERT...SELECT skips the row silently if the auth user doesn't exist yet
+-- (avoids null value violation when users haven't been created in Auth first)
+
+INSERT INTO public.studio_members (id, studio_id, user_id, role, display_name, phone, whatsapp, specialization, is_active, accepted_at)
+SELECT 'c0000001-0001-4000-8000-000000000001', 'a0000001-0001-4000-8000-000000000001', id, 'owner', 'Studio Owner', NULL, NULL, NULL, true, NOW()
+FROM auth.users WHERE email = 'owner@test.com'
+ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, role = EXCLUDED.role, display_name = EXCLUDED.display_name, is_active = EXCLUDED.is_active, accepted_at = EXCLUDED.accepted_at;
+
+INSERT INTO public.studio_members (id, studio_id, user_id, role, display_name, phone, whatsapp, specialization, is_active, accepted_at)
+SELECT 'c0000001-0001-4000-8000-000000000002', 'a0000001-0001-4000-8000-000000000001', id, 'photographer', 'Test Photographer', '9876500001', '9876500001', ARRAY['wedding', 'portrait'], true, NOW()
+FROM auth.users WHERE email = 'photographer@test.com'
+ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, role = EXCLUDED.role, display_name = EXCLUDED.display_name, phone = EXCLUDED.phone, whatsapp = EXCLUDED.whatsapp, specialization = EXCLUDED.specialization, is_active = EXCLUDED.is_active, accepted_at = EXCLUDED.accepted_at;
+
+INSERT INTO public.studio_members (id, studio_id, user_id, role, display_name, phone, whatsapp, specialization, is_active, accepted_at)
+SELECT 'c0000001-0001-4000-8000-000000000003', 'a0000001-0001-4000-8000-000000000001', id, 'editor', 'Test Editor', '9876500002', '9876500002', ARRAY['corporate', 'video'], true, NOW()
+FROM auth.users WHERE email = 'editor@test.com'
+ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, role = EXCLUDED.role, display_name = EXCLUDED.display_name, phone = EXCLUDED.phone, whatsapp = EXCLUDED.whatsapp, specialization = EXCLUDED.specialization, is_active = EXCLUDED.is_active, accepted_at = EXCLUDED.accepted_at;
+
+INSERT INTO public.studio_members (id, studio_id, user_id, role, display_name, phone, whatsapp, specialization, is_active, accepted_at)
+SELECT 'c0000001-0001-4000-8000-000000000004', 'a0000001-0001-4000-8000-000000000002', id, 'owner', 'Outside Owner', NULL, NULL, NULL, true, NOW()
+FROM auth.users WHERE email = 'outsider@test.com'
+ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, role = EXCLUDED.role, display_name = EXCLUDED.display_name, is_active = EXCLUDED.is_active, accepted_at = EXCLUDED.accepted_at;
 
 -- ── Verification ───────────────────────────────────────────────────────────
 -- Run this separately to confirm:

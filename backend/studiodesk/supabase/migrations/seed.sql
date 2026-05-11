@@ -50,11 +50,23 @@ ON CONFLICT (studio_id, step_number) DO UPDATE SET step_name = EXCLUDED.step_nam
 
 -- studio_members (requires auth users owner@test.com, photographer@test.com, editor@test.com, outsider@test.com)
 INSERT INTO public.studio_members (id, studio_id, user_id, role, display_name, is_active, accepted_at)
-VALUES
-  ('c0000001-0001-4000-8000-000000000001', 'a0000001-0001-4000-8000-000000000001', (SELECT id FROM auth.users WHERE email = 'owner@test.com' LIMIT 1), 'owner', 'Studio Owner', true, NOW()),
-  ('c0000001-0001-4000-8000-000000000002', 'a0000001-0001-4000-8000-000000000001', (SELECT id FROM auth.users WHERE email = 'photographer@test.com' LIMIT 1), 'photographer', 'Test Photographer', true, NOW()),
-  ('c0000001-0001-4000-8000-000000000003', 'a0000001-0001-4000-8000-000000000001', (SELECT id FROM auth.users WHERE email = 'editor@test.com' LIMIT 1), 'editor', 'Test Editor', true, NOW()),
-  ('c0000001-0001-4000-8000-000000000004', 'a0000001-0001-4000-8000-000000000002', (SELECT id FROM auth.users WHERE email = 'outsider@test.com' LIMIT 1), 'owner', 'Outside Owner', true, NOW())
+SELECT 'c0000001-0001-4000-8000-000000000001', 'a0000001-0001-4000-8000-000000000001', id, 'owner', 'Studio Owner', true, NOW()
+FROM auth.users WHERE email = 'owner@test.com'
+ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, role = EXCLUDED.role, display_name = EXCLUDED.display_name, is_active = EXCLUDED.is_active, accepted_at = EXCLUDED.accepted_at;
+
+INSERT INTO public.studio_members (id, studio_id, user_id, role, display_name, is_active, accepted_at)
+SELECT 'c0000001-0001-4000-8000-000000000002', 'a0000001-0001-4000-8000-000000000001', id, 'photographer', 'Test Photographer', true, NOW()
+FROM auth.users WHERE email = 'photographer@test.com'
+ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, role = EXCLUDED.role, display_name = EXCLUDED.display_name, is_active = EXCLUDED.is_active, accepted_at = EXCLUDED.accepted_at;
+
+INSERT INTO public.studio_members (id, studio_id, user_id, role, display_name, is_active, accepted_at)
+SELECT 'c0000001-0001-4000-8000-000000000003', 'a0000001-0001-4000-8000-000000000001', id, 'editor', 'Test Editor', true, NOW()
+FROM auth.users WHERE email = 'editor@test.com'
+ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, role = EXCLUDED.role, display_name = EXCLUDED.display_name, is_active = EXCLUDED.is_active, accepted_at = EXCLUDED.accepted_at;
+
+INSERT INTO public.studio_members (id, studio_id, user_id, role, display_name, is_active, accepted_at)
+SELECT 'c0000001-0001-4000-8000-000000000004', 'a0000001-0001-4000-8000-000000000002', id, 'owner', 'Outside Owner', true, NOW()
+FROM auth.users WHERE email = 'outsider@test.com'
 ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, role = EXCLUDED.role, display_name = EXCLUDED.display_name, is_active = EXCLUDED.is_active, accepted_at = EXCLUDED.accepted_at;
 
 -- service_packages
@@ -114,10 +126,15 @@ VALUES
 ON CONFLICT (studio_id) DO UPDATE SET form_title = EXCLUDED.form_title, button_text = EXCLUDED.button_text;
 
 -- studio_invitations (pending + expired)
+-- Skips silently if the invited_by member doesn't exist yet (auth user not created)
 INSERT INTO public.studio_invitations (id, studio_id, invited_by, email, role, token, expires_at, resent_count)
-VALUES
-  ('40000001-0001-4000-8000-000000000001', 'a0000001-0001-4000-8000-000000000001', 'c0000001-0001-4000-8000-000000000001', 'pending@test.com', 'videographer', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', (CURRENT_TIMESTAMP + INTERVAL '1 day'), 0),
-  ('40000001-0001-4000-8000-000000000002', 'a0000001-0001-4000-8000-000000000001', 'c0000001-0001-4000-8000-000000000001', 'expired@test.com', 'assistant', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', (CURRENT_TIMESTAMP - INTERVAL '3 days'), 1)
+SELECT '40000001-0001-4000-8000-000000000001', 'a0000001-0001-4000-8000-000000000001', 'c0000001-0001-4000-8000-000000000001', 'pending@test.com', 'videographer', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', (CURRENT_TIMESTAMP + INTERVAL '1 day'), 0
+WHERE EXISTS (SELECT 1 FROM public.studio_members WHERE id = 'c0000001-0001-4000-8000-000000000001')
+ON CONFLICT (id) DO UPDATE SET token = EXCLUDED.token, expires_at = EXCLUDED.expires_at, resent_count = EXCLUDED.resent_count;
+
+INSERT INTO public.studio_invitations (id, studio_id, invited_by, email, role, token, expires_at, resent_count)
+SELECT '40000001-0001-4000-8000-000000000002', 'a0000001-0001-4000-8000-000000000001', 'c0000001-0001-4000-8000-000000000001', 'expired@test.com', 'assistant', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', (CURRENT_TIMESTAMP - INTERVAL '3 days'), 1
+WHERE EXISTS (SELECT 1 FROM public.studio_members WHERE id = 'c0000001-0001-4000-8000-000000000001')
 ON CONFLICT (id) DO UPDATE SET token = EXCLUDED.token, expires_at = EXCLUDED.expires_at, resent_count = EXCLUDED.resent_count;
 
 -- studio_settings

@@ -8,6 +8,9 @@ import { Database } from '@/types/supabase'
  * NEVER use this on the client side or in a way that exposes it to users.
  */
 export function createAdminClient() {
+  if (!env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set — admin operations are unavailable')
+  }
   return createClient<Database>(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.SUPABASE_SERVICE_ROLE_KEY,
