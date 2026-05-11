@@ -5,7 +5,7 @@
 --
 --  Changelog v2.0:
 --  + RBAC: permissions, role_permissions, member_permission_overrides
---  + Platform Admin: platform_admins, admin_sessions, admin_audit_logs,
+--  + Platform Admin: platform_admins, admin_sessions, a  dmin_audit_logs,
 --    studio_impersonation_log, platform_settings, support_notes
 --  + Payments: razorpay_webhook_events, refunds, payment_disputes,
 --    subscription_events, promo_codes, platform_subscription_invoices

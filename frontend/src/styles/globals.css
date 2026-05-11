@@ -1,0 +1,91 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Inter Tight', 'Inter', system-ui, sans-serif;
+
+  --color-bg: rgb(var(--bg));
+  --color-fg: rgb(var(--fg));
+  --color-muted: rgb(var(--muted));
+  --color-muted-fg: rgb(var(--muted-fg));
+  --color-border: rgb(var(--border));
+  --color-card: rgb(var(--card));
+  --color-accent: rgb(var(--accent));
+  --color-accent-fg: rgb(var(--accent-fg));
+  --color-success: rgb(var(--success));
+  --color-warn: rgb(var(--warn));
+  --color-danger: rgb(var(--danger));
+
+  --radius-card: var(--radius-card);
+  --radius-input: var(--radius-input);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-card: var(--shadow-sm);
+  --shadow-elevated: var(--shadow-md);
+  --shadow-focus: var(--shadow-glow);
+}
+
+/* Dark mode driven by [data-theme="dark"] attribute, not media query */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+html,
+body {
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  letter-spacing: -0.005em;
+}
+
+/* Subtle ambient gradient on the body — barely-there, gives chrome quiet depth.
+   This is NOT the aurora; aurora is reserved for hero zones (rule #4).
+   This is a 2% indigo/violet wash that just keeps pages from feeling flat. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60rem 40rem at 10% -10%, rgb(var(--aurora-2) / 0.06), transparent 60%),
+    radial-gradient(50rem 36rem at 100% 10%, rgb(var(--aurora-1) / 0.05), transparent 65%);
+  pointer-events: none;
+}
+
+[data-theme='dark'] body::before {
+  background:
+    radial-gradient(60rem 40rem at 10% -10%, rgb(var(--aurora-2) / 0.12), transparent 60%),
+    radial-gradient(50rem 36rem at 100% 10%, rgb(var(--aurora-1) / 0.10), transparent 65%);
+}
+
+/* Display heading polish */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+* {
+  border-color: rgb(var(--border));
+}
+
+/* Focus ring — the only place glow is allowed */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-glow);
+  border-radius: var(--radius-input);
+}
+
+/* Quiet motion defaults */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

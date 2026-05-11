@@ -1,0 +1,58 @@
+import { z } from 'zod';
+
+export const EVENT_TYPES = [
+  'wedding',
+  'pre_wedding',
+  'engagement',
+  'portrait',
+  'birthday',
+  'corporate',
+  'product',
+  'maternity',
+  'newborn',
+  'other',
+] as const;
+
+export const BOOKING_STATUSES = [
+  'new_lead',
+  'contacted',
+  'proposal_sent',
+  'booked',
+  'partially_paid',
+  'paid',
+  'shoot_completed',
+  'delivered',
+  'closed',
+  'lost',
+] as const;
+
+export const createBookingSchema = z.object({
+  title: z.string().min(3, 'Title must be at least 3 characters').max(100),
+  client_id: z.string().uuid('Must be a valid client UUID'),
+  lead_id: z.string().uuid().optional().nullable(),
+  event_type: z.enum(EVENT_TYPES, { required_error: 'Event type is required' }),
+  event_date: z.string().datetime().optional().nullable(),
+  event_end_date: z.string().datetime().optional().nullable(),
+  package_id: z.string().uuid().optional().nullable(),
+  venue_name: z.string().max(100).optional().nullable(),
+  venue_address: z.string().max(500).optional().nullable(),
+  venue_state: z.string().max(50).optional().nullable(),
+  venue_city: z.string().max(50).optional().nullable(),
+  venue_pincode: z.string().max(10).optional().nullable(),
+  total_amount: z.number({ required_error: 'Total amount is required' }).min(0),
+  advance_amount: z.number({ required_error: 'Advance amount is required' }).min(0),
+  notes: z.string().max(2000).optional().nullable(),
+});
+
+export const updateBookingSchema = createBookingSchema.partial().refine(
+  (obj) => Object.keys(obj).length > 0,
+  { message: 'At least one field must be provided' },
+);
+
+export const updateStatusSchema = z.object({
+  status: z.enum(BOOKING_STATUSES),
+});
+
+export type CreateBookingInput = z.infer<typeof createBookingSchema>;
+export type UpdateBookingInput = z.infer<typeof updateBookingSchema>;
+export type UpdateStatusInput = z.infer<typeof updateStatusSchema>;
