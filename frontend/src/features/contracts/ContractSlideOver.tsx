@@ -210,14 +210,14 @@ function NotesTab({
         onChange={(e) => setNotes(e.target.value)}
         onKeyDown={(e) => {
           if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); handleSave(); }
-          if (e.key === 'Escape') setNotes(contract.notes ?? '');
+          if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); setNotes(contract.notes ?? ''); }
         }}
         placeholder="Add notes about this contract…"
         rows={8}
         className="w-full resize-none rounded-card border border-border bg-bg/60 px-4 py-3 text-sm text-fg placeholder:text-muted-fg/50 focus:outline-none focus:ring-2 focus:ring-accent/40"
       />
       <div className="flex items-center justify-between text-xs text-muted-fg">
-        <span>⌘↵ to save · Esc to discard</span>
+        <span>{navigator.platform?.includes('Mac') ? '⌘' : 'Ctrl'}+↵ to save · Esc to discard</span>
         {dirty && (
           <button type="button" onClick={handleSave}
             className="rounded-input border border-border bg-card px-3 py-1.5 text-xs font-medium transition-colors hover:bg-bg">
@@ -246,7 +246,13 @@ function ContractSlideOverContent({ id, onClose }: { id: string; onClose: () => 
   const remindContract = useRemindContract();
 
   const handleNotesSave = (notes: string) => {
-    updateContract.mutate({ id, data: { notes } });
+    updateContract.mutate({ id, data: { notes } }, {
+      onError: (err: unknown) => {
+        const msg = (err as { message?: string })?.message ?? '';
+        if (msg.includes('cannot be edited')) toast.error('Notes cannot be edited after a contract is sent');
+        else toast.error('Failed to save notes');
+      },
+    });
   };
 
   const handleSend = () => {
@@ -394,7 +400,12 @@ export function ContractSlideOver({ id, onClose }: { id: string | null; onClose:
                 transition={{ duration: 0.18 }}
               />
             </Dialog.Overlay>
-            <Dialog.Content asChild aria-describedby={undefined}>
+            <Dialog.Content asChild aria-describedby={undefined}
+              onEscapeKeyDown={(e) => {
+                const active = document.activeElement;
+                if (active?.tagName === 'TEXTAREA') { e.preventDefault(); }
+              }}
+            >
               <motion.aside
                 className="fixed inset-y-0 right-0 z-40 flex w-full max-w-lg flex-col border-l border-border bg-card shadow-elevated"
                 initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}

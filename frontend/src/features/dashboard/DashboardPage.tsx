@@ -298,7 +298,7 @@ export function DashboardPage() {
 
       <PageContainer>
         {/* ── KPI strip ── */}
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {overviewLoading || !kpis ? (
             <>
               <SkeletonKpi /><SkeletonKpi /><SkeletonKpi /><SkeletonKpi />

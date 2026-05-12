@@ -34,23 +34,8 @@ export class AuthService {
         authError.message?.toLowerCase().includes('already been registered') ||
         (authError as any).status === 422
       ) {
-        // If user exists, we check if they have a studio.
-        const { data: existingUser } = await admin.from('users').select('id').eq('email', validated.email).maybeSingle()
-
-        if (existingUser) {
-          userId = existingUser.id
-          // Check if they already have a studio
-          const { data: existingMember } = await admin.from('studio_members').select('id').eq('user_id', userId).maybeSingle()
-          if (existingMember) {
-            throw Errors.conflict('An account with this email already exists and is associated with a studio')
-          }
-          console.log('[AuthService] Found existing user without studio, proceeding to DB creation phase:', userId)
-        } else {
-          const { data: { users }, error: listError } = await admin.auth.admin.listUsers()
-          const foundAuthUser = users?.find(u => u.email === validated.email)
-          if (!foundAuthUser) throw Errors.conflict('An account with this email already exists in Auth')
-          userId = foundAuthUser.id
-        }
+        // User exists in auth — always reject duplicate signups
+        throw Errors.conflict('An account with this email already exists')
       } else {
         throw authError
       }

@@ -43,8 +43,8 @@ export const bookingRepo = {
     if (params.from_date) query = query.gte('event_date', params.from_date)
     if (params.to_date) query = query.lte('event_date', params.to_date)
 
-    if (params.search) {
-      query = query.or(`title.ilike.%${params.search}%,clients.full_name.ilike.%${params.search}%`)
+    if (params.search?.trim()) {
+      query = query.ilike('title', `%${params.search.trim()}%`)
     }
 
     const from = params.page * params.pageSize

@@ -37,7 +37,7 @@ export function CommandPalette({ open, onOpenChange }: Props) {
               />
             </Dialog.Overlay>
 
-            <Dialog.Content asChild>
+            <Dialog.Content asChild aria-describedby={undefined}>
               <motion.div
                 className="fixed left-1/2 top-[18%] z-50 w-[min(640px,calc(100vw-2rem))] -translate-x-1/2"
                 initial={{ opacity: 0, y: -10, scale: 0.98 }}

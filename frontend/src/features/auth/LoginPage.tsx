@@ -36,8 +36,13 @@ export function LoginPage() {
       await login(data);
       navigate(from, { replace: true });
     } catch (err: unknown) {
-      const msg = (err as { message?: string })?.message;
-      toast.error(msg?.includes('Invalid') ? 'Wrong email or password' : (msg ?? 'Login failed'));
+      const apiErr = (err as any)?.apiError;
+      const code = apiErr?.code ?? '';
+      const msg = apiErr?.message ?? (err as { message?: string })?.message ?? '';
+      if (code === 'invalid_credentials' || code === 'AUTH_ERROR' || msg.includes('Invalid'))
+        toast.error('Wrong email or password');
+      else
+        toast.error(msg || 'Login failed');
     }
   };
 

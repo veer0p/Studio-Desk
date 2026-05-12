@@ -319,6 +319,8 @@ function NotesTab({ booking }: { booking: BookingDetail }) {
       void save();
     }
     if (e.key === 'Escape') {
+      e.stopPropagation();
+      e.preventDefault();
       setDraft(original);
       textareaRef.current?.blur();
     }
@@ -336,7 +338,7 @@ function NotesTab({ booking }: { booking: BookingDetail }) {
         className="w-full rounded-input border border-border bg-bg/60 p-3 text-sm text-fg placeholder:text-muted-fg/50 focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none"
       />
       <div className="flex items-center justify-between">
-        <p className="text-xs text-muted-fg/50">⌘↵ to save · Esc to revert</p>
+        <p className="text-xs text-muted-fg/50">{navigator.platform?.includes('Mac') ? '⌘' : 'Ctrl'}+↵ to save · Esc to revert</p>
         {saved && <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">Saved ✓</p>}
         <button
           type="button"
@@ -363,7 +365,7 @@ function ShootBriefTab({ bookingId }: { bookingId: string }) {
 
   useEffect(() => {
     if (brief) {
-      setShotList(brief.shot_list ?? '');
+      setShotList(Array.isArray(brief.shot_list) ? brief.shot_list.join('\n') : (brief.shot_list ?? ''));
       setSpecialRequests(brief.special_requests ?? '');
       setLocationNotes(brief.location_notes ?? '');
     }
@@ -374,7 +376,7 @@ function ShootBriefTab({ bookingId }: { bookingId: string }) {
       await upsert.mutateAsync({
         id: bookingId,
         data: {
-          shot_list: shotList || null,
+          shot_list: shotList ? shotList.split('\n').map((s: string) => s.trim()).filter(Boolean) : [],
           special_requests: specialRequests || null,
           location_notes: locationNotes || null,
         },
@@ -580,7 +582,12 @@ export function BookingSlideOver({
                 transition={{ duration: 0.18 }}
               />
             </Dialog.Overlay>
-            <Dialog.Content asChild aria-describedby={undefined}>
+            <Dialog.Content asChild aria-describedby={undefined}
+              onEscapeKeyDown={(e) => {
+                const active = document.activeElement;
+                if (active?.tagName === 'TEXTAREA') { e.preventDefault(); }
+              }}
+            >
               <motion.aside
                 className="fixed inset-y-0 right-0 z-40 flex w-full max-w-xl flex-col border-l border-border bg-card shadow-elevated"
                 initial={{ x: '100%' }}

@@ -203,19 +203,16 @@ export function ClientsPage() {
   const selectedId = searchParams.get('id');
 
   // ?new=1 trigger (from ⌘K)
+  const newParam = searchParams.get('new');
   useEffect(() => {
-    if (searchParams.get('new') === '1') {
-      setNewClientOpen(true);
-      setSearchParams(
-        (prev) => {
-          const next = new URLSearchParams(prev);
-          next.delete('new');
-          return next;
-        },
-        { replace: true },
-      );
-    }
-  }, [searchParams, setSearchParams]);
+    if (newParam !== '1') return;
+    setNewClientOpen(true);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.delete('new');
+      return next;
+    }, { replace: true });
+  }, [newParam, setSearchParams]);
 
   // Sync debounced search → URL
   useEffect(() => {

@@ -285,14 +285,14 @@ function NotesTab({
             e.preventDefault();
             handleSave();
           }
-          if (e.key === 'Escape') setNotes(proposal.notes ?? '');
+          if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); setNotes(proposal.notes ?? ''); }
         }}
         placeholder="Add notes about this proposal…"
         rows={8}
         className="w-full resize-none rounded-card border border-border bg-bg/60 px-4 py-3 text-sm text-fg placeholder:text-muted-fg/50 focus:outline-none focus:ring-2 focus:ring-accent/40"
       />
       <div className="flex items-center justify-between text-xs text-muted-fg">
-        <span>⌘↵ to save · Esc to discard</span>
+        <span>{navigator.platform?.includes('Mac') ? '⌘' : 'Ctrl'}+↵ to save · Esc to discard</span>
         {dirty && (
           <button
             type="button"
@@ -462,7 +462,12 @@ export function ProposalSlideOver({
                 transition={{ duration: 0.18 }}
               />
             </Dialog.Overlay>
-            <Dialog.Content asChild aria-describedby={undefined}>
+            <Dialog.Content asChild aria-describedby={undefined}
+              onEscapeKeyDown={(e) => {
+                const active = document.activeElement;
+                if (active?.tagName === 'TEXTAREA') { e.preventDefault(); }
+              }}
+            >
               <motion.aside
                 className="fixed inset-y-0 right-0 z-40 flex w-full max-w-lg flex-col border-l border-border bg-card shadow-elevated"
                 initial={{ x: '100%' }}

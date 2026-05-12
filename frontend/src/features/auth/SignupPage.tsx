@@ -81,10 +81,12 @@ export function SignupPage() {
       toast.success(`Welcome to StudioDesk, ${data.fullName.split(' ')[0]}!`);
       navigate(ROUTES.dashboard, { replace: true });
     } catch (err: unknown) {
-      const msg = (err as { message?: string })?.message ?? 'Signup failed';
-      if (msg.toLowerCase().includes('already')) {
+      const apiErr = (err as any)?.apiError;
+      const code = apiErr?.code ?? '';
+      const msg = apiErr?.message ?? (err as { message?: string })?.message ?? 'Signup failed';
+      if (msg.toLowerCase().includes('email') || msg.toLowerCase().includes('already')) {
         toast.error('An account with this email already exists');
-      } else if (msg.toLowerCase().includes('slug')) {
+      } else if (code === 'CONFLICT' || msg.toLowerCase().includes('slug')) {
         toast.error('That studio URL is already taken — try a different slug');
       } else {
         toast.error(msg);

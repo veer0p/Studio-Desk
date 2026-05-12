@@ -23,6 +23,10 @@ type NavEntry = {
   count?: number;
 };
 
+const OVERVIEW_NAV: NavEntry[] = [
+  { to: ROUTES.dashboard, label: 'Dashboard', icon: LayoutDashboard, enabled: true },
+];
+
 const PRIMARY_NAV: NavEntry[] = [
   { to: ROUTES.leads, label: 'Leads', icon: UserPlus, enabled: true, count: 0 },
   { to: ROUTES.clients, label: 'Clients', icon: Users, enabled: true },
@@ -38,7 +42,6 @@ const FINANCE_NAV: NavEntry[] = [
 
 const DELIVERY_NAV: NavEntry[] = [
   { to: ROUTES.gallery, label: 'Gallery', icon: Images, enabled: true },
-  { to: ROUTES.dashboard, label: 'Dashboard', icon: LayoutDashboard, enabled: true },
 ];
 
 interface NavTreeProps {
@@ -165,6 +168,7 @@ export function NavTree({ onNavigate, variant = 'desktop' }: NavTreeProps) {
       </button>
 
       <nav className="flex flex-1 flex-col gap-6 overflow-y-auto">
+        <NavSection title="Overview" items={OVERVIEW_NAV} onNavigate={onNavigate} variant={variant} />
         <NavSection title="Pipeline" items={PRIMARY_NAV} onNavigate={onNavigate} variant={variant} />
         <NavSection title="Finance" items={FINANCE_NAV} onNavigate={onNavigate} variant={variant} />
         <NavSection title="Delivery" items={DELIVERY_NAV} onNavigate={onNavigate} variant={variant} />
